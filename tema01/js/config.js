@@ -2,38 +2,20 @@
 const siteConfig = {
     // Configuración general del sitio
     siteName: "Pogramación de Servicios y Procesos",
-    baseUrl: "../",
+    baseUrl: "./",
     
     // Estructura de navegación
-    navigation: {
+     navigation: {
         "1.- Programación de Procesos": [
-            { title: "Programas y procesos", url: "01-01.html" },
-            { title: "Variables", url: "variables.html" },
-            { title: "Tipos de Datos", url: "tipos-datos.html" }
-        ],
-        "Java Básico": [
-            { title: "Sintaxis Básica", url: "java-sintaxis.html" },
-            { title: "Clases y Objetos", url: "java-objetos.html" },
-            { title: "Herencia", url: "java-herencia.html" },
-            { title: "Interfaces", url: "java-interfaces.html" }
-        ],
-        "Python Básico": [
-            { title: "Sintaxis Básica", url: "python-sintaxis.html" },
-            { title: "Funciones", url: "python-funciones.html" },
-            { title: "Clases", url: "python-clases.html" },
-            { title: "Módulos", url: "python-modulos.html" }
-        ],
-        "Estructuras de Datos": [
-            { title: "Arrays/Listas", url: "arrays.html" },
-            { title: "Pilas y Colas", url: "pilas-colas.html" },
-            { title: "Árboles", url: "arboles.html" },
-            { title: "Grafos", url: "grafos.html" }
-        ],
-        "Algoritmos": [
-            { title: "Búsqueda", url: "busqueda.html" },
-            { title: "Ordenamiento", url: "ordenamiento.html" },
-            { title: "Recursión", url: "recursion.html" },
-            { title: "Programación Dinámica", url: "prog-dinamica.html" }
+            { title: "1.1. Programas y procesos", url: "01-01.html" },
+            { title: "1.2. Multitarea", url: "01-02.html" },
+            { title: "1.3. Procesos y sistemas mono/multiprocesadores", url: "01-03.html" },
+            { title: "1.4. Ventajas e inconvenientes de la programación concurrente", url: "01-04.html" },
+            { title: "1.5. Kernel y llamadas al sistema", url: "01-05.html" },
+            { title: "1.6. Estados de ejecución de un proceso", url: "01-06.html" },
+            { title: "1.7. Hilos y procesos", url: "01-07.html" },
+            { title: "1.8. Servicios", url: "01-08.html" },
+            { title: "1.9. Concurrencia en Java", url: "01-09.html" }
         ]
     },
 
