@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Servicios y Procesos</title>
+    <script>
+        // Redirecciona si no está en un iframe
+//        if (window.self === window.top) {
+//            window.location.href = 'https://digitechfp.com'; // O muestra página de error
+//        }
+    </script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="js/config.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Plataforma Educativa</div>
+            <div class="header-controls">
+                <!-- Botón para desktop -->
+                <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu">☰</button>
+                <!-- Botón para móvil (se oculta automáticamente) -->
+                <button class="nav-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar de navegación -->
+        <nav class="sidebar" id="sidebar">
+            <div id="navigation-content"></div>
+        </nav>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">Bienvenido a la Plataforma Educativa</h1>
+                <p class="content-subtitle">Aprende programación con ejemplos prácticos en Java y Python</p>
+            </div>
+
+            <div id="lesson-content">
+                <div class="lesson-section">
+                    <h2 class="section-title">Introducción a la Programación</h2>
+                    <div class="text-content">
+                        <p>Esta plataforma te ayudará a aprender programación con ejemplos prácticos en Java y Python.
+                            Cada lección incluye explicaciones detalladas y código ejecutable.</p>
+                    </div>
+
+                    <div class="info-box note">
+                        <div class="info-box-title">💡 Nota Importante</div>
+                        <p>Asegúrate de practicar cada ejemplo de código para reforzar tu aprendizaje.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo: Hola Mundo en Java</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code class="language-java">public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("¡Hola, Mundo!");
+        
+        // Variables básicas
+        String mensaje = "Bienvenido a Java";
+        int numero = 42;
+        boolean esVerdadero = true;
+        
+        System.out.println(mensaje);
+        System.out.println("Número: " + numero);
+        System.out.println("Booleano: " + esVerdadero);
+    }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo: Hola Mundo en Python</span>
+                            <span class="language-badge">Python</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code class="language-python">def main():
+    print("¡Hola, Mundo!")
+    
+    # Variables básicas
+    mensaje = "Bienvenido a Python"
+    numero = 42
+    es_verdadero = True
+    
+    print(mensaje)
+    print(f"Número: {numero}")
+    print(f"Booleano: {es_verdadero}")
+
+if __name__ == "__main__":
+    main()</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="info-box tip">
+                        <div class="info-box-title">💻 Consejo</div>
+                        <p>Experimenta modificando los valores de las variables para ver cómo cambia la salida del
+                            programa.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/navigation.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
