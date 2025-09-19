@@ -10,6 +10,7 @@
             window.location.href = 'https://digitechfp.com'; // O muestra página de error
         }
     </script>
+
 <style>
   :root{
     --fg:#111;
@@ -20,58 +21,23 @@
     --hr:#e5e5e5;
   }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:16px;line-height:1.5;}
-  .doc{
-    max-width:1000px;
-    margin:0 auto;
-    padding:24px 16px 64px;
-  }
-  header h1{
-    font-size:1.6rem;
-    margin:0 0 4px;
-    font-weight:700;
-  }
-  header .subtitle{
-    color:var(--muted);
-    font-size:0.98rem;
-    margin-bottom:12px;
-  }
+  .doc{max-width:1000px;margin:0 auto;padding:24px 16px 64px;}
+  header h1{font-size:1.6rem;margin:0 0 4px;font-weight:700;}
+  header .subtitle{color:var(--muted);font-size:0.98rem;margin-bottom:12px;}
   hr{border:0;border-top:1px solid var(--hr);margin:16px 0 24px;}
-  h2{
-    font-size:1.15rem;
-    margin:20px 0 8px;
-    border-left:4px solid var(--accent);
-    padding-left:8px;
-  }
-  h3{
-    font-size:1.02rem;
-    margin:16px 0 6px;
-  }
+  h2{font-size:1.15rem;margin:20px 0 8px;border-left:4px solid var(--accent);padding-left:8px;}
+  h3{font-size:1.02rem;margin:16px 0 6px;}
   p{margin:8px 0;}
   ul,ol{margin:8px 0 8px 20px;}
   li{margin:4px 0;}
-  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
   .small{font-size:0.95rem;}
-  table{
-    width:100%;
-    border-collapse:collapse;
-    margin:12px 0;
-    font-size:0.96rem;
-  }
-  th,td{
-    border:1px solid var(--table-border);
-    padding:8px;
-    vertical-align:top;
-  }
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.96rem;}
+  th,td{border:1px solid var(--table-border);padding:8px;vertical-align:top;}
   th{background:#f7f7f7;text-align:left;}
-  .note{
-    background:#f9fbff;border:1px solid #dceaff;border-left:4px solid var(--accent);
-    padding:10px 12px;margin:12px 0;border-radius:4px;
-  }
-  /* Responsive tables */
+  .note{background:#f9fbff;border:1px solid #dceaff;border-left:4px solid var(--accent);padding:10px 12px;margin:12px 0;border-radius:4px;}
   .table-wrap{overflow-x:auto;}
-  /* Print-friendly */
   @media print{
-    .doc{padding:0 0 0 0;}
+    .doc{padding:0;}
     header h1{font-size:18pt;}
     h2{font-size:14pt;}
     h3{font-size:12pt;}
@@ -95,7 +61,7 @@
     <li>Materiales y recursos didácticos</li>
     <li>Contenido
       <ol>
-        <li>Unidades Temáticas</li>
+        <li>Unidades Temáticas (según indice.html)</li>
         <li>Resultados de aprendizaje y criterios de evaluación</li>
       </ol>
     </li>
@@ -124,44 +90,41 @@
   </ol>
 
   <h2>1. Legislación vigente</h2>
-  <p>Esta programación se elabora conforme a la normativa vigente de Formación Profesional del sistema educativo español y su desarrollo en Andalucía:</p>
   <ul>
     <li>Ley Orgánica 3/2022, de 31 de marzo, de ordenación e integración de la Formación Profesional.</li>
     <li>Real Decreto 450/2010, de 16 de abril, por el que se establece el título de Técnico Superior en Desarrollo de Aplicaciones Multiplataforma y se fijan sus enseñanzas mínimas.</li>
-    <li>Andalucía: Orden de 5 de noviembre de 2012 (currículo de DAM) y Decreto 46/2011, de 22 de febrero (ordenación general de la FP inicial), además de las instrucciones vigentes de evaluación de la Dirección General de Formación Profesional.</li>
+    <li>Andalucía: Orden de 5 de noviembre de 2012 (currículo de DAM) y Decreto 46/2011, de 22 de febrero (ordenación general de la FP inicial), además de instrucciones de evaluación vigentes.</li>
   </ul>
-  <p>Los resultados de aprendizaje (RA) y criterios de evaluación (CE) empleados corresponden al módulo 0490: Programación de Servicios y Procesos, conforme a las fuentes oficiales citadas.</p>
+  <p>Los Resultados de Aprendizaje (RA) y Criterios de Evaluación (CE) aplicados son los oficiales del módulo 0490: Programación de Servicios y Procesos.</p>
 
   <h2>2. Contextualización</h2>
-  <p>El módulo de Programación de Servicios y Procesos (0490), impartido en el segundo curso del ciclo DAM, profundiza en la ejecución concurrente y paralela, la gestión de procesos e hilos, la comunicación entre procesos (IPC), el desarrollo e integración de servicios del sistema y la programación de servicios de comunicaciones en red, incorporando aspectos de seguridad, robustez y despliegue.</p>
+  <p>El módulo de 2.º curso aborda la programación concurrente y de servicios, con especial énfasis en procesos e hilos, comunicaciones en red, generación de servicios y técnicas de programación segura. Los contenidos temáticos se ajustan al índice proporcionado en indice.html.</p>
 
   <h2>3. Objetivos específicos del módulo</h2>
   <ul>
-    <li>Comprender los modelos de ejecución concurrente y paralela en sistemas actuales.</li>
-    <li>Desarrollar aplicaciones con procesos e hilos, gestionando su ciclo de vida y sincronización.</li>
-    <li>Seleccionar e implementar mecanismos de IPC y protocolos de intercambio adecuados.</li>
-    <li>Diseñar, desplegar e integrar servicios (daemon/servicio) en el sistema operativo.</li>
-    <li>Garantizar la integridad del acceso concurrente a recursos y datos, evitando condiciones de carrera y bloqueos.</li>
-    <li>Aplicar medidas de seguridad en servicios y comunicaciones.</li>
-    <li>Documentar las soluciones desarrolladas con criterios técnicos y operativos.</li>
+    <li>Comprender la relación entre programas, procesos, hilos y servicios en sistemas modernos.</li>
+    <li>Dominar la concurrencia en Java: creación, sincronización y depuración de hilos.</li>
+    <li>Implementar comunicaciones en red con sockets y clases estándar de Java.</li>
+    <li>Diseñar y generar servicios en red utilizando protocolos de aplicación y APIs de URL/HTTP.</li>
+    <li>Aplicar técnicas de programación segura en comunicaciones, integridad y criptografía en Java.</li>
+    <li>Documentar, probar y evaluar soluciones concurrentes y de red con criterios de calidad.</li>
   </ul>
 
   <h2>4. Competencias profesionales, personales y sociales</h2>
-  <p>Este módulo contribuye al logro de competencias del título, especialmente en la configuración y explotación de sistemas informáticos, la aplicación de técnicas de seguridad en sistemas y servicios, el desarrollo y mantenimiento de aplicaciones multiplataforma con criterios de calidad, la comunicación técnica eficaz y la actualización tecnológica continua.</p>
+  <p>Contribuye a competencias del título relacionadas con desarrollo, integración de servicios, comunicaciones y seguridad; trabajo en equipo, comunicación técnica y aprendizaje autónomo.</p>
 
   <h2>5. Materiales y recursos didácticos</h2>
   <h3>Infraestructura de comunicaciones</h3>
-  <p>Contamos con una infraestructura de red que conecta todos los ordenadores del aula y permite su acceso a Internet. Este entorno facilita la realización de prácticas relacionadas con redes, configuraciones de sistemas y recursos compartidos.</p>
+  <p>Red del aula con acceso a Internet para pruebas de servicios y resolución de nombres.</p>
   <h3>Hardware</h3>
-  <p>El alumnado dispondrá de ordenadores con procesadores Intel i5 o superiores y una memoria RAM mínima de 16 GB por equipo. Todos los ordenadores están interconectados en una red local y dispondrán de salida a Internet. 
-<br>El aula también estará equipada con proyector con mando a distancia, pantalla de proyección, pizarra blanca digital, micrófono y cámara web para facilitar la docencia en casos justificados de imposibilidad de asistencia a clase.
-</p>
+  <p>Equipos con CPU multinúcleo y 16 GB de RAM mínimo.</p>
   <h3>Software</h3>
   <ul>
     <li>Sistemas operativos: Windows 11.</li>
     <li>JDK 21+.</li>
-    <li>IDEs: VS Code. Construcción: Maven/Gradle.</li>
-    <li>Virtualización: WSL.</li>
+    <li>IDE: VS Code. Construcción: Maven/Gradle.</li>
+    <li>Virtualización/entorno: WSL (y/o VM Linux según disponibilidad).</li>
+    <li>Herramientas: cURL, netcat, Postman (opcional), OpenSSL/Keytool, Git.</li>
   </ul>
 
   <h2>6. Contenido</h2>
@@ -169,127 +132,117 @@
 
   <h3>6.1. Unidades Temáticas</h3>
 
-  <h3>UT01. Fundamentos de concurrencia y procesos</h3>
+  <h3>1. PROGRAMACIÓN DE PROCESOS</h3>
   <ul>
-    <li>Procesos e hilos: estados y planificación (visión general).</li>
-    <li>Condiciones de carrera, interbloqueos e inanición.</li>
-    <li>Modelos de memoria, secciones críticas y exclusión mutua.</li>
+    <li>1.1. Programas y procesos</li>
+    <li>1.2. Multitarea</li>
+    <li>1.3. Procesos y sistemas monoprocesadores y multiprocesadores</li>
+    <li>1.4. Ventajas e inconvenientes de la programación concurrente</li>
+    <li>1.5. Kernel y llamadas al sistema</li>
+    <li>1.6. Estados de ejecución de un proceso</li>
+    <li>1.7. Hilos y procesos</li>
+    <li>1.8. Servicios</li>
+    <li>1.9. Concurrencia en Java</li>
   </ul>
 
-  <h3>UT02. Programación de hilos</h3>
+  <h3>2. PROGRAMACIÓN DE HILOS</h3>
   <ul>
-    <li>Creación, ciclo de vida y coordinación de hilos.</li>
-    <li>Sincronización: monitores, locks, semáforos, barreras, colas seguras.</li>
-    <li>Pools de hilos y tareas; problemas clásicos de concurrencia.</li>
+    <li>2.1. Programación de hilos en Java</li>
+    <li>2.2. Creación de hilos en Java</li>
+    <li>2.3. La clase Thread</li>
+    <li>2.4. Sincronización de hilos</li>
+    <li>2.5. Interrupción de hilos</li>
+    <li>2.6. Prioridades</li>
+    <li>2.7. Depuración (debugging) de aplicaciones multihilo</li>
+    <li>2.8. Mecanismos de alto nivel para concurrencia</li>
+    <li>2.9. Uso de concurrencia en juegos y simulaciones gráficas</li>
   </ul>
 
-  <h3>UT03. Programación de procesos e IPC local</h3>
+  <h3>3. PROGRAMACIÓN DE COMUNICACIONES EN RED</h3>
   <ul>
-    <li>Creación de procesos, comunicación y control de retorno.</li>
-    <li>Pipes, colas y memoria compartida (según plataforma/SDK).</li>
-    <li>Serialización e intercambio (JSON y formatos básicos).</li>
+    <li>3.1. Distintos modelos de comunicaciones entre procesos</li>
+    <li>3.2. Modelo de niveles de TCP/IP</li>
+    <li>3.3. Resolución de nombres</li>
+    <li>3.4. Clases de Java para comunicaciones en red</li>
+    <li>3.5. Clases de Java para interfaces de red</li>
+    <li>3.6. Clases de Java para direcciones IP</li>
+    <li>3.7. Resolución de nombres con Java</li>
+    <li>3.8. Clases de Java para sockets de UDP</li>
+    <li>3.9. Clases de Java para sockets de TCP</li>
   </ul>
 
-  <h3>UT04. Servicios del sistema y demonios</h3>
+  <h3>4. GENERACIÓN DE SERVICIOS EN RED</h3>
   <ul>
-    <li>Servicios/daemon: diseño, ciclo de vida, dependencias.</li>
-    <li>Integración en Linux (systemd: unit files, logs) y Windows (servicios).</li>
-    <li>Registro y trazas, configuración y despliegue automatizado.</li>
+    <li>4.1. Servicios en red y protocolos estándares de nivel de aplicación</li>
+    <li>4.2. Clases de Java para comunicaciones en red</li>
+    <li>4.3. El protocolo TELNET</li>
+    <li>4.4. El protocolo SSH</li>
+    <li>4.5. Servicios de transferencia de ficheros</li>
+    <li>4.6. Servicios de correo electrónico</li>
+    <li>4.7. URI y URL</li>
+    <li>4.8. Clases estándares de Java para URL</li>
+    <li>4.9. Clases estándares de Java para conexiones con URL de HTTP</li>
   </ul>
 
-  <h3>UT05. Programación de servicios en red</h3>
+  <h3>5. TÉCNICAS DE PROGRAMACIÓN SEGURA</h3>
   <ul>
-    <li>Sockets TCP/UDP, puertos, modelos de concurrencia en servidores.</li>
-    <li>Protocolos de aplicación sencillos (texto/JSON).</li>
-    <li>Clientes robustos: timeouts, reintentos y gestión de errores.</li>
-  </ul>
-
-  <h3>UT06. Acceso concurrente a datos e integridad</h3>
-  <ul>
-    <li>Regiones críticas en acceso a ficheros y BD.</li>
-    <li>Bloqueos pesimistas/optimistas; transacciones a alto nivel (ACID, introducción).</li>
-    <li>Diseños thread-safe, inmutabilidad, colas y patrones productor/consumidor.</li>
-  </ul>
-
-  <h3>UT07. Seguridad en servicios y comunicaciones</h3>
-  <ul>
-    <li>Autenticación y autorización básicas; cifrado en tránsito.</li>
-    <li>TLS (OpenSSL/Keytool): claves y certificados.</li>
-    <li>Endurecimiento del servicio y del host; registros de auditoría.</li>
-  </ul>
-
-  <h3>UT08. Despliegue, observabilidad y fiabilidad</h3>
-  <ul>
-    <li>Empaquetado y despliegue (scripts, systemd, Docker básico).</li>
-    <li>Configuración externa, variables de entorno.</li>
-    <li>Health checks, métricas e introducción a pruebas de carga.</li>
-    <li>Tolerancia a fallos: timeouts, reintentos, circuit breakers (conceptos).</li>
+    <li>5.1. Seguridad en comunicaciones de datos</li>
+    <li>5.2. Funciones de hash</li>
+    <li>5.3. Integridad en las comunicaciones de datos</li>
+    <li>5.4. Criptografía</li>
+    <li>5.5. Firma digital</li>
+    <li>5.6. Certificados digitales</li>
+    <li>5.7. TLS/SSL</li>
+    <li>5.8. Seguridad en Java</li>
+    <li>5.9. Criptografía con Java</li>
+    <li>5.10. Generación y uso de certificados digitales</li>
+    <li>5.11. Generación y uso de firma digital</li>
+    <li>5.12. Comunicaciones seguras con Java: JSSE</li>
   </ul>
 
   <h3>6.2. Resultados de aprendizaje y criterios de evaluación (oficiales)</h3>
-  <p><strong>RA1.</strong> Reconoce la estructura de programas compuestos por procesos y/o hilos, identificando componentes y comportamiento de la ejecución concurrente.</p>
+  <p><strong>RA1.</strong> Reconoce la estructura de programas con procesos y/o hilos y la ejecución concurrente.</p>
   <ul>
-    <li>Identifica procesos e hilos y sus estados.</li>
-    <li>Describe mecanismos de comunicación y sincronización.</li>
-    <li>Reconoce condiciones de carrera e interbloqueos, proponiendo soluciones.</li>
-    <li>Selecciona modelos de concurrencia adecuados a un problema.</li>
-    <li>Documenta estructuras y flujos de ejecución.</li>
+    <li>Identificación de procesos/hilos y estados.</li>
+    <li>Mecanismos básicos de comunicación y sincronización.</li>
+    <li>Reconocimiento de condiciones de carrera e interbloqueos.</li>
   </ul>
 
-  <p><strong>RA2.</strong> Desarrolla aplicaciones multiproceso y multihilo utilizando las librerías y APIs del entorno de desarrollo.</p>
+  <p><strong>RA2.</strong> Desarrolla aplicaciones multiproceso y multihilo con las APIs del entorno.</p>
   <ul>
-    <li>Crea y gestiona hilos y procesos.</li>
-    <li>Implementa sincronización (monitores, semáforos, etc.).</li>
-    <li>Emplea pools de hilos y tareas concurrentes.</li>
-    <li>Gestiona excepciones y estados en ejecución concurrente.</li>
-    <li>Verifica el comportamiento mediante pruebas.</li>
+    <li>Creación/gestión de hilos y procesos; sincronización; pools.</li>
+    <li>Gestión de errores/estados e instrumentación mínima.</li>
   </ul>
 
-  <p><strong>RA3.</strong> Implementa y utiliza mecanismos de comunicación entre procesos, seleccionando el adecuado en cada caso.</p>
+  <p><strong>RA3.</strong> Implementa mecanismos de comunicación entre procesos (IPC).</p>
   <ul>
-    <li>Utiliza pipes, colas, memoria compartida, ficheros y sockets locales.</li>
-    <li>Diseña protocolos de intercambio de datos sencillos.</li>
-    <li>Garantiza integridad y evita bloqueos.</li>
-    <li>Trata errores y condiciones límite.</li>
-    <li>Documenta el mecanismo empleado.</li>
+    <li>Modelos y clases de red/IPC; protocolos sencillos; manejo de errores.</li>
   </ul>
 
-  <p><strong>RA4.</strong> Desarrolla servicios, integrándolos en el sistema operativo y controlando su ciclo de vida.</p>
+  <p><strong>RA4.</strong> Desarrolla servicios e integración con el sistema operativo.</p>
   <ul>
-    <li>Implementa servicios/demonios e integración (systemd/Windows Service).</li>
-    <li>Define configuración, dependencias, arranque y parada controlados.</li>
-    <li>Registra actividad y errores (logging).</li>
-    <li>Automatiza despliegue y configuración básica.</li>
-    <li>Documenta instalación, operación y mantenimiento.</li>
+    <li>Servicios/demonios, ciclo de vida, configuración y registro.</li>
   </ul>
 
-  <p><strong>RA5.</strong> Desarrolla servicios de comunicaciones en red, aplicando protocolos y asegurando su fiabilidad.</p>
+  <p><strong>RA5.</strong> Desarrolla servicios de comunicaciones en red fiables.</p>
   <ul>
-    <li>Implementa servidores y clientes con sockets TCP/UDP.</li>
-    <li>Gestiona concurrencia en servicios de red.</li>
-    <li>Aplica timeouts, reintentos y control de errores.</li>
-    <li>Verifica funcionamiento con herramientas de red.</li>
-    <li>Documenta interfaz/protocolo del servicio.</li>
+    <li>Sockets TCP/UDP, clientes/servidores, pruebas y diagnósticos.</li>
   </ul>
 
-  <p><strong>RA6.</strong> Asegura servicios y comunicaciones aplicando medidas de protección y control de acceso.</p>
+  <p><strong>RA6.</strong> Asegura servicios y comunicaciones (protección y control de acceso).</p>
   <ul>
-    <li>Emplea cifrado en tránsito (TLS) cuando proceda.</li>
-    <li>Implementa autenticación/autorización básicas.</li>
-    <li>Aplica hardening del servicio y del entorno.</li>
-    <li>Registra eventos relevantes para auditoría.</li>
-    <li>Verifica el cumplimiento de requisitos de seguridad.</li>
+    <li>TLS/SSL, certificados, firma e integridad, seguridad en Java (JSSE).</li>
   </ul>
 
   <h2>7. Temporización</h2>
-  <p>El módulo es de segundo curso, tiene una carga total de 60 horas, con 3 horas semanales, distribuidas en 2 evaluaciones. La secuenciación propuesta equilibra teoría y práctica para asegurar la consecución de los RA.</p>
+  <p>Carga total: 60 horas. Ritmo: 3 horas/semana. Evaluaciones: 2.</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>Evaluación</th>
           <th>Periodo orientativo</th>
-          <th>Unidades</th>
+          <th>Bloques/Unidades (según indice.html)</th>
           <th>Semanas (3 h/sem)</th>
           <th>Horas</th>
         </tr>
@@ -298,33 +251,34 @@
         <tr>
           <td>1.ª</td>
           <td>Septiembre – Diciembre</td>
-          <td>UT01, UT02, UT03, y UT04</td>
-          <td>≈ 12 semanas</td>
+          <td>Bloque 1: Programación de procesos. Bloque 2: Programación de hilos.</td>
+          <td>≈ 12</td>
           <td>36 h</td>
         </tr>
         <tr>
           <td>2.ª</td>
           <td>Enero – Febrero</td>
-          <td>UT05, UT06, UT07 y UT08</td>
-          <td>≈ 8 semanas</td>
+          <td>Bloque 3: Comunicaciones en red. Bloque 4: Generación de servicios en red. Bloque 5: Programación segura.</td>
+          <td>≈ 8</td>
           <td>24 h</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <th colspan="3" style="text-align:right;">Total</th>
-          <th>≈ 20 semanas</th>
+          <th>≈ 20</th>
           <th>60 h</th>
         </tr>
       </tfoot>
     </table>
   </div>
-  <p>Propuesta de reparto fino por unidad:</p>
+
+  <p>Reparto sugerido por bloques/unidades:</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Unidad</th>
+          <th>Bloque / Unidad</th>
           <th>Semanas</th>
           <th>Horas</th>
           <th>RA principales</th>
@@ -332,52 +286,34 @@
       </thead>
       <tbody>
         <tr>
-          <td>UT01. Fundamentos de concurrencia</td>
-          <td>1</td>
+          <td>1. Programación de procesos (1.1–1.9)</td>
           <td>3</td>
+          <td>9</td>
           <td>RA1</td>
         </tr>
         <tr>
-          <td>UT02. Programación de hilos</td>
-          <td>3</td>
-          <td>9</td>
+          <td>2. Programación de hilos (2.1–2.9)</td>
+          <td>5</td>
+          <td>15</td>
           <td>RA2</td>
         </tr>
         <tr>
-          <td>UT03. Procesos e IPC local</td>
+          <td>3. Comunicaciones en red (3.1–3.9)</td>
           <td>3</td>
           <td>9</td>
-          <td>RA2–RA3</td>
+          <td>RA3–RA5</td>
         </tr>
         <tr>
-          <td>UT04. Servicios del sistema</td>
+          <td>4. Generación de servicios en red (4.1–4.9)</td>
           <td>3</td>
           <td>9</td>
-          <td>RA4</td>
+          <td>RA4–RA5</td>
         </tr>
         <tr>
-          <td>UT05. Servicios en red</td>
-          <td>4</td>
-          <td>12</td>
-          <td>RA5</td>
-        </tr>
-        <tr>
-          <td>UT06. Acceso concurrente a datos</td>
-          <td>2</td>
+          <td>5. Técnicas de programación segura (5.1–5.12)</td>
           <td>6</td>
-          <td>RA2–RA5</td>
-        </tr>
-        <tr>
-          <td>UT07. Seguridad</td>
-          <td>2</td>
-          <td>6</td>
+          <td>18</td>
           <td>RA6</td>
-        </tr>
-        <tr>
-          <td>UT08. Despliegue y observabilidad</td>
-          <td>2</td>
-          <td>6</td>
-          <td>RA4–RA5–RA6</td>
         </tr>
       </tbody>
       <tfoot>
@@ -389,10 +325,8 @@
       </tfoot>
     </table>
   </div>
-  <p>Las semanas restantes hasta completar el periodo se reservan para evaluación, defensa de prácticas, refuerzo y recuperación continua.</p>
 
   <h2>8. Calendario de evaluaciones</h2>
-  <p>Al tratarse de un módulo de 2.º curso con 2 evaluaciones, se propone el siguiente calendario orientativo (adaptable a las fechas oficiales del centro):</p>
   <div class="table-wrap">
     <table>
       <thead>
@@ -408,13 +342,13 @@
           <td>1.ª Evaluación</td>
           <td>9 – 12 diciembre 2025</td>
           <td>17 diciembre 2025</td>
-          <td>UT01–UT04 (RA1–RA4): concurrencia básica, hilos, procesos/IPC y servicios del sistema.</td>
+          <td>Bloques 1 y 2 (1.1–2.9): procesos, concurrencia en Java, hilos y sincronización.</td>
         </tr>
         <tr>
           <td>2.ª Evaluación (Final ordinaria)</td>
           <td>2 – 6 marzo 2026</td>
           <td>11 marzo 2026</td>
-          <td>UT05–UT08 y visión global (RA5–RA6): servicios de red, integridad concurrente, seguridad, despliegue/observabilidad.</td>
+          <td>Bloques 3, 4 y 5 (3.1–5.12): sockets y red, servicios en red, seguridad (TLS/JSSE, criptografía, certificados).</td>
         </tr>
         <tr>
           <td>Extraordinaria</td>
@@ -431,7 +365,7 @@
     <table>
       <thead>
         <tr>
-          <th>Unidad Temática</th>
+          <th>Bloque / Unidad (indice.html)</th>
           <th>RA asociado(s)</th>
           <th>Criterios de evaluación (síntesis)</th>
           <th>Actividades propuestas</th>
@@ -439,52 +373,34 @@
       </thead>
       <tbody>
         <tr>
-          <td>UT01. Fundamentos de concurrencia</td>
+          <td>1. Programación de procesos (1.1–1.9)</td>
           <td>RA1</td>
-          <td>Identificación de procesos/hilos; detección de carrera y deadlock; selección de modelos.</td>
-          <td>Diagramas de estados; análisis de condiciones de carrera; informe técnico.</td>
+          <td>Identificar procesos/hilos/servicios; estados; ventajas y riesgos de concurrencia; llamadas al sistema.</td>
+          <td>Mapa de estados; ejercicios de planificación; ensayo comparativo mono/multiprocesador.</td>
         </tr>
         <tr>
-          <td>UT02. Programación de hilos</td>
+          <td>2. Programación de hilos (2.1–2.9)</td>
           <td>RA2</td>
-          <td>Creación/gestión de hilos; sincronización; pools y pruebas.</td>
-          <td>Productor–consumidor; lectores–escritores; filósofos comensales.</td>
+          <td>Creación con Thread/Runnable; sincronización; interrupciones; prioridades; concurrencia de alto nivel.</td>
+          <td>Productor–consumidor; lectores–escritores; debugging multihilo en IDE.</td>
         </tr>
         <tr>
-          <td>UT03. Procesos e IPC local</td>
-          <td>RA2–RA3</td>
-          <td>Creación de procesos; pipes/colas/memoria compartida; protocolos simples.</td>
-          <td>Launcher con ProcessBuilder; pipeline con pipes; intercambio JSON.</td>
+          <td>3. Comunicaciones en red (3.1–3.9)</td>
+          <td>RA3–RA5</td>
+          <td>Modelo TCP/IP; resolución de nombres; sockets UDP/TCP; clases de red en Java; pruebas de conectividad.</td>
+          <td>Cliente/servidor UDP/TCP; utilidades con cURL/netcat; resolución DNS en Java.</td>
         </tr>
         <tr>
-          <td>UT04. Servicios del sistema</td>
-          <td>RA4</td>
-          <td>Implementación e integración (systemd/Windows); logging; despliegue.</td>
-          <td>Servicio con unit file (systemd), logs con journalctl; script de instalación.</td>
-        </tr>
+          <td>4. Generación de servicios en red (4.1–4.9)</td>
+          <td>RA4–RA5</td>
+          <td>Protocolos de aplicación (TELNET, SSH, FTP/SMTP/IMAP); URI/URL; HTTP con clases estándar.</td>
+          <td>Echo/TELNET server; cliente HTTP con HttpURLConnection; script de servicio.</td>
+      </tr>
         <tr>
-          <td>UT05. Servicios en red</td>
-          <td>RA5</td>
-          <td>Servidor/cliente TCP-UDP; concurrencia; fiabilidad y pruebas.</td>
-          <td>Echo server concurrente; protocolo JSON; pruebas con cURL/netcat.</td>
-        </tr>
-        <tr>
-          <td>UT06. Acceso concurrente a datos</td>
-          <td>RA2–RA5</td>
-          <td>Integridad en archivos/BD; bloqueos; diseños thread-safe.</td>
-          <td>Bloqueos de fichero; colas thread-safe; benchmark de contención.</td>
-        </tr>
-        <tr>
-          <td>UT07. Seguridad</td>
+          <td>5. Técnicas de programación segura (5.1–5.12)</td>
           <td>RA6</td>
-          <td>TLS; autenticación/autorización; hardening; auditoría.</td>
-          <td>Certificados con OpenSSL/Keytool; TLS en servicio; registro de auditoría.</td>
-        </tr>
-        <tr>
-          <td>UT08. Despliegue y observabilidad</td>
-          <td>RA4–RA5–RA6</td>
-          <td>Empaquetado; configuración; health/métricas; tolerancia a fallos.</td>
-          <td>Despliegue con systemd/Docker; healthcheck; pruebas de carga básicas.</td>
+          <td>Hash, integridad, cifrado, firma, certificados, TLS/SSL, JSSE; seguridad en Java.</td>
+          <td>TLS en cliente/servidor Java (JSSE); generación de claves/cert con Keytool/OpenSSL; firma/verificación.</td>
         </tr>
       </tbody>
     </table>
@@ -493,49 +409,43 @@
   <h2>10. Procedimiento de evaluación</h2>
   <ul>
     <li>30%: Tareas y actividades (prácticas, miniproyectos), entregadas en el campus virtual (única vía de registro).</li>
-    <li>10%: Asistencia y actitud/participación, controladas mediante el campus virtual.</li>
+    <li>10%: Asistencia y actitud/participación.</li>
     <li>60%: Pruebas teórico-prácticas presenciales.</li>
   </ul>
-  <p>Se emplearán rúbricas por RA/CE, repositorios Git con evidencias y defensa breve de prácticas.</p>
+  <p>Rúbricas por RA/CE, repositorios Git con evidencias y defensa breve de prácticas.</p>
 
   <h3>10.1. Criterios de calificación</h3>
   <ul>
-    <li>Evaluación continua, formativa e integradora, referida a RA y CE (0–10 sin decimales en acta final).</li>
-    <li>Las tareas se valoran por funcionalidad, corrección concurrente, calidad de código, pruebas y documentación.</li>
-    <li>Entregas fuera de plazo pueden ser penalizadas salvo causa justificada.</li>
-    <li>La calificación final se determina en la evaluación ordinaria global (no es la media aritmética de trimestres).</li>
+    <li>Evaluación continua, formativa e integradora, referida a RA/CE (0–10 sin decimales en acta final).</li>
+    <li>Se valora funcionalidad, corrección concurrente, calidad de código, pruebas, documentación.</li>
+    <li>Entregas fuera de plazo: posible penalización salvo causa justificada.</li>
+    <li>La nota final se determina en la evaluación ordinaria global (no media aritmética de periodos).</li>
   </ul>
 
   <h3>10.2. Proceso de recuperación</h3>
   <ul>
-    <li>Refuerzo continuo con tareas específicas por criterio no superado en el campus virtual.</li>
-    <li>Pruebas de recuperación en periodo ordinario por RA o conjunto de CE.</li>
-    <li>La superación posterior de un CE lo considera recuperado.</li>
-    <li>Extraordinaria de junio: permite acreditar RA mínimos; nota máxima 5.</li>
+    <li>Refuerzo continuo mediante tareas específicas por criterio no superado.</li>
+    <li>Pruebas de recuperación por RA/CE en periodo ordinario.</li>
+    <li>La evidencia posterior de superación de un CE se considera recuperación.</li>
+    <li>Extraordinaria de junio: acredita RA mínimos (nota máxima 5).</li>
   </ul>
 
   <h2>11. Metodología didáctica</h2>
-  <p>Enfoque activo, práctico y competencial: presentación progresiva de contenidos, prácticas guiadas en clase, proyectos breves iterativos, y uso de máquinas virtuales y Linux para servicios del sistema. Control de versiones y revisión por pares. Pruebas y mediciones para evidenciar mejoras de concurrencia y robustez.</p>
+  <p>Metodología activa y competencial: prácticas guiadas, proyectos breves, uso de Java y sus APIs estándar para concurrencia y red, y actividades de seguridad con JSSE. Evaluación continua con feedback y revisión por pares.</p>
 
   <h3>11.1. Integración de la IA en la metodología didáctica</h3>
-  <p>La IA se utilizará como apoyo para búsqueda de patrones de concurrencia, generación de casos de prueba y análisis de trazas, con uso crítico y verificación manual. No se permite suplantación de autoría; el alumnado debe comprender y defender cada entrega. Se fomentará el contraste con documentación oficial (APIs, manuales del SO).</p>
+  <p>Uso de IA para apoyo en búsqueda de patrones de concurrencia, generación de casos de prueba y explicación de trazas, con verificación manual y respeto a la autoría.</p>
 
   <h2>12. Atención a la diversidad</h2>
-
   <h3>12.1. Alumnado con ritmo de aprendizaje más lento</h3>
-  <p>Guías paso a paso, plantillas de código seguro, acompañamiento en prácticas y tiempos adicionales.</p>
-
+  <p>Guías paso a paso, prácticas escalonadas y tiempos adicionales.</p>
   <h3>12.2. Alumnado con altas capacidades</h3>
-  <p>Retos de alto rendimiento, asincronía no bloqueante y pruebas de carga/observabilidad; roles de liderazgo en trabajos cooperativos.</p>
-
+  <p>Retos avanzados (asincronía, NIO, pruebas de carga, hardening) y liderazgo técnico.</p>
   <h3>12.3. Alumnado extranjero con dificultades en el idioma</h3>
-  <p>Glosarios de términos técnicos, materiales visuales y ejemplos autocontenidos; apoyo entre iguales.</p>
+  <p>Glosarios y ejemplos autocontenidos; apoyo entre iguales.</p>
 
   <h2>13. Consideraciones finales</h2>
   <p>La programación se alinea con los RA y CE oficiales del módulo 0490 y la normativa vigente, priorizando la práctica guiada y la verificación en entornos realistas. El objetivo es capacitar al alumnado para diseñar y desplegar servicios concurrentes, seguros y observables en escenarios profesionales.</p>
-
-
-
 </div>
 </body>
-</html>
+</html>    
