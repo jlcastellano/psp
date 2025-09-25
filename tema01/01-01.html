@@ -4,65 +4,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programación de Servicios y Procesos</title>
-    <script>
-        // Redirecciona si no está en un iframe
-//        if (window.self === window.top) {
-//            window.location.href = 'https://digitechfp.com'; // O muestra página de error
-//        }
-    </script>
-    <!-- CSS -->
+    <title>Introducción | UT01 - Servicios de Red</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
-
-    <!-- JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="js/config.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
 </head>
 
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">1.- Programación de Procesos</div>
-            <div class="header-controls">
-                <!-- Botón para desktop -->
-                <button class="menu-toggle" onclick="toggleSidebar()" title="Toggle menu">☰</button>
-                <!-- Botón para móvil (se oculta automáticamente) -->
-                <button class="nav-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
-            </div>
+            <div class="logo">Servicios de Red</div>
+
         </div>
     </header>
 
-    <!-- Contenedor principal -->
     <div class="container">
-        <!-- Sidebar de navegación -->
-        <nav class="sidebar" id="sidebar">
-            <div id="navigation-content"></div>
-        </nav>
 
-        <!-- Contenido principal -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <main class="main-content">
             <div class="content-header">
-                <h1 class="content-title" id="page-title">1.- Programación de Procesos</h1>
-                <p class="content-subtitle" id="page-subtitle">Programas y procesos</p>
+                <h1 class="content-title" id="page-title">Introducción a los Servicios de Red</h1>
+                <p class="content-subtitle" id="page-subtitle">DNS y LDAP: Fundamentos esenciales</p>
             </div>
 
             <div id="lesson-content">
-                <!-- AQUÍ VA EL CONTENIDO ESPECÍFICO DE CADA PÁGINA -->
-                <!-- Reemplaza este comentario con el contenido de la lección -->
+                <section class="lesson-section">
+                    <h2 class="section-title">1.1. Introducción</h2>
+
+                    <div class="text-content">
+                        <p>Una aplicación web necesita de servicios de red para poder funcionar de forma correcta y
+                            coherente. Estos servicios son el servicio DNS y el servicio de directorio LDAP.</p>
+                    </div>
+
+                    <div class="info-box note">
+                        <div class="info-box-title">Servicios Fundamentales</div>
+                        <p>DNS y LDAP son servicios críticos que permiten el funcionamiento correcto de las aplicaciones
+                            web en cualquier infraestructura de red.</p>
+                    </div>
+
+                    <div class="text-content">
+                        <h3>Servicio DNS</h3>
+                        <p>En el caso del servicio DNS, es uno de los servicios más críticos de cualquier dispositivo
+                            que debe conectarse a Internet. Está divido en dos zonas, directa e inversa, que definen
+                            distintos tipos de registros para que el servicio DNS permita resolvers. Existen distintos
+                            tipos de servidores DNS en función de nuestras necesidades.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Zonas DNS principales</span>
+                            <span class="language-badge">Conceptos</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>• Zona directa: Traduce nombres a direcciones IP
+• Zona inversa: Traduce direcciones IP a nombres
+
+Tipos de servidores DNS:
+- Master (principal)
+- Slave (secundario)
+- Caché</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="text-content">
+                        <h3>Servicio LDAP</h3>
+                        <p>Con relación al servicio de directorio LDAP, es un software que permite la validación de
+                            usuarios de forma centralizada y permite controlar el acceso a cualquier aplicación que esté
+                            instalada en el sistema operativo. Tiene una estructura jerárquica y centralizada, a partir
+                            de una ruta de nombres se puede llegar al recurso solicitado por un cliente determinado.</p>
+                    </div>
+
+                    <div class="info-box tip">
+                        <div class="info-box-title">Estructura LDAP</div>
+                        <p>LDAP utiliza una estructura jerárquica similar a un árbol, donde cada nodo representa un
+                            objeto o recurso en el directorio.</p>
+                    </div>
+                </section>
             </div>
-            <!-- Navegación entre páginas -->
-            <div class="page-navigation">
-                <a href="#" class="nav-button">← Anterior</a>
-                <a href="#" class="nav-button">Siguiente →</a>
-            </div>
+
+
         </main>
     </div>
-
     <!-- Scripts -->
-    <script src="js/navigation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="js/main.js"></script>
+
 </body>
 
 </html>

@@ -449,3 +449,193 @@ body {
         display: flex;
     }
 }
+
+/* Estilos para tablas */
+table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--background-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-gray);
+}
+
+/* Encabezados de tabla */
+table th {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: white;
+    padding: 1.2rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+/* Celdas de tabla */
+table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-gray);
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    vertical-align: top;
+}
+
+/* Primera columna con énfasis */
+table td:first-child {
+    font-weight: 600;
+    color: var(--primary-purple);
+    background-color: rgba(124, 58, 237, 0.03);
+    min-width: 150px;
+}
+
+/* Última columna (sintaxis) con estilo de código */
+table td:last-child {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85rem;
+    background-color: rgba(30, 41, 59, 0.03);
+    color: var(--text-dark);
+    word-break: break-word;
+}
+
+/* Filas alternadas */
+table tr:nth-child(even) td {
+    background-color: rgba(37, 99, 235, 0.02);
+}
+
+table tr:nth-child(even) td:first-child {
+    background-color: rgba(124, 58, 237, 0.05);
+}
+
+table tr:nth-child(even) td:last-child {
+    background-color: rgba(30, 41, 59, 0.05);
+}
+
+/* Última fila sin borde inferior */
+table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Efecto hover en filas */
+table tbody tr {
+    transition: all 0.3s ease;
+}
+
+table tbody tr:hover {
+    background-color: var(--light-blue);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+table tbody tr:hover td {
+    background-color: transparent;
+}
+
+table tbody tr:hover td:first-child {
+    background-color: rgba(124, 58, 237, 0.08);
+}
+
+table tbody tr:hover td:last-child {
+    background-color: rgba(30, 41, 59, 0.08);
+}
+
+/* Responsive para tablas */
+@media (max-width: 768px) {
+    /* Hacer la tabla scrolleable horizontalmente en móvil */
+    .table-container {
+        overflow-x: auto;
+        margin: 1.5rem -1rem;
+        padding: 0 1rem;
+    }
+    
+    table {
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+    
+    table th {
+        padding: 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    table td {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+    }
+    
+    table td:last-child {
+        font-size: 0.75rem;
+    }
+}
+
+/* Contenedor opcional para tablas con scroll */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 2rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.table-responsive table {
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* Indicador de scroll para móvil */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: var(--light-blue);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--secondary-blue);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-blue);
+}
+
+/* Estilo especial para tablas de comparación */
+.comparison-table th:first-child {
+    background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+}
+
+.comparison-table td:first-child {
+    background-color: rgba(139, 92, 246, 0.05);
+    color: var(--primary-purple);
+    font-weight: 700;
+}
+
+/* Badge para tipos de registros DNS */
+.dns-record-type {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Estilos para imágenes */
+.responsive-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-gray);
+}
