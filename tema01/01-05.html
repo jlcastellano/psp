@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.5. Kernel (o núcleo) del sistema operativo y llamadas al sistema</h1>
+            </div>
+
+            <div class="lesson-section">
+                
+                <p class="text-content">La parte central del sistema operativo se denomina <em>kernel</em> o núcleo. Es una parte pequeña y muy optimizada del sistema operativo que da respuesta a multitud de eventos mediante un mecanismo de gestión de interrupciones. Las interrupciones pueden producirse por diversas causas:</p>
+
+                <ul class="text-content">
+                    <li><strong>Eventos generados por el hardware.</strong> Por ejemplo: movimientos del ratón o pulsaciones del teclado, o el final de una operación de lectura o escritura en disco.</li>
+                    <li><strong>Llamadas al sistema.</strong> El kernel proporciona acceso para las aplicaciones a determinados servicios o funcionalidades del sistema operativo mediante llamadas al sistema.</li>
+                    <li><strong>Interrupciones periódicas</strong> que invocan al planificador de procesos a corto plazo del sistema operativo (<em>CPU scheduler</em>). Este decide si se sigue ejecutando el proceso actual o se hace un cambio de contexto para pasar a ejecutar otro proceso.</li>
+                </ul>
+
+                <p class="text-content">Cuando sucede una interrupción, el procesador deja de ejecutar el proceso en curso y pasa a ejecutar una rutina de tratamiento de interrupción. Cuando esta finaliza, se reanuda la ejecución en el mismo lugar en que estaba antes de la interrupción.</p>
+
+                <p class="text-content">El procesador tiene dos modos de funcionamiento: modo kernel, o supervisor, y modo usuario. Las rutinas de tratamiento de interrupciones se ejecutan en modo kernel.</p>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.7. Hilos y procesos</h1>
+            </div>
+
+            <div class="lesson-section">
+
+                <p class="text-content">Hasta ahora se ha venido hablando de <em>procesos</em>. Para crear un proceso es
+                    necesario reservar espacio en la memoria para él. Esto consume una cantidad considerable de tiempo y
+                    recursos del sistema. La comunicación entre procesos requiere de ciertos mecanismos especiales que
+                    se verán más adelante.</p>
+
+                <p class="text-content">Los <em>hilos</em> o <em>hebras</em> (<em>threads</em> en inglés) se llaman a
+                    veces <em>procesos ligeros</em> (<em>lightweight processes</em>). Un proceso en ejecución tiene
+                    inicialmente un hilo, pero se pueden crear más de manera sencilla y rápida. La ejecución de un
+                    proceso termina cuando finaliza la ejecución de todos sus hilos. Y a la inversa, si se termina la
+                    ejecución de un proceso, se acaba también la ejecución de todos sus hilos.</p>
+
+                <p class="text-content">La creación de un nuevo hilo para un proceso ya existente no requiere reservar e
+                    inicializar espacio en la memoria, porque este es compartido por todos los hilos de un mismo
+                    proceso. Esto hace muy sencilla la comunicación entre ellos. Si un hilo de un proceso modifica un
+                    objeto situado en la memoria, los demás hilos del mismo proceso pueden ver los cambios realizados.
+                </p>
+
+                <p class="text-content">Se necesitan mecanismos de sincronización entre hilos para evitar problemas que
+                    pueden darse si los distintos hilos modifican sin control objetos situados en la memoria compartida.
+                </p>
+
+                <p class="text-content">El planificador a corto plazo, o <em>CPU scheduler</em>, gestiona de manera
+                    independiente los distintos hilos de un mismo proceso.</p>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

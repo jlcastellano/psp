@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.3. Procesos y sistemas monoprocesadores y multiprocesadores</h1>
+            </div>
+
+            <div class="lesson-section">
+
+                <p class="text-content">Un <em>sistema monoprocesador</em> tiene un único procesador, y un <em>sistema
+                        multiprocesador</em>, varios. En ambos tipos de sistemas, se pueden ejecutar varios procesos de
+                    manera simultánea. En este apartado se explican las técnicas utilizadas para ejecutar varios
+                    procesos concurrentes en ambos tipos de sistemas.</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">Ten en cuenta</div>
+                    <ul>
+                        <li>Se denominan <em>procesos concurrentes</em> a los que se ejecutan simultáneamente durante un
+                            intervalo dado de tiempo, ya sea de forma real (en sistemas multiprocesadores) o entrelazada
+                            (en sistemas monoprocesadores, o en un mismo procesador de un sistema multiprocesador).</li>
+                        <li>Se habla de <em>programación concurrente</em> cuando se ejecutan varios procesos
+                            concurrentes en un sistema, y también para hacer referencia a las técnicas que permiten
+                            desarrollar los programas que utilizan varios procesos concurrentes que funcionan de forma
+                            conjunta y coordinada, para realizar una tarea.</li>
+                    </ul>
+                </div>
+
+                <p class="text-content">Si un programa lanza distintos procesos concurrentes para realizar una tarea,
+                    estos deben comunicarse y sincronizarse entre sí. Las técnicas de comunicación y sincronización
+                    serán distintas, normalmente, según se trate de sistemas monoprocesadores o multiprocesadores, y
+                    según el tipo de sistema multiprocesador.</p>
+
+                <h3 class="section-title">1.3.1. Sistemas monoprocesadores</h3>
+
+                <p class="text-content">La ejecución concurrente de varios procesos en un sistema monoprocesador se
+                    conoce con el nombre de <em>multiprogramación</em>. Ya se ha visto que la técnica del cambio de
+                    contexto permite una multitarea efectiva y un mejor aprovechamiento del procesador, ya que se asigna
+                    a otro proceso durante el tiempo en que un proceso está inactivo, o a la espera de que se termine de
+                    realizar una operación de E/S.</p>
+
+                <h3 class="section-title">1.3.2. Sistemas multiprocesadores</h3>
+
+                <p class="text-content">Los sistemas multiprocesadores disponen de más de un procesador. Se pueden
+                    clasificar, dependiendo de su arquitectura, en sistemas multiprocesadores fuertemente acoplados y
+                    sistemas multiprocesadores débilmente acoplados.</p>
+
+                <h4 class="section-title">A) Sistemas fuertemente acoplados</h4>
+
+                <p class="text-content">En estos sistemas existe una memoria compartida para todos los procesadores, a
+                    la que todos ellos acceden a través de un bus de conexión. También acceden al sistema de E/S a
+                    través del mismo bus.</p>
+                <img src="image01-05.png" alt="" class="responsive-image">
+                <p class="text-content">Se pueden distinguir dos tipos de sistemas multiprocesadores fuertemente
+                    acoplados:</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">1. Sistemas multiprocesadores simétricos (SMP)</div>
+                    <p>En los que los procesadores del sistema funcionan todos de igual manera, y no hay ninguno
+                        diferenciado del resto.</p>
+                </div>
+
+                <div class="info-box note">
+                    <div class="info-box-title">2. Sistemas multiprocesadores asimétricos</div>
+                    <p>En los que uno de los procesadores del sistema, el maestro o <em>master</em>, controla al resto
+                        de los procesadores (<em>slave</em>). Este tipo de sistemas también se denominan
+                        <em>master-slave</em>.
+                    </p>
+                </div>
+
+                <h4 class="section-title">B) Sistemas débilmente acoplados</h4>
+
+                <p class="text-content">En estos sistemas no hay memoria compartida, sino que cada procesador tiene su
+                    propia memoria y su propio sistema de E/S. Existe una red de comunicaciones entre los procesadores.
+                </p>
+                <img src="image01-06.png" alt="" class="responsive-image">
+                <p class="text-content">Una posibilidad es que los procesadores estén físicamente cercanos unos a otros
+                    y comunicados mediante una red a medida, de alta velocidad y con una estructura regular. Este tipo
+                    de sistemas se utiliza en supercomputación y para aplicaciones de cálculo.</p>
+
+                <p class="text-content">Una alternativa a este tipo de sistemas son los <em>clusters</em>. Tienen
+                    también una estructura regular, pero, en lugar de procesadores de alto rendimiento interconectados
+                    mediante una red especializada y diseñada a medida, están formados por ordenadores convencionales
+                    conectados mediante una red de área local convencional.</p>
+
+                <p class="text-content">Otra posibilidad, muy común hoy en día, es que los procesadores estén en
+                    ordenadores independientes comunicados mediante una red de área local (LAN) o incluso de área amplia
+                    (WAN) o a través de internet. Estos son los <em>sistemas distribuidos</em>. Se caracterizan por la
+                    heterogeneidad del hardware sobre el que están construidos y por la relativa independencia entre los
+                    sistemas que los constituyen.</p>
+                <img src="image01-07.png" alt="" class="responsive-image">
+                <p class="text-content">Las principales ventajas de los sistemas distribuidos es que son altamente
+                    escalables y configurables. Sus principales inconvenientes es que son sistemas heterogéneos y
+                    complejos de manejar. La sincronización entre procesos puede ser complicada también. La comunicación
+                    entre procesos se realiza a través de la red, que tiene una velocidad limitada, por lo que puede
+                    convertirse en un cuello de botella.</p>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

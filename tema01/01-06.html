@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.6. Estados de ejecución de un proceso</h1>
+            </div>
+
+            <div class="lesson-section">
+
+                <p class="text-content">Desde que se crea inicialmente un proceso, puede pasar por diversos estados y
+                    cambiar de uno a otro. El sistema operativo gestiona los procesos y realiza los cambios de estado,
+                    teniendo en cuenta distintos eventos que pueden suceder durante el ciclo de vida del proceso, que se
+                    muestra en la figura 1.11.</p>
+                <img src="image01-08.png" alt="" class="responsive-image">
+                <p class="text-content">Los cambios de estado de los procesos están controlados por el sistema
+                    operativo, con el objetivo de conseguir, por un lado, un máximo aprovechamiento de los recursos del
+                    sistema, y en particular del procesador o procesadores; y, por otro lado, una ejecución lo más
+                    eficiente posible de todos los procesos. Esto se consigue con una planificación a varios niveles:
+                </p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">1. Planificador a largo plazo o de trabajos (job scheduler)</div>
+                    <p>Un proceso debe estar en la memoria principal para poderse ejecutar.</p>
+                </div>
+
+                <p class="text-content">El planificador a largo plazo decide qué procesos son admitidos para su
+                    ejecución. Estos se cargan en la memoria principal y pasan a estado listo (<em>ready</em>). En
+                    sistemas operativos interactivos, como los que manejan la mayoría de los usuarios en sistemas de
+                    ordenadores, no hay realmente planificación a largo plazo, sino que son los propios usuarios quienes
+                    lanzan las aplicaciones, y estas se cargan inmediatamente en la memoria, y pasan a estado listo. Es
+                    importante, en cambio, en sistemas donde hay muchos procesos no interactivos y es el propio sistema
+                    operativo el que gestiona su lanzamiento.</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">2. Planificador a corto plazo o de procesador (CPU scheduler)</div>
+                    <p>Se realiza para procesos cargados en la memoria principal.</p>
+                </div>
+
+                <p class="text-content">Su objetivo es repartir el tiempo de procesador entre todos los procesos, de
+                    manera que se consiga un máximo aprovechamiento del procesador, y que los procesos se ejecuten de la
+                    manera más eficiente posible. Un proceso en estado listo puede pasar a estado en ejecución y empezar
+                    a ejecutarse en el procesador. Un proceso en este estado puede volver a estado listo para permitir
+                    que otro proceso se ejecute. Cuando un proceso en ejecución realiza una operación de E/S, pasa a
+                    estado bloqueado, y se pasa a ejecutar un nuevo proceso que estaba en estado de lista o de listo a
+                    en ejecución. Cuando la operación de E/S haya concluido, el proceso volverá a estado listo. El
+                    planificador a corto plazo funciona basándose en interrupciones periódicas que hacen que el
+                    procesador pase inmediatamente a ejecutar una rutina de gestión de interrupción, que es parte del
+                    núcleo o kernel del sistema operativo. Esta rutina realiza la planificación a corto plazo, y decide
+                    si hay que continuar con la ejecución del proceso actual, o si hay que pasar a ejecutar un nuevo
+                    proceso y, en su caso, cuál.</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">3. Planificador a medio plazo</div>
+                    <p>Gestiona el paso de procesos de la memoria principal a la secundaria (suspensión) y viceversa
+                        (reaudación).</p>
+                </div>
+
+                <p class="text-content">Los sistemas operativos actuales funcionan, en general, con memoria virtual.
+                    Esta es una técnica que utiliza un espacio de direcciones virtual, mayor que el disponible en la
+                    memoria física, y utiliza para ello un medio de almacenamiento secundario. El contenido de cualquier
+                    dirección de la memoria virtual puede estar en la memoria física (memoria principal) o en
+                    almacenamiento secundario (memoria secundaria). Pero el microprocesador solo puede acceder
+                    directamente a la memoria principal. Cuando un proceso necesita más memoria de la que hay disponible
+                    en ella, se consigue pasando parte de sus contenidos a la memoria secundaria. Cuando se necesitan
+                    contenidos que están en la memoria secundaria, deben pasarse antes a la memoria principal. Si no hay
+                    suficiente espacio en ella, antes hay que pasar algunos de sus contenidos a la memoria secundaria.
+                    Se produce así un intercambio o <em>swap</em> entre las memorias principal y secundaria. La memoria
+                    virtual funciona bien si los intercambios solo se producen ocasionalmente, porque las operaciones de
+                    lectura y escritura en almacenamiento secundario son muy lentas. Si son demasiado frecuentes, se
+                    produce un trasiego constante entre las memorias principal y secundaria (<em>trashing</em>), y el
+                    rendimiento del sistema se degrada enormemente.</p>
+
+                <p class="text-content">Los procesos en la memoria principal que no se están ejecutando pueden
+                    suspenderse, y pasar a la memoria secundaria en los estados <em>suspendido listo</em> y
+                    <em>suspendido bloqueado</em>. Desde el estado suspendido bloqueado puede pasar al estado suspendido
+                    listo si se completa la operación de E/S que provocó su paso a estado bloqueado. También pueden
+                    reanudarse los procesos en estos estados para pasar a la memoria principal.
+                </p>
+
+                <p class="text-content">Para la gestión de los procesos, el sistema operativo utiliza un bloque de
+                    control de procesos (PCB) para cada proceso. El sistema operativo mantiene colas de procesos para
+                    cada uno de los estados. También mantiene colas para cada dispositivo de E/S, con información de los
+                    procesos que tienen operaciones pendientes en dicho dispositivo. La utilización de estas colas
+                    permite realizar, de manera muy eficiente, la planificación de procesos.</p>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.4. Ventajas e inconvenientes de la programación concurrente</h1>
+            </div>
+
+            <div class="lesson-section">
+
+                <p class="text-content">La programación concurrente permite incrementar el rendimiento del sistema,
+                    porque los procesadores pasan a ejecutar otros procesos cuando el proceso que ejecutan está
+                    desocupado, o a la espera de que termine una operación de E/S. También hace posible un menor tiempo
+                    de respuesta, porque el tiempo de procesado se distribuye entre todos los procesos en ejecución. La
+                    mejora en el rendimiento dependerá, de todas formas, del tipo de aplicaciones.</p>
+
+                <p class="text-content">Lo ideal es que una aplicación se pueda descomponer en procesos independientes
+                    que se ejecuten en paralelo con un mínimo de interacción y comunicación entre ellos.</p>
+
+                <p class="text-content">Un sistema multiprocesador debe ser flexible para permitir distribuir
+                    dinámicamente la carga de trabajo entre los procesadores disponibles. Y debe ser escalable para
+                    permitir que la potencia de cálculo aumente con la instalación de nuevos procesadores.</p>
+
+                <p class="text-content">Un sistema multiprocesador redundante tiene procesadores suplementarios que
+                    proporcionan alta disponibilidad (bajo tiempo de respuesta ante peticiones de los usuarios) y
+                    tolerancia a fallos, de manera que, si se produce un fallo en un procesador, se deshabilita para
+                    seguir funcionando con el resto.</p>
+
+                <p class="text-content">Los principales inconvenientes de la programación concurrente pueden venir,
+                    sobre todo, de la dificultad de implementar mecanismos adecuados de sincronización y comunicación
+                    entre procesos. Según el caso, es posible que la sobrecarga que suponen anule la mejora en el
+                    rendimiento que proporciona la ejecución concurrente. En sistemas distribuidos, la red podría
+                    convertirse en un cuello de botella si no tiene la suficiente capacidad para el tráfico que genera
+                    el intercambio de mensajes entre procesos.</p>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.8. Servicios</h1>
+            </div>
+
+            <div class="lesson-section">
+
+                <p class="text-content">Los <em>servicios</em> son un tipo particular de procesos que proporcionan
+                    determinados servicios (de ahí su nombre) a otros procesos. Se ejecutan en segundo plano (en
+                    <em>background</em>) y no son directamente utilizados por los usuarios.</p>
+
+                <p class="text-content">Otros procesos, en cambio, se ejecutan en primer plano (en <em>foreground</em>),
+                    y tienen una interfaz de usuario con la que interactúan los usuarios.</p>
+
+                <p class="text-content">Los servicios se ejecutan continuamente, normalmente, son iniciados por el
+                    sistema operativo durante su arranque, y se ejecutan en segundo plano (en <em>background</em>).
+                    Suelen proporcionar información acerca de su ejecución en ficheros de <em>log</em>, en los que van
+                    anotando todos los eventos que se producen durante su ejecución y detalles acerca de las acciones
+                    que realizan.</p>
+
+                <p class="text-content">Los servicios pueden proporcionar servicios a otros procesos en el mismo
+                    ordenador, y también a otros procesos en otros ordenadores. En este caso, suelen comunicarse a
+                    través de una red de comunicaciones, utilizando protocolos de red estándares, como TCP o UDP, de la
+                    familia de protocolos TCP/IP. Este tipo de servicios en red son un componente fundamental de los
+                    sistemas distribuidos. En este contexto, las aplicaciones servidoras, o simplemente los servidores,
+                    prestan servicio a otras aplicaciones, y las aplicaciones clientes, o simplemente los clientes,
+                    utilizan estos servicios. Por supuesto, una aplicación puede proporcionar un servicio a otras
+                    aplicaciones y a la vez utilizar los servicios que proporciona otra aplicación. Es decir, puede
+                    actuar a la vez como cliente y como servidor.</p>
+
+                <p class="text-content">Una técnica frecuentemente utilizada por los servicios para mejorar el tiempo de
+                    respuesta ante peticiones de servicios de otros procesos es crear un nuevo hilo para responder a
+                    cada nueva petición recibida, o bien mantener un <em>pool</em> de hilos, de manera que a cada nueva
+                    petición se le puede asignar inmediatamente un hilo ya disponible en el <em>pool</em>. De esta
+                    forma, el hilo principal queda libre para recibir nuevas peticiones. Un servidor de este tipo es un
+                    <em>servidor multihilo</em>.</p>
+
+                <p class="text-content">Cada sistema operativo tiene sus propios mecanismos para gestionar los
+                    servicios. Normalmente, se puede configurar cada uno para que arranque automáticamente cuando
+                    arranca el sistema. También existen mecanismos generales para arrancar o parar servicios.</p>
+
+                <h3 class="section-title">1.8.1. Servicios en Windows</h3>
+
+                <p class="text-content">En Windows, el administrador de servicios permite arrancar y detener servicios,
+                    así como consultar el estado de ejecución y obtener información adicional acerca de cada uno.
+                    También se puede configurar el modo de arranque para cada servicio: automático (para que arranque
+                    automáticamente cuando arranca el sistema operativo) o manual.</p>
+
+                <h3 class="section-title">1.8.2. Servicios en Linux</h3>
+
+                <p class="text-content">En Linux existen sofisticados sistemas para gestión, control y configuración de
+                    servicios. El antiguo sistema <code>initd</code> de System V está siendo desplazado por el nuevo
+                    <code>systemd</code>. Para <code>systemd</code> se utiliza el comando <code>systemctl</code>.</p>
+
+                <p class="text-content">Con el siguiente comando, se muestra una lista con todos los servicios
+                    existentes en el sistema. Aquellos para los que se muestra <code>enabled</code> en la columna STATE
+                    se arrancan automáticamente cuando arranca el sistema.</p>
+
+                <div class="code-block">
+                    <code>$ systemctl list-unit-files</code>
+                </div>
+
+                <p class="text-content">Con el siguiente comando, se muestran todos los servicios cargados en el
+                    sistema. Que estén cargados no significa que estén en ejecución actualmente. El estado de ejecución
+                    aparece en la columna SUB.</p>
+
+                <div class="code-block">
+                    <code>$ systemctl --type=service</code>
+                </div>
+
+                <p class="text-content">Para cada servicio, se pueden ejecutar comandos del tipo:</p>
+
+                <div class="code-block">
+                    <code>$ systemctl <em>acción servicio</em></code>
+                </div>
+
+                <p class="text-content">Donde <em>servicio</em> es el nombre del servicio, y <em>acción</em>, la acción
+                    que se quiere realizar sobre el servicio. Las acciones disponibles son las que se muestran en el
+                    cuadro 1.1.</p>
+
+                <div class="table-container">
+                    <h4 class="table-title">Cuadro 1.1 - Acciones</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Acción</th>
+                                <th>Función</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>Muestra el estado de ejecución del servicio.</td>
+                            </tr>
+                            <tr>
+                                <td><code>start</code></td>
+                                <td>Arranca el servicio si no está en ejecución.</td>
+                            </tr>
+                            <tr>
+                                <td><code>stop</code></td>
+                                <td>Para el servicio si está en ejecución.</td>
+                            </tr>
+                            <tr>
+                                <td><code>restart</code></td>
+                                <td>Reinicia el servicio. Es decir, lo para si está en ejecución, y luego lo arranca.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>reload</code></td>
+                                <td>Alternativa a <code>restart</code>. Se utiliza para que el servicio tome en
+                                    consideración los cambios realizados en su configuración, pero sin que se reinicie
+                                    el servicio.</td>
+                            </tr>
+                            <tr>
+                                <td><code>enable</code></td>
+                                <td>Establece el arranque automático del servicio cuando arranca el sistema.</td>
+                            </tr>
+                            <tr>
+                                <td><code>disable</code></td>
+                                <td>Establece que el servicio no arranque automáticamente cuando arranca el sistema.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

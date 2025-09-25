@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introducción | UT01 - Servicios de Red</title>
+    <title>Programación de Procesos</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
 </head>
@@ -12,78 +12,81 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">Servicios de Red</div>
+            <div class="logo">Programación de Procesos</div>
 
         </div>
     </header>
 
     <div class="container">
-
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
         <main class="main-content">
             <div class="content-header">
-                <h1 class="content-title" id="page-title">Introducción a los Servicios de Red</h1>
-                <p class="content-subtitle" id="page-subtitle">DNS y LDAP: Fundamentos esenciales</p>
+                <h1 class="content-title">1.1. Programas y procesos</h1>
             </div>
 
-            <div id="lesson-content">
-                <section class="lesson-section">
-                    <h2 class="section-title">1.1. Introducción</h2>
+            <div class="lesson-section">
 
-                    <div class="text-content">
-                        <p>Una aplicación web necesita de servicios de red para poder funcionar de forma correcta y
-                            coherente. Estos servicios son el servicio DNS y el servicio de directorio LDAP.</p>
-                    </div>
+                <p class="text-content">Un <em>programa</em> contiene un conjunto de instrucciones que se pueden
+                    ejecutar directamente en una máquina.
+                    Esta puede ser una máquina física o, en el caso del lenguaje Java, una máquina virtual. Un programa
+                    es un objeto
+                    estático, normalmente almacenado en un fichero binario en un medio de almacenamiento secundario,
+                    como, por
+                    ejemplo, un disco duro.</p>
+                <p class="text-content">Un <em>proceso</em> corresponde a una instancia de un programa en ejecución. Un
+                    proceso es una entidad dinámica.
+                    La ejecución de un programa comienza con la creación y ejecución de un proceso, y un proceso puede
+                    crear nuevos
+                    procesos sobre la marcha.</p>
+                <p class="text-content">Para ejecutar un programa, primero debe cargarse en la memoria. Durante su
+                    ejecución, un programa utiliza
+                    diversos recursos del sistema:</p>
 
-                    <div class="info-box note">
-                        <div class="info-box-title">Servicios Fundamentales</div>
-                        <p>DNS y LDAP son servicios críticos que permiten el funcionamiento correcto de las aplicaciones
-                            web en cualquier infraestructura de red.</p>
-                    </div>
+                <div class="info-box note">
+                    <div class="info-box-title">Memoria principal</div>
+                    <p>Consta de una secuencia de celdas de memoria, todas con la misma
+                        longitud en bits, y cada una identificada por su posición. Antes de comenzar su ejecución, un
+                        programa debe
+                        cargarse en un bloque de la memoria principal, que se asigna al proceso que se crea para
+                        ejecutar el
+                        programa. Este proceso también puede obtener más memoria, dinámicamente, durante su ejecución.
+                    </p>
+                </div>
 
-                    <div class="text-content">
-                        <h3>Servicio DNS</h3>
-                        <p>En el caso del servicio DNS, es uno de los servicios más críticos de cualquier dispositivo
-                            que debe conectarse a Internet. Está divido en dos zonas, directa e inversa, que definen
-                            distintos tipos de registros para que el servicio DNS permita resolvers. Existen distintos
-                            tipos de servidores DNS en función de nuestras necesidades.</p>
-                    </div>
+                <div class="info-box note">
+                    <div class="info-box-title">Procesador o CPU (Central Processing Unit)</div>
+                    <p>Ejecuta el proceso que se crea una vez cargado
+                        en la memoria. El procesador guarda, en un registro especial, el contador de programa (PC o
+                        program
+                        counter), la dirección en la memoria de la instrucción que se está ejecutando. Un bus de datos
+                        no puede
+                        operar directamente con los contenidos de la memoria. Estos deben antes traerse de ella y
+                        cargarse en
+                        registros del procesador. Las operaciones se realizan en una unidad aritmético-lógica o UAL (en
+                        inglés,
+                        arithmetic and logical unit o ALU). Su resultado se obtiene en un registro desde el que se puede
+                        transferir
+                        a una posición de la memoria.</p>
+                </div>
 
-                    <div class="code-container">
-                        <div class="code-header">
-                            <span>Zonas DNS principales</span>
-                            <span class="language-badge">Conceptos</span>
-                        </div>
-                        <div class="code-content">
-                            <button class="copy-button">Copiar</button>
-                            <pre><code>• Zona directa: Traduce nombres a direcciones IP
-• Zona inversa: Traduce direcciones IP a nombres
+                <div class="info-box note">
+                    <div class="info-box-title">Dispositivos de entrada/salida (E/S)</div>
+                    <p>Los procesos comparten los dispositivos de E/S. Debe
+                        guardarse información acerca de a qué procesos se les ha otorgado acceso a un dispositivo de
+                        E/S, y del
+                        estado de las operaciones realizadas sobre él.</p>
+                </div>
 
-Tipos de servidores DNS:
-- Master (principal)
-- Slave (secundario)
-- Caché</code></pre>
-                        </div>
-                    </div>
-
-                    <div class="text-content">
-                        <h3>Servicio LDAP</h3>
-                        <p>Con relación al servicio de directorio LDAP, es un software que permite la validación de
-                            usuarios de forma centralizada y permite controlar el acceso a cualquier aplicación que esté
-                            instalada en el sistema operativo. Tiene una estructura jerárquica y centralizada, a partir
-                            de una ruta de nombres se puede llegar al recurso solicitado por un cliente determinado.</p>
-                    </div>
-
-                    <div class="info-box tip">
-                        <div class="info-box-title">Estructura LDAP</div>
-                        <p>LDAP utiliza una estructura jerárquica similar a un árbol, donde cada nodo representa un
-                            objeto o recurso en el directorio.</p>
-                    </div>
-                </section>
+                <p class="text-content">Toda la información asociada a un proceso se guarda en un <em>bloque de control
+                        de proceso</em> (en inglés, PCB o
+                    <em>process control block</em>). Si el mismo programa se ejecuta varias veces, se creará cada vez un
+                    nuevo
+                    proceso, y cada uno tendrá su propio PCB.
+                </p>
+                <img src="image01-01.png" alt="Estructura de un procesador" class="responsive-image">
+                <p class="text-content">Un proceso puede crear nuevos procesos durante su ejecución, que pueden, a su
+                    vez, crear nuevos procesos. De esta
+                    forma, a partir de un proceso inicial puede crearse una jerarquía de procesos.</p>
             </div>
-
-
         </main>
     </div>
     <!-- Scripts -->
