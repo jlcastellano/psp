@@ -28,7 +28,8 @@
                     de Java se han diseñado para soportar programación concurrente.</p>
 
                 <p class="text-content">La funcionalidad básica para procesos la proporciona la clase
-                    <code>Process</code>.</p>
+                    <code>Process</code>.
+                </p>
 
                 <p class="text-content">La funcionalidad básica para hilos la proporciona la clase <code>Thread</code>.
                     Esta clase implementa la interfaz <code>Runnable</code>.</p>
@@ -54,7 +55,8 @@
                 <p class="text-content">Cada programa de Java tiene asociada una instancia de la clase
                     <code>Runtime</code> que le permite obtener información del entorno de ejecución e interactuar con
                     él. Esta se puede recuperar con el método estático <code>getRuntime()</code>. Las diversas variantes
-                    del método <code>exec()</code> permiten lanzar nuevos procesos.</p>
+                    del método <code>exec()</code> permiten lanzar nuevos procesos.
+                </p>
 
                 <p class="text-content">En el cuadro 1.2 se muestran algunos de los métodos de esta clase.</p>
 
@@ -139,7 +141,8 @@
                                 <td>El primer método establece el directorio de trabajo del proceso, y el segundo método
                                     lo devuelve. Por defecto, el segundo método normalmente devuelve <code>null</code>.
                                     Si es así, se puede obtener el directorio de ejecución del proceso actual con
-                                    <code>System.getProperty("user.dir")</code>.</td>
+                                    <code>System.getProperty("user.dir")</code>.
+                                </td>
                             </tr>
                             <tr>
                                 <td><code>Map&lt;String,String&gt;</code><br>
@@ -202,7 +205,8 @@
                                     ejecución sin errores, mientras que un valor distinto de cero corresponde a un
                                     código de error. Si el proceso es de un programa en Java, es el valor devuelto por
                                     <code>System.exit()</code>, o cero si no se terminó la ejecución con
-                                    <code>System.exit()</code>.</td>
+                                    <code>System.exit()</code>.
+                                </td>
                             </tr>
                             <tr>
                                 <td><code>boolean waitFor(long</code><br>
@@ -212,7 +216,8 @@
                                 <td>Hace que el hilo en ejecución espere hasta que el proceso haya terminado, durante un
                                     tiempo máximo indicado por <code>timeout</code>. Devuelve <code>true</code> si el
                                     proceso ha terminado por sí mismo antes del tiempo máximo indicado, y
-                                    <code>false</code> en caso contrario.</td>
+                                    <code>false</code> en caso contrario.
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -220,7 +225,8 @@
 
                 <p class="text-content">Cualquiera de los múltiples errores que se pueden producir durante la creación y
                     ejecución del proceso hará que se produzca una excepción, en general, de la clase
-                    <code>IOException</code>.</p>
+                    <code>IOException</code>.
+                </p>
 
                 <p class="text-content">El siguiente programa de ejemplo crea un proceso para un comando que se pasa
                     como parámetros de línea de comandos en args. Estos se pasan directamente al creador de
@@ -229,8 +235,52 @@
                     padre. Con <code>waitFor()</code> se espera a que termine la ejecución del proceso hijo y se obtiene
                     el código de retorno. Si, mientras eso sucede, se interrumpe la ejecución del programa, se lanzaría
                     una excepción de tipo <code>InterruptedException</code>, que este programa capturaría, y de la que
-                    informaría.</p>
+                    informaría.
+                </p>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Lanzador de procesos</span>
+                        <span class="language-badge">java</span>
+                    </div>
+                    <div class="code-content">
+                        <button class="copy-button">Copiar</button>
+                        <pre><code>import java.util.Arrays;
+import java.io.IOException;
 
+public class LanzaProceso {
+
+  public static void main(String[] args) {
+
+    if (args.length <= 0) {
+      System.out.println("Debe indicarse comando a ejecutar.");
+      System.exit(1);
+    }
+
+    ProcessBuilder pb = new ProcessBuilder(args);
+    pb.inheritIO();
+
+    try {
+      Process p = pb.start();
+      int codRet = p.waitFor();
+      System.out.println("La ejecución de " + Arrays.toString(args)
+              + " devuelve " + codRet
+              + " " + (codRet == 0 ? "(ejecución correcta)" : "(ERROR)")
+      );
+    } catch (IOException e) {
+      System.err.println("Error durante ejecución del proceso");
+      System.err.println("Información detallada");
+      System.err.println("---------------------");
+      e.printStackTrace();
+      System.err.println("---------------------");
+      System.exit(2);
+    } catch (InterruptedException e) {
+      System.err.println("Proceso interrumpido");
+      System.exit(3);
+    }
+  }
+}</code></pre>
+                    </div>
+                </div>
                 <h3 class="section-title">1.9.3. Redirección de entrada y salida estándares y de error</h3>
 
                 <p class="text-content">Las clases <code>ProcessBuilder</code> y <code>Process</code> proporcionan
@@ -245,7 +295,7 @@
                         operativo UNIX, y se implementaron posteriormente en Linux y Windows. Cualquier proceso tiene
                         acceso a varios <em>streams</em> o flujos de bytes.</p>
 
-<img src="image01-09.png" alt="" class="responsive-image">
+                    <img src="image01-09.png" alt="" class="responsive-image">
 
                     <ul>
                         <li><strong>Entrada estándar o stdin (standard input)</strong>. Es un <em>stream</em> de entrada
@@ -336,7 +386,8 @@
                         creados se enlazan con las del proceso padre actual.</li>
                     <li>Los métodos <code>redirectInput()</code>, <code>redirectOutput()</code> y
                         <code>redirectError()</code> son útiles cuando se necesita una sencilla redirección, desde o
-                        hacia un fichero, o bien a <code>/dev/null</code> para ignorar la salida.</li>
+                        hacia un fichero, o bien a <code>/dev/null</code> para ignorar la salida.
+                    </li>
                 </ol>
 
                 <ul class="text-content">
@@ -350,7 +401,8 @@
                         <ul>
                             <li>La salida estándar del proceso padre con <code>redirect.INHERIT</code>.</li>
                             <li>Un fichero, borrando contenido actual del fichero con <code>f</code>, de clase
-                                <code>File</code>.</li>
+                                <code>File</code>.
+                            </li>
                             <li>Un fichero, añadiendo a sus contenidos actuales con <code>Redirect.appendTo(f)</code>.
                             </li>
                             <li>Ninguna parte, con lo que se descarta sin más con <code>Redirect.DISCARD</code>.</li>
@@ -442,7 +494,8 @@
                                         <li>La correspondiente del proceso padre (con <code>Redirect.INHERIT</code>).
                                         </li>
                                         <li>La salida estándar y de error se pueden descartar (con
-                                            <code>Redirect.DISCARD</code>).</li>
+                                            <code>Redirect.DISCARD</code>).
+                                        </li>
                                     </ul>
                                 </td>
                             </tr>
@@ -522,7 +575,8 @@
                 <p class="text-content">El siguiente programa de ejemplo ejecuta un comando que se proporciona como
                     argumentos de línea de comandos. La salida del proceso se obtiene con
                     <code>p.getInputStream()</code>. Sobre el <code>InputStream</code> obtenido se construye un
-                    <code>BufferedReader</code>, para poder obtener la salida como texto y línea a línea.</p>
+                    <code>BufferedReader</code>, para poder obtener la salida como texto y línea a línea.
+                </p>
             </div>
         </main>
     </div>
