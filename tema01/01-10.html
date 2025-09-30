@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Procesos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Procesos</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title">1.9. Concurrencia en Java (II)</h1>
+            </div>
+
+            <div class="lesson-section">                <h3 class="section-title">1.9.3. Redirección de entrada y salida estándares y de error</h3>
+
+                <p class="text-content">Las clases <code>ProcessBuilder</code> y <code>Process</code> proporcionan
+                    diversos mecanismos para redireccionar y gestionar la salida y entrada de los procesos. Esto podría
+                    no funcionar bien en algunas plataformas, debido a limitaciones en los buffers utilizados para ellas
+                    por el sistema operativo particular. Estos mecanismos se aprovechan en algunos de los programas de
+                    ejemplo que se presentan a continuación.</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">RECUERDA</div>
+                    <p>Los conceptos de entrada y salida estándares y de salida de error se introdujeron en el sistema
+                        operativo UNIX, y se implementaron posteriormente en Linux y Windows. Cualquier proceso tiene
+                        acceso a varios <em>streams</em> o flujos de bytes.</p>
+
+                    <img src="image01-09.png" alt="" class="responsive-image">
+
+                    <ul>
+                        <li><strong>Entrada estándar o stdin (standard input)</strong>. Es un <em>stream</em> de entrada
+                            del que puede leer datos. Normalmente, se lean datos sobre los que se realiza algún
+                            procesamiento. Por defecto, suele estar asociada al teclado, de manera que el programa puede
+                            leer de teclado el texto que se introduce por teclado.</li>
+                        <li><strong>Salida estándar o stdout (standard output)</strong>. Es un <em>stream</em> de salida
+                            en el que se pueden escribir datos. Una manera sencilla en que un programa puede generar su
+                            salida es escribirla en la salida estándar. Por defecto, suele estar asociada a la pantalla,
+                            de manera que todo el texto que se envía a la salida estándar se escribe en la pantalla.
+                        </li>
+                        <li><strong>Salida de error o stderr (standard output)</strong>. Es un <em>stream</em> de salida
+                            en el que se pueden escribir datos. También suele estar asociado a la pantalla, de manera
+                            que todo el texto que se envía a la salida de error se escribe en la pantalla.</li>
+                    </ul>
+
+                    <p>El proceso puede ser cualquier programa en ejecución. Para los siguientes ejemplos se utilizarán
+                        comandos existentes en Linux.</p>
+
+                    <p>Existen mecanismos de redirección para estos <em>streams</em> muy potentes y versátiles, que se
+                        detallan a continuación, y para los que se ponen ejemplos.</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Fichero</th>
+                                    <th>Ejemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A entrada estándar desde</td>
+                                    <td><code>proceso &lt; fichero</code></td>
+                                    <td><code>grep localhost &lt; /etc/hosts</code></td>
+                                </tr>
+                                <tr>
+                                    <td>De salida estándar hacia</td>
+                                    <td><code>proceso &gt; fichero</code><br><code>proceso &gt;&gt; fichero</code></td>
+                                    <td><code>ls -l &gt; listafich.txt</code><br><code>echo -dn- &gt;&gt; listafich.txt</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>De salida de error hacia</td>
+                                    <td><code>proceso 2&gt; fichero</code><br><code>proceso 2&gt;&gt; fichero</code>
+                                    </td>
+                                    <td><code>ls /et 2&gt; errores.log</code><br><code>ls /etcaetera 2&gt;&gt; errores.log</code>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="table-note">(Nota: Para descartar salida, se puede redirigir a <code>/dev/null</code>)
+                        </p>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Ejemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>De salida estándar de un proceso a entrada estándar de otro</td>
+                                    <td><code>proceso1 | proceso2</code></td>
+                                    <td><code>head -4 /etc/fstab | tail -1</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h4 class="section-title">A) Mecanismos de redirección de la clase ProcessBuilder</h4>
+
+                <p class="text-content">La clase <code>ProcessBuilder</code> proporciona mecanismos para la redirección
+                    de la entrada y salida de los nuevos procesos creados. En los programas de ejemplo vistos hasta
+                    ahora, se ha utilizado el método <code>inheritIO()</code> para enlazar la entrada y la salida
+                    estándares y de error de los subprocesos con las del proceso principal, y por eso se ha podido ver
+                    su salida.</p>
+
+                <p class="text-content">Los mecanismos proporcionados por <code>ProcessBuilder</code> para ello son los
+                    siguientes:</p>
+
+                <ol class="text-content">
+                    <li>El método <code>inheritIO()</code>. Esta es la solución más sencilla y la utilizada en el
+                        programa anterior. Con este método, la entrada y la salida estándares y de error de los procesos
+                        creados se enlazan con las del proceso padre actual.</li>
+                    <li>Los métodos <code>redirectInput()</code>, <code>redirectOutput()</code> y
+                        <code>redirectError()</code> son útiles cuando se necesita una sencilla redirección, desde o
+                        hacia un fichero, o bien a <code>/dev/null</code> para ignorar la salida.
+                    </li>
+                </ol>
+
+                <ul class="text-content">
+                    <li><code>redirectInput()</code> redirige la entrada desde:
+                        <ul>
+                            <li>La entrada estándar del proceso padre con <code>redirect.INHERIT</code>.</li>
+                            <li>El contenido de un fichero con un objeto <code>File</code>.</li>
+                        </ul>
+                    </li>
+                    <li><code>redirectOutput()</code> redirige la salida estándar de los nuevos procesos creados hacia:
+                        <ul>
+                            <li>La salida estándar del proceso padre con <code>redirect.INHERIT</code>.</li>
+                            <li>Un fichero, borrando contenido actual del fichero con <code>f</code>, de clase
+                                <code>File</code>.
+                            </li>
+                            <li>Un fichero, añadiendo a sus contenidos actuales con <code>Redirect.appendTo(f)</code>.
+                            </li>
+                            <li>Ninguna parte, con lo que se descarta sin más con <code>Redirect.DISCARD</code>.</li>
+                        </ul>
+                    </li>
+                    <li><code>redirectError()</code> funciona como <code>redirectOutput()</code>, pero para la salida de
+                        error.</li>
+                </ul>
+
+                <p class="text-content">El cuadro 1.5 muestra la equivalencia entre los diversos métodos de redirección
+                    para la clase <code>ProcessBuilder</code> de Java y mecanismos de redirección disponibles para la
+                    ejecución de comandos en una <em>shell</em> de Linux.</p>
+
+                <div class="table-container">
+                    <h4 class="table-title">Cuadro 1.5 - Métodos de redirección para clase ProcessBuilder de Java</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Métodos</th>
+                                <th>Línea de comandos de Linux</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>redirectInput(new File (fichero))</code></td>
+                                <td><code>comando &lt; fichero</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>redirectOutput(new File(fichero))</code></td>
+                                <td><code>comando &gt; fichero</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>redirectOutput(Redirect.appendTo(new File(fichero)))</code></td>
+                                <td><code>comando &gt;&gt; fichero</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>redirectOutput(Redirect.DISCARD)</code></td>
+                                <td><code>comando &gt; /dev/null</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>redirectError(new File(fichero))</code></td>
+                                <td><code>comando 2&gt; fichero</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>RedirectError(Redirect.appendTo(new File(fichero)))</code></td>
+                                <td><code>comando 2&gt;&gt; fichero</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>redirectError(Redirect.DISCARD)</code></td>
+                                <td><code>comando 2&gt; /dev/null</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-content">El cuadro 1.6 muestra todos los métodos para redirección de entrada y salida, ya
+                    explicados anteriormente, de <code>ProcessBuilder</code>.</p>
+
+                <div class="table-container">
+                    <h4 class="table-title">Cuadro 1.6 - Métodos de la clase ProcessBuilder para redirección de entrada
+                        y salida</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Método</th>
+                                <th>Funcionalidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ProcessBuilder inheritIO()</code></td>
+                                <td>Redirige la salida estándar y de error de los subprocesos creados hacia las del
+                                    proceso padre, y su entrada estándar desde la del proceso padre.</td>
+                            </tr>
+                            <tr>
+                                <td><code>ProcessBuilder redirectInput(File f)</code><br>
+                                    <code>ProcessBuilder redirectInput(</code><br>
+                                    <code>ProcessBuilder.Redirect fuente)</code><br>
+                                    <code>ProcessBuilder redirectOutput(File f)</code><br>
+                                    <code>redirectOutput(</code><br>
+                                    <code>ProcessBuilder.Redirect destino)</code><br>
+                                    <code>ProcessBuilder redirectError(File f)</code><br>
+                                    <code>redirectError(</code><br>
+                                    <code>ProcessBuilder.Redirect destino)</code>
+                                </td>
+                                <td>Redirige las entrada y salida estándares y de error, respectivamente, desde o hacia:
+                                    <ul>
+                                        <li>Un fichero (con <code>File f</code>).</li>
+                                        <li>La correspondiente del proceso padre (con <code>Redirect.INHERIT</code>).
+                                        </li>
+                                        <li>La salida estándar y de error se pueden descartar (con
+                                            <code>Redirect.DISCARD</code>).
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>ProcessBuilder redirectErrorStream(</code><br>
+                                    <code>boolean redir)</code>
+                                </td>
+                                <td>Con valor <code>true</code> para <code>redir</code>, dirige la salida de error hacia
+                                    la estándar. Esto hace innecesario gestionar por separado la salida de error. Tiene
+                                    el inconveniente de que no se puede distinguir entre ambas. Pero tiene la ventaja de
+                                    que evita que ambas aparezcan entremezcladas, lo que dificulta su lectura e
+                                    interpretación.</td>
+                            </tr>
+                            <tr>
+                                <td><code>static List&lt;Process&gt; startPipeline(</code><br>
+                                    <code>List&lt;ProcessBuilder&gt; builders)</code>
+                                </td>
+                                <td>Inicia un proceso para cada <code>ProcessBuilder</code>, y crea una secuencia de
+                                    procesos cuyas salida y entradas están enlazadas mediante tuberías o <em>pipes</em>,
+                                    de manera que la salida de un proceso se dirige a la entrada del siguiente en la
+                                    secuencia. Solo se pueden redirigir la entrada del primer proceso y la salida del
+                                    último. El resto de entradas y salidas están conectadas mediante <em>pipes</em> de
+                                    un proceso al siguiente y, obviamente, no se pueden redirigir.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="section-title">B) Mecanismos de redirección a streams de la clase Process</h4>
+
+                <p class="text-content">La clase <code>Process</code> tiene métodos que devuelven <em>streams</em>
+                    asociados a la entrada estándar del proceso, a la salida estándar y a la salida de error. Esto
+                    permite enviar datos a la entrada estándar del proceso y leer de la salida estándar y de error, lo
+                    que permite un absoluto control y flexibilidad, más allá de los sencillos mecanismos de redirección
+                    vistos anteriormente.</p>
+
+                <div class="table-container">
+                    <h4 class="table-title">Cuadro 1.7 - Métodos de Process para obtener streams asociados a entrada
+                        estándar y a salidas estándar y de error</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Método</th>
+                                <th>Funcionalidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>InputStream</code><br>
+                                    <code>getInputStream()</code>
+                                </td>
+                                <td>Devuelve un <em>stream</em> de entrada conectado con la salida estándar del proceso.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>OutputStream</code><br>
+                                    <code>getOutputStream()</code>
+                                </td>
+                                <td>Devuelve un <em>stream</em> de salida conectado con la entrada estándar del proceso.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>InputStream</code><br>
+                                    <code>getErrorStream()</code>
+                                </td>
+                                <td>Devuelve un <em>stream</em> de entrada conectado con la salida de error del proceso.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-content">Sobre estos <em>streams</em> binarios se pueden construir <em>streams</em> de
+                    texto (un <code>InputStreamReader</code> sobre un <code>InputStream</code>), y sobre estos se pueden
+                    construir <em>streams</em> con <em>buffering</em>, que permiten leer o escribir líneas enteras.</p>
+
+                <p class="text-content">El siguiente programa de ejemplo ejecuta un comando que se proporciona como
+                    argumentos de línea de comandos. La salida del proceso se obtiene con
+                    <code>p.getInputStream()</code>. Sobre el <code>InputStream</code> obtenido se construye un
+                    <code>BufferedReader</code>, para poder obtener la salida como texto y línea a línea.
+                </p>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
