@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Wait y Notify</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+            <div class="content-header">
+                <h1 class="content-title">2.6. Métodos wait(), notify() y notifyAll()</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Coordinación entre Hilos</h2>
+                <div class="text-content">
+                    <p>A veces no basta con que los hilos accedan de forma exclusiva a un recurso compartido. Es
+                        necesario que se coordinen para realizar determinadas acciones en el momento adecuado.</p>
+
+                    <p>Java proporciona tres métodos de la clase <code>Object</code> que permiten esta coordinación:</p>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Método</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>wait()</td>
+                            <td>Hace que el hilo actual espere hasta que otro hilo invoque notify() o notifyAll() sobre
+                                el mismo objeto</td>
+                        </tr>
+                        <tr>
+                            <td>wait(long timeout)</td>
+                            <td>Espera durante un tiempo máximo especificado en milisegundos</td>
+                        </tr>
+                        <tr>
+                            <td>notify()</td>
+                            <td>Despierta un único hilo que esté esperando sobre el objeto</td>
+                        </tr>
+                        <tr>
+                            <td>notifyAll()</td>
+                            <td>Despierta todos los hilos que estén esperando sobre el objeto</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Uso de wait() y notify()</h2>
+                <div class="text-content">
+                    <p><strong>Requisitos importantes:</strong></p>
+
+                    <ul>
+                        <li>Estos métodos solo se pueden llamar desde código sincronizado</li>
+                        <li>El hilo debe poseer el monitor del objeto sobre el que se invoca el método</li>
+                        <li>Cuando un hilo ejecuta <code>wait()</code>, libera el monitor y se queda esperando</li>
+                        <li>Cuando otro hilo ejecuta <code>notify()</code> o <code>notifyAll()</code>, despierta al hilo
+                            (o hilos) en espera</li>
+                        <li>El hilo despertado debe volver a adquirir el monitor antes de continuar</li>
+                    </ul>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Ejemplo básico de uso</div>
+                    <pre><code>class RecursoCompartido {
+  private boolean disponible = false;
+  
+  public synchronized void esperar() {
+    while (!disponible) {
+      try {
+        wait(); // Espera hasta que esté disponible
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    disponible = false; // Marca como no disponible
+  }
+  
+  public synchronized void liberar() {
+    disponible = true;
+    notify(); // Despierta a un hilo en espera
+  }
+}</code></pre>
+                </div>
+
+                <div class="text-content">
+                    <p><strong>Nota importante:</strong> Se usa <code>while</code> en lugar de <code>if</code> para
+                        comprobar la condición, porque cuando un hilo se despierta, debe volver a verificar que la
+                        condición se cumple antes de continuar.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Patrón Productor-Consumidor</h2>
+                <div class="text-content">
+                    <p>Un ejemplo clásico del uso de wait() y notify() es el patrón productor-consumidor, donde uno o
+                        más hilos producen datos y otros los consumen:</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Ejemplo: Buffer compartido</div>
+                    <pre><code>class Buffer {
+  private int contenido;
+  private boolean disponible = false;
+  
+  public synchronized int get() {
+    while (!disponible) {
+      try {
+        wait(); // Espera a que haya algo disponible
+      } catch (InterruptedException e) { }
+    }
+    disponible = false;
+    notifyAll(); // Notifica a los productores
+    return contenido;
+  }
+  
+  public synchronized void put(int valor) {
+    while (disponible) {
+      try {
+        wait(); // Espera a que se consuma el valor anterior
+      } catch (InterruptedException e) { }
+    }
+    contenido = valor;
+    disponible = true;
+    notifyAll(); // Notifica a los consumidores
+  }
+}</code></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

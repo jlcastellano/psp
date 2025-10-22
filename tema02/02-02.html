@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Creación</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+            <div class="content-header">
+                <h1 class="content-title">2.2. Creación de Hilos en Java</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Creación de Hilos</h2>
+                <div class="text-content">
+                    <p>Para ejecutar un programa de Java, se inicia la máquina virtual de Java (JVM) con un único hilo
+                        que ejecuta el método <code>main()</code> de una clase. Pero desde este hilo se pueden crear más
+                        hilos.</p>
+
+                    <p>Los hilos se pueden ejecutar en Java a partir de cualquier clase que implemente la interfaz
+                        <code>Runnable</code>. En esta clase hay que programar el método <code>run()</code>, que se
+                        ejecuta cuando se lanza el hilo.
+                    </p>
+
+                    <p>Un hilo se gestiona con un objeto de la clase <code>Thread</code>. Después de crearlo, se puede
+                        lanzar con su método <code>start()</code>. Con esto se crea el hilo y se ejecuta el método
+                        <code>run()</code>.
+                    </p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Primer Ejemplo: LanzaHilos</h2>
+                <div class="text-content">
+                    <p>El siguiente programa de ejemplo lanza dos hilos de un proceso. La funcionalidad de los hilos se
+                        implementa en una clase <code>Hilo</code>, que implementa la interfaz <code>Runnable</code>. Al
+                        lanzar el hilo se ejecuta el método <code>run()</code>, que escribe un identificador que se pasa
+                        en el constructor.</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header"><span>Ejemplo: LanzaHilos.java</span><span
+                            class="language-badge">java</span></div>
+                    <div class="code-content">
+                        <button class="copy-button">Copiar</button>
+                        <pre><code>class Hilo implements Runnable {
+  private final String nombre;
+
+  public Hilo(String nombre) {
+    this.nombre = nombre;
+  }
+
+  @Override
+  public void run() {
+    System.out.printf("Hola, soy el hilo: %s.\n", this.nombre);
+    System.out.printf("Hilo %s terminado.\n", this.nombre);
+  }
+}
+
+public class LanzaHilos {
+  public static void main(String[] args) {
+    Thread h1 = new Thread(new Hilo("H1"));
+    Thread h2 = new Thread(new Hilo("H2"));
+    h1.start();
+    h2.start();
+    System.out.println("Hilo principal terminado.");
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="text-content">
+                    <p><strong>Nota:</strong> Si se ejecuta el programa varias veces, se puede ver que, en cada
+                        ejecución, las instrucciones de los tres hilos (el principal y los dos creados por él)
+                        intercalan su ejecución de diversas maneras, y empiezan y terminan su ejecución en distintos
+                        órdenes.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

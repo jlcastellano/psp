@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Sincronización</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+            <div class="content-header">
+                <h1 class="content-title">2.4. Sincronización de Hilos</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Introducción a la Sincronización</h2>
+                <div class="text-content">
+                    <p>Un programa puede lanzar múltiples hilos que colaboren entre sí para la realización de una tarea.
+                        Deben utilizarse mecanismos de sincronización para evitar problemas que se puedan dar en
+                        determinadas situaciones. Como cuando cooperan personas, el problema de fondo es que alguien
+                        hace algo cuando no hay que hacerlo. Y la solución pasa por esperar hasta que llegue el momento
+                        de hacerlo.</p>
+
+                    <p>En el programa de ejemplo anterior, todos los hilos realizan tareas completamente independientes.
+                        Normalmente no es así, sino que los diferentes hilos colaboran para realizar un trabajo
+                        conjunto.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Ejemplo: Contador Compartido (Sin Sincronización)</h2>
+                <div class="text-content">
+                    <p>El siguiente programa de ejemplo lanza varios hilos que cooperan incrementando un contador hasta
+                        un valor determinado. Este valor se divide entre el número de hilos, y el resultado es la
+                        cantidad de veces que cada hilo debe incrementarlo.</p>
+
+                    <p>El contador se implementa como un objeto de una clase <code>Contador</code>, que se pasa a cada
+                        hilo en su constructor. De esta forma, todos los hilos comparten este objeto. Todos pueden
+                        consultar su valor y todos pueden modificarlo. El hilo principal crea y lanza todos los hilos y
+                        espera a que terminen de ejecutarse utilizando el método <code>join</code>.</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header"><span>HilosCooperantesNoSincr.java</span><span
+                            class="language-badge">java</span></div>
+                    <div class="code-content">
+                        <button class="copy-button">Copiar</button>
+                        <pre><code>class Contador {
+  private int cuenta = 0;
+  public int getCuenta() { return cuenta; }
+  public int incrementa() { this.cuenta++; return cuenta; }
+}
+
+class Hilo implements Runnable {
+  int numHilo, miParte, miCuenta = 0;
+  private final Contador cont;
+
+  public int getMiCuenta() { return miCuenta; }
+
+  Hilo(int numHilo, int miParte, Contador c) {
+    this.numHilo = numHilo;
+    this.miParte = miParte;
+    this.cont = c;
+  }
+
+  @Override
+  public void run() {
+    for (int i = 0; i < miParte; i++) {
+      this.cont.incrementa();
+      miCuenta++;
+    }
+    System.out.printf("Hilo %d terminado, cuenta: %d\n", 
+                      numHilo, getMiCuenta());
+  }
+}
+
+public class HilosCooperantesNoSincr {
+  private static final int NUM_HILOS = 10;
+  private static final int CUENTA_TOTAL = 100000;
+
+  public static void main(String[] args) {
+    Contador c = new Contador();
+    Thread[] hilos = new Thread[NUM_HILOS];
+    for (int i = 0; i < NUM_HILOS; i++) {
+      hilos[i] = new Thread(new Hilo(i, CUENTA_TOTAL / NUM_HILOS, c));
+      hilos[i].start();
+    }
+    for (Thread h : hilos) {
+      try {
+        h.join();
+      } catch (InterruptedException e) { }
+    }
+    System.out.println("Cuenta global: " + c.getCuenta());
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="lesson-section">
+                <div class="text-content">
+                    <p>Con el programa anterior, el contador no llega al valor que cabría esperar, dado por la variable
+                        estática de clase CUENTA TOTAL. Se puede probar con distintos valores para ella. Es posible que
+                        llegue para valores pequeños, pero la discrepancia es mayor cuanto mayor sea su valor. En el
+                        siguiente apartado se explica el motivo y se da una sencilla solución.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

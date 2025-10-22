@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Condición de Carrera</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+            <div class="content-header">
+                <h1 class="content-title">2.5. Exclusión mutua. Condición de Carrera y Secciones Críticas</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Análisis del Problema</h2>
+                <div class="text-content">
+                    <p>Si se ejecuta el programa anterior varias veces, se puede ver que el resultado no siempre es
+                        correcto. En algunas ejecuciones la cuenta global no alcanza el valor esperado de 100000.</p>
+
+                    <p>El problema se debe a que la operación de incremento del contador no es atómica. Es decir, no se
+                        realiza en un único paso indivisible. En realidad, se ejecuta en varios pasos:</p>
+
+                    <ul>
+                        <li>Se lee el valor actual del contador</li>
+                        <li>Se incrementa en una unidad</li>
+                        <li>Se guarda el nuevo valor en el contador</li>
+                    </ul>
+
+                    <p>Si dos hilos ejecutan estos pasos simultáneamente, puede ocurrir que ambos lean el mismo valor
+                        inicial, lo incrementen, y ambos escriban el mismo resultado. De esta forma, se pierden
+                        incrementos.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Condición de Carrera (Race Condition)</h2>
+                <div class="text-content">
+                    <p>Esta situación se conoce como <strong>condición de carrera</strong> (<em>race condition</em>). Se
+                        produce cuando el resultado de una operación depende del orden temporal en que se ejecutan las
+                        instrucciones de diferentes hilos.</p>
+
+                    <p>Para evitar este problema, es necesario garantizar que cuando un hilo está ejecutando la
+                        operación de incremento, ningún otro hilo pueda interferir. Esto se consigue mediante la
+                        <strong>sincronización</strong>.
+                    </p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Secciones Críticas</h2>
+                <div class="text-content">
+                    <p>Una <strong>sección crítica</strong> es una porción de código que accede a un recurso compartido
+                        y que no debe ser ejecutada por más de un hilo a la vez.</p>
+
+                    <p>En nuestro ejemplo, el método <code>incrementa()</code> de la clase <code>Contador</code> es una
+                        sección crítica, porque modifica un recurso compartido (el atributo <code>cuenta</code>).</p>
+
+                    <p>Para proteger las secciones críticas en Java, se utiliza la palabra clave
+                        <code>synchronized</code>.
+                    </p>
+                </div>
+            </section>
+            <section class="lesson-section">
+                <h2 class="section-title">Métodos Sincronizados</h2>
+                <div class="text-content">
+                    <p>La forma más sencilla de sincronizar el acceso a un recurso compartido es declarar los métodos
+                        que lo modifican como <code>synchronized</code>. Cuando un método está declarado como
+                        sincronizado, solo un hilo puede ejecutarlo a la vez sobre un objeto determinado.</p>
+
+                    <p>Si un hilo está ejecutando un método sincronizado de un objeto, cualquier otro hilo que intente
+                        ejecutar cualquier método sincronizado del mismo objeto quedará bloqueado hasta que el primer
+                        hilo termine.</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Ejemplo: Contador con método sincronizado</div>
+                    <pre><code>class Contador {
+  private int cuenta = 0;
+  
+  public int getCuenta() { 
+    return cuenta; 
+  }
+  
+  public synchronized int incrementa() { 
+    this.cuenta++; 
+    return cuenta; 
+  }
+}</code></pre>
+                </div>
+
+                <div class="text-content">
+                    <p>Con esta modificación, el programa funcionará correctamente y siempre obtendrá el resultado
+                        esperado de 100000, porque se garantiza que solo un hilo a la vez puede ejecutar el método
+                        <code>incrementa()</code>.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Bloques Sincronizados</h2>
+                <div class="text-content">
+                    <p>También es posible sincronizar solo una parte de un método utilizando bloques sincronizados. La
+                        sintaxis es:</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Sintaxis de bloque sincronizado</div>
+                    <pre><code>synchronized (objeto) {
+  // código sincronizado
+  // solo un hilo a la vez puede ejecutar este bloque
+  // para el objeto especificado
+}</code></pre>
+                </div>
+
+                <div class="text-content">
+                    <p>El objeto entre paréntesis es el que se utiliza para controlar el acceso. Solo un hilo puede
+                        ejecutar un bloque sincronizado sobre un objeto determinado a la vez.</p>
+
+                    <p>Un ejemplo de uso sería:</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Ejemplo de bloque sincronizado</div>
+                    <pre><code>class Contador {
+  private int cuenta = 0;
+  
+  public int getCuenta() { 
+    return cuenta; 
+  }
+  
+  public int incrementa() {
+    synchronized(this) {
+      this.cuenta++;
+      return cuenta;
+    }
+  }
+}</code></pre>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Consideraciones sobre la Sincronización</h2>
+                <div class="text-content">
+                    <p>Es importante tener en cuenta que la sincronización tiene un coste en términos de rendimiento,
+                        porque los hilos deben esperar su turno para acceder a las secciones críticas.</p>
+
+                    <p>Por tanto, se debe sincronizar solo lo necesario:</p>
+
+                    <ul>
+                        <li>Sincronizar únicamente las secciones de código que realmente necesitan protección</li>
+                        <li>Mantener las secciones críticas lo más pequeñas posible</li>
+                        <li>Evitar sincronizar métodos completos si solo una parte requiere sincronización</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Introducción</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+            <div class="content-header">
+                <h1 class="content-title">2.1. Introducción a Hilos</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">¿Qué son los Hilos?</h2>
+                <div class="text-content">
+                    <p>En este capítulo se aprenderá a crear y lanzar nuevos hilos o hebras (<em>threads</em> en inglés)
+                        de un proceso con Java, y a hacer que diferentes hilos de un mismo proceso colaboren y se
+                        coordinen entre sí para realizar una tarea.</p>
+
+                    <p>La ejecución de un proceso comienza con un único hilo, pero se pueden crear más sobre la marcha.
+                        Los distintos hilos de un mismo proceso comparten:</p>
+
+                    <ul>
+                        <li>El espacio de memoria asignado al proceso.</li>
+                        <li>La información de acceso a ficheros. Estos se utilizan no solo para almacenar datos, sino
+                            también para controlar dispositivos de entrada y salida (E/S).</li>
+                    </ul>
+
+                    <p>En cambio, cada hilo tiene sus propios valores para:</p>
+
+                    <ul>
+                        <li>Los registros del procesador.</li>
+                        <li>El estado de su pila (<em>stack</em>). En la pila se guarda información acerca de las
+                            llamadas en curso de ejecución a métodos de diversos objetos. Para cada llamada se guardan,
+                            entre otras cosas, los datos locales (en variables internas del método).</li>
+                    </ul>
+                    <img src="image02-01.jpg" alt="" class="responsive-image">
+                    <p>El intercambio de información entre hilos es sencillo, dado que los distintos hilos de un mismo
+                        proceso comparten la memoria asignada al proceso por el sistema operativo. Pero los distintos
+                        hilos de un mismo proceso pueden coordinar para el acceso a los contenidos de la memoria y a los
+                        ficheros que se utilizan para controlar las operaciones de E/S.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Aplicaciones de los Hilos</h2>
+                <div class="text-content">
+                    <p>Se pueden utilizar hilos en situaciones muy diversas, como por ejemplo las siguientes:</p>
+
+                    <p><strong>1. Programas Servidores:</strong> Proporcionan servicios a otros procesos, como por
+                        ejemplo un servidor web o de bases de datos. Cada petición al servidor se puede atender en un
+                        hilo distinto. De esa manera, se pueden atender simultáneamente muchas peticiones de servicio, y
+                        se mejora el tiempo de respuesta para ellas. En el capítulo siguiente se aprenderá a programar
+                        servidores multihilo que prestan servicios a otros procesos a través de protocolos estándares de
+                        red, y que crean sobre la marcha nuevos hilos para atender nuevas peticiones.</p>
+
+                    <p><strong>2. Interfaces Gráficas:</strong> Programas de todo tipo que muestran una interfaz gráfica
+                        de usuario a la vez que realizan procesos en segundo plano. Es el caso de un procesador de texto
+                        o de una hoja de cálculo. En una hoja de cálculo, un hilo podría responder a las acciones del
+                        usuario sobre la interfaz de usuario. Otro podría recalcular los valores que cambian en
+                        cualquier celda como consecuencia del cambio en el valor de una celda, y mostrar los nuevos
+                        valores donde hayan cambiado. Otro podría ocuparse de guardar el documento periódicamente, y
+                        otro podría imprimir el documento.</p>
+
+                    <p><strong>3. Videojuegos:</strong> Juegos en los que intervienen muchos elementos que interactúan
+                        entre ellos, y que pueden ser controlados por los usuarios. En lugar de un único hilo que
+                        controla todos los elementos del juego, se pueden tener distintos hilos para distintos elementos
+                        del juego.</p>
+
+                    <p><strong>4. Control en Tiempo Real:</strong> Programas de control en tiempo real. Estos controlan
+                        un sistema mediante dispositivos sensores y actuadores. Obtienen información del estado del
+                        sistema a través de dispositivos sensores, y actúan sobre él mediante dispositivos actuadores.
+                        Un ejemplo sería un programa de control del acceso a un aparcamiento, que debe detectar la
+                        llegada de vehículos mediante determinados sensores, y debe actuar sobre el sistema mostrando
+                        información para los conductores en una pantalla, haciendo que se generen los tickets, y
+                        levantando y bajando una barrera en momentos determinados. Existen muchos dispositivos que
+                        intervienen en este proceso, y se pueden controlar mediante distintos hilos que se comunican y
+                        coordinan entre sí.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
