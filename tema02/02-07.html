@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Bloqueo Intrínseco e Interbloqueo</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+<body>
+        <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+                        <div class="content-header">
+                <h1 class="content-title">Bloqueo Intrínseco, Bloques de Código Sincronizados</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Mecanismo del Bloqueo Intrínseco</h2>
+                <div class="text-content">
+                    <p>La implementación de la palabra clave <code>synchronized</code> se basa en el mecanismo del bloqueo intrínseco (<em>intrinsic lock</em>). Cada objeto de Java posee un bloqueo intrínseco por el solo hecho de serlo, es decir, por pertenecer a la clase <code>Object</code>.</p>
+                    
+                    <p>Cada bloqueo intrínseco tiene asociada una cola de procesos a la espera de adquirirlo. Por otra parte, nadie impide a un hilo adquirir de nuevo un bloqueo intrínseco que ya ha adquirido. Esto se llama sincronización reentrante.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Tipos de Bloques Sincronizados</h2>
+                <div class="text-content">
+                    <p>La palabra clave <code>synchronized</code> puede aplicarse en distintos tipos de bloques de código Java, y en cada caso se utilizará un objeto distinto para bloquearlo.</p>
+                    
+                    <ul>
+                        <li><strong>Métodos no estáticos:</strong> Como en los ejemplos anteriores, se añade <code>synchronized</code> a la declaración del método. El bloqueo intrínseco se realiza sobre el objeto sobre el que se ejecuta el método (<code>this</code>). Por tanto, dos hilos distintos no pueden estar a la vez ejecutando cada uno uno mismo un método no estático sincronizado sobre el mismo objeto.</li>
+                        
+                        <li><strong>Métodos estáticos:</strong> El bloqueo intrínseco se realiza sobre la clase a la que pertenece el método. En Java, una clase es también un objeto. De hecho, es una instancia de la clase <code>Class</code>. Por tanto, dos hilos distintos no pueden estar a la vez ejecutando cada uno un método estático <code>synchronized</code> de la misma clase.</li>
+                        
+                        <li><strong>Bloques de código cualquiera:</strong> Después de la palabra clave <code>synchronized</code>, y entre paréntesis, se indica el objeto sobre el que se realiza el bloqueo:</li>
+                    </ul>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Sintaxis de bloque sincronizado</div>
+                    <pre><code>synchronized(objeto) {
+  (...)
+}</code></pre>
+                </div>
+
+                <div class="text-content">
+                    <p>Un hilo no puede ejecutar un bloque de código sincronizado sobre un objeto si ya existe un hilo que ha adquirido el bloqueo para dicho objeto. El objeto debería ser de tipo <code>final</code>, porque si se le asigna un nuevo valor, quedan sin efecto todos los bloqueos que existan sobre dicho objeto.</p>
+                    
+                    <p><strong>Muy importante:</strong> Un objeto de bloqueo debería ser de tipo <code>final</code>, porque si se le asigna un nuevo valor, quedan sin efecto todos los bloqueos que existen sobre dicho objeto. A un objeto de tipo <code>final</code>, una vez que se ha creado y se le ha asignado un valor, no se le puede asignar un nuevo valor.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Ejemplo con Bloques Sincronizados</h2>
+                <div class="text-content">
+                    <p>A continuación se muestra un ejemplo con bloques de código sincronizados. Cada contador tiene su propio objeto de bloqueo, de modo que dos hilos pueden incrementar contadores distintos a la vez, pero no dos hilos que quieran modificar el mismo contador.</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">Clase Contadores con bloques sincronizados</div>
+                    <pre><code>class Contadores {
+  private long cont1 = 0;
+  private long cont2 = 0;
+  private final Object lock1 = new Object();
+  private final Object lock2 = new Object();
+
+  public void incrementar1() {
+    synchronized (lock1) {
+      cont1++;
+    }
+  }
+
+  public long getContador1() {
+    synchronized (lock1) {
+      return cont1;
+    }
+  }
+
+  public void incrementar2() {
+    synchronized (lock2) {
+      cont2++;
+    }
+  }
+
+  public long getContador2() {
+    synchronized (lock2) {
+      return cont2;
+    }
+  }
+}</code></pre>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
