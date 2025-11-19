@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Depuración de Aplicaciones Multihilo en VS Code</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+<body>
+        <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+
+        <main>
+                        <div class="content-header">
+                <h1 class="content-title">2.7. Depuración (debugging) de aplicaciones multihilo</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Puntos de ruptura (Breakpoints)</h2>
+                <div class="text-content">
+                    <p>Al igual que en aplicaciones de un solo hilo, puedes establecer breakpoints haciendo clic en el margen izquierdo del editor, junto al número de línea. Cuando la aplicación multihilo alcance ese punto, la ejecución se detendrá.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Panel de depuración y visualización de hilos</h2>
+                <div class="text-content">
+                    <p>Una vez que la ejecución se detiene en un breakpoint, VS Code muestra en el panel lateral izquierdo (sección "Call Stack" o "Pila de llamadas") todos los hilos activos de la aplicación. Cada hilo aparece listado con su nombre (por ejemplo, "Thread-0", "Thread-1", "main", etc.) y su estado actual.</p>
+                    
+                    <p>Los hilos se organizan jerárquicamente, mostrando la pila de llamadas de cada uno. El hilo donde se ha detenido la ejecución aparece expandido por defecto y resaltado. Puedes expandir otros hilos para ver su pila de llamadas completa.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Navegación entre hilos</h2>
+                <div class="text-content">
+                    <p>Para cambiar el hilo actual y ejecutarlo paso a paso:</p>
+                    
+                    <ol>
+                        <li>En el panel "Call Stack", localiza el hilo que deseas inspeccionar</li>
+                        <li>Haz clic sobre el nombre del hilo o sobre cualquier frame de su pila de llamadas</li>
+                        <li>El editor saltará automáticamente a la línea de código donde se encuentra ese hilo</li>
+                        <li>Ahora puedes usar las herramientas de depuración paso a paso (F10 para paso por procedimiento, F11 para paso a paso por instrucciones) sobre ese hilo específico</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Control de ejecución de hilos</h2>
+                <div class="text-content">
+                    <p>VS Code te permite controlar individualmente la ejecución de cada hilo:</p>
+                    
+                    <ul>
+                        <li><strong>Pausar un hilo específico:</strong> Aunque VS Code no permite pausar hilos individuales directamente desde la interfaz gráfica de manera tan explícita como NetBeans, cuando alcanzas un breakpoint, puedes añadir breakpoints condicionales o logpoints para controlar mejor qué hilos se detienen</li>
+                        <li><strong>Continuar todos los hilos:</strong> Presiona F5 o haz clic en el botón "Continue" (▶️) en la barra de herramientas de depuración para reanudar la ejecución de todos los hilos</li>
+                        <li><strong>Paso a paso:</strong> Las teclas F10 (Step Over) y F11 (Step Into) operan sobre el hilo actualmente seleccionado</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Visualización de variables y sincronización</h2>
+                <div class="text-content">
+                    <p>En el panel "Variables" puedes inspeccionar el estado de las variables en el hilo actual, incluyendo:</p>
+                    
+                    <ul>
+                        <li>Variables locales del hilo</li>
+                        <li>Campos de objeto compartidos entre hilos</li>
+                        <li>Estados de sincronización (aunque de forma menos visual que NetBeans)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Detección de interbloqueos (Deadlocks)</h2>
+                <div class="text-content">
+                    <p>A diferencia de NetBeans, Visual Studio Code no incluye una herramienta gráfica integrada específica para detectar interbloqueos automáticamente. Sin embargo, puedes utilizar las siguientes alternativas:</p>
+                </div>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">Opción 1: Análisis manual mediante la pila de hilos</h3>
+                    <div class="text-content">
+                        <p>Cuando sospechas de un interbloqueo:</p>
+                        
+                        <ol>
+                            <li>Pausa la ejecución manualmente (botón "Pause" o Ctrl+Shift+P)</li>
+                            <li>Examina el panel "Call Stack" para ver todos los hilos</li>
+                            <li>Identifica hilos bloqueados buscando métodos como <code>wait()</code>, <code>lock()</code>, o bloques <code>synchronized</code></li>
+                            <li>Compara qué recursos está esperando cada hilo</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">Opción 2: Uso de JConsole</h3>
+                    <div class="text-content">
+                        <p>Puedes conectar herramientas externas de monitorización de JVM:</p>
+                        
+                        <p><strong>JConsole</strong> (incluida en el JDK):</p>
+                        <ol>
+                            <li>Ejecuta tu aplicación en modo de depuración</li>
+                            <li>Abre JConsole desde la línea de comandos: <code>jconsole</code></li>
+                            <li>Conéctate al proceso Java</li>
+                            <li>Ve a la pestaña "Threads" y pulsa el botón "Detect Deadlock"</li>
+                        </ol>
+               
+                    </div>
+                </section>
+
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Breakpoints condicionales para multihilo</h2>
+                <div class="text-content">
+                    <p>Una técnica muy útil en VS Code es usar breakpoints condicionales para depurar hilos específicos:</p>
+                    
+                    <ol>
+                        <li>Haz clic derecho sobre un breakpoint existente</li>
+                        <li>Selecciona "Edit Breakpoint" > "Conditional Breakpoint"</li>
+                        <li>Introduce una condición como: <code>Thread.currentThread().getName().equals("Thread-0")</code></li>
+                    </ol>
+                    
+                    <p>Esto hará que el breakpoint solo se active cuando sea alcanzado por el hilo específico que te interesa.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Ejemplo práctico de análisis de interbloqueo</h2>
+                <div class="text-content">
+                    <p>Supongamos que tienes dos hilos (Thread-0 y Thread-1) realizando transferencias entre cuentas y se produce un interbloqueo:</p>
+                    
+                    <ol>
+                        <li>La ejecución se congela</li>
+                        <li>Pausas manualmente con el botón "Pause"</li>
+                        <li>En el panel "Call Stack" verás ambos hilos</li>
+                        <li>Al examinar Thread-0, verás que está bloqueado en un método <code>synchronized</code> esperando por un monitor</li>
+                        <li>Al examinar Thread-1, verás que también está bloqueado esperando por otro monitor</li>
+                        <li>Analizando las pilas de llamadas, identificas que Thread-0 tiene el bloqueo del objeto A y espera por B, mientras que Thread-1 tiene el bloqueo de B y espera por A</li>
+                    </ol>
+                    
+                    <p>Esta información, aunque menos visual que en NetBeans, te permite identificar y resolver el interbloqueo.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Consejos adicionales</h2>
+                <div class="text-content">
+                    <ul>
+                        <li>Usa el panel "Debug Console" para ejecutar comandos y evaluar expresiones en el contexto del hilo actual</li>
+                        <li>Configura logpoints (breakpoints que imprimen mensajes sin detener la ejecución) para rastrear el flujo de ejecución de múltiples hilos</li>
+                        <li>Activa "All Exceptions" en los breakpoints para capturar excepciones que puedan indicar problemas de concurrencia</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
