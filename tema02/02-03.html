@@ -195,6 +195,67 @@ public class LanzaHilosYAEsperarQueTerminen {
                     </div>
                 </div>
             </section>
+  <section class="lesson-section">
+                <h2 class="section-title">Estados de un Hilo en Java</h2>
+                <div class="text-content">
+                    <p>En Java, los hilos pueden encontrarse en diferentes estados durante su ciclo de vida, definidos en el enumerado <code>Thread.State</code> accesible mediante el método <code>getState()</code> de la clase <code>Thread</code>. Estos estados permiten monitorear el comportamiento concurrente de los hilos, facilitando la comprensión y depuración de programas multi-hilo.</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Descripción</th>
+                                <th>Condiciones de Transición</th>
+                                <th>Ejemplo de Uso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>NEW</td>
+                                <td>El hilo ha sido creado mediante <code>new Thread(...)</code> pero aún no ha sido iniciado con <code>start()</code>. No consume recursos del sistema.</td>
+                                <td>Se transita a RUNNABLE al llamar <code>start()</code>. Si nunca se inicia, permanece en NEW hasta la recolección de basura.</td>
+                                <td><code>Thread t = new Thread(runnable); // Estado: NEW</code> – Útil para preparar hilos sin ejecutarlos inmediatamente.</td>
+                            </tr>
+                            <tr>
+                                <td>RUNNABLE</td>
+                                <td>El hilo está ejecutándose en la JVM o está listo para ejecutarse (en la cola de hilos del scheduler del SO). Incluye tiempo de ejecución real y tiempo listo.</td>
+                                <td>Puede pasar a BLOCKED/WAITING/TIMED_WAITING por sincronización o sleep; a TERMINATED al finalizar <code>run()</code>.</td>
+                                <td>Hilo en ejecución: <code>t.start(); // Estado: RUNNABLE</code> – Representa el estado activo en programación concurrente.</td>
+                            </tr>
+                            <tr>
+                                <td>BLOCKED</td>
+                                <td>El hilo está bloqueado esperando adquirir un monitor lock (bloqueo intrínseco) para entrar en un bloque <code>synchronized</code>. Ocurre en sincronización de métodos o bloques.</td>
+                                <td>Transita a RUNNABLE al adquirir el lock. Común en accesos a recursos compartidos para evitar condiciones de carrera.</td>
+                                <td>Esperando lock: <code>synchronized(obj) { ... } // Si lock ocupado: BLOCKED</code> – Previene accesos concurrentes no seguros.</td>
+                            </tr>
+                            <tr>
+                                <td>WAITING</td>
+                                <td>El hilo está esperando indefinidamente a que otro hilo invoque <code>notify()</code> o <code>notifyAll()</code> sobre el mismo objeto monitor. Libera el lock al entrar en este estado.</td>
+                                <td>Transita a BLOCKED al intentar re-adquirir el lock tras notify, o a RUNNABLE si se interrumpe. Usado en patrones como productor-consumidor.</td>
+                                <td><code>obj.wait(); // Estado: WAITING</code> – Para coordinación entre hilos, como esperar señales en colas compartidas.</td>
+                            </tr>
+                            <tr>
+                                <td>TIMED_WAITING</td>
+                                <td>Similar a WAITING, pero con un timeout: el hilo espera hasta que expire el tiempo o llegue una notificación. Incluye llamadas como <code>Thread.sleep()</code>, <code>Object.wait(timeout)</code>, <code>Thread.join(timeout)</code> o <code>Lock.lockInterruptibly()</code>.</td>
+                                <td>Transita a RUNNABLE al expirar el timeout o recibir notify; puede interrumpirse. Útil para esperas con límite temporal.</td>
+                                <td><code>Thread.sleep(1000); // Estado: TIMED_WAITING</code> – Evita esperas indefinidas en bucles concurrentes.</td>
+                            </tr>
+                            <tr>
+                                <td>TERMINATED</td>
+                                <td>El hilo ha completado su ejecución (método <code>run()</code> terminó) o ha sido interrumpido fatalmente. No puede reanudarse y sus recursos se liberan.</td>
+                                <td>Estado final; no hay transiciones salientes. Verificar con <code>isAlive()</code> que retorne false.</td>
+                                <td>Al finalizar <code>run(): // Estado: TERMINATED</code> – Indica fin de tarea en pools de hilos o monitores de progreso.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-content">
+                    <p>Esta tabla resume los seis estados posibles, que son inmutables y se obtienen de forma atómica con <code>thread.getState()</code>, permitiendo un monitoreo no intrusivo en aplicaciones concurrentes. En la práctica, un hilo puede transitar rápidamente entre estados (por ejemplo, de RUNNABLE a BLOCKED en sincronizaciones frecuentes), lo que resalta la necesidad de un diseño robusto para evitar problemas como deadlocks o starvation.</p>
+                </div>
+            </section>            
         </main>
     </div>
 
