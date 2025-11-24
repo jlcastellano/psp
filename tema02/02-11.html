@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Hilos en Java - Herramientas de Alto Nivel para Concurrencia</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/vs2015.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Programación de Hilos en Java</div>
+        </div>
+    </header>
+    <div class="container">
+        <main>
+            <div class="content-header">
+                <h1 class="content-title">Herramientas de alto nivel para concurrencia</h1>
+            </div>
+            <section class="lesson-section">
+                <h2 class="section-title">Introducción a las Herramientas de Concurrencia</h2>
+                <div class="text-content">
+                    <p>Java proporciona diversos mecanismos de alto nivel para concurrencia en el paquete
+                        <code>java.util.concurrent</code>. Vale la pena tenerlos en cuenta, porque pueden simplificar
+                        significativamente el desarrollo de aplicaciones concurrentes. Con ello se puede evitar esfuerzo
+                        innecesario y mejorar la calidad del software desarrollado, utilizando mecanismos de alto nivel
+                        y patrones ya disponibles y probados exhaustivamente. Este paquete es muy amplio y en constante
+                        evolución, por lo que a continuación se explicarán los componentes más útiles y modernos para
+                        desarrollar aplicaciones concurrentes robustas.</p>
+                    
+                    <p>El paquete <code>java.util.concurrent</code> fue introducido en Java 5 y ha sido mejorado continuamente en versiones posteriores. Representa un cambio de paradigma desde la programación concurrente de bajo nivel (usando <code>synchronized</code>, <code>wait()</code> y <code>notify()</code>) hacia abstracciones de más alto nivel que encapsulan patrones comunes de concurrencia. Estas herramientas están diseñadas por expertos en concurrencia y han sido optimizadas y probadas exhaustivamente en entornos de producción de alta demanda.</p>
+                    
+                    <p>Las ventajas de utilizar estas herramientas de alto nivel incluyen: reducción significativa de errores de concurrencia (como race conditions y deadlocks), mejor rendimiento gracias a optimizaciones internas avanzadas, código más legible y mantenible, y menor tiempo de desarrollo. Además, muchas de estas clases están optimizadas a nivel de hardware, aprovechando instrucciones especiales del procesador para operaciones atómicas, lo que las hace extremadamente eficientes.</p>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Colecciones concurrentes</h2>
+                <div class="text-content">
+                    <p>Las colecciones tradicionales de Java (ArrayList, HashMap, etc.) no son seguras para uso
+                        concurrente. El paquete <code>java.util.concurrent</code> ofrece alternativas diseñadas
+                        específicamente para entornos multihilo.</p>
+                    
+                    <p>Las colecciones estándar de Java fueron diseñadas para entornos de un solo hilo y no proporcionan ninguna garantía de seguridad cuando múltiples hilos intentan acceder o modificar la colección simultáneamente. Intentar usar estas colecciones en un entorno concurrente puede resultar en comportamientos impredecibles como valores corruptos, excepciones <code>ConcurrentModificationException</code>, pérdida de datos, o incluso bucles infinitos.</p>
+                    
+                    <p>Una solución tradicional era usar <code>Collections.synchronizedList()</code> o <code>Collections.synchronizedMap()</code>, que envuelven las colecciones estándar con sincronización. Sin embargo, este enfoque tiene limitaciones importantes: todas las operaciones están sincronizadas con un único bloqueo, lo que crea un cuello de botella en aplicaciones con alta concurrencia; no hay soporte para operaciones atómicas compuestas; y los iteradores no son seguros sin sincronización externa adicional.</p>
+                    
+                    <p>Las colecciones concurrentes de <code>java.util.concurrent</code> resuelven estos problemas utilizando técnicas avanzadas como bloqueo a nivel de segmento, operaciones lock-free basadas en CAS (Compare-And-Swap), y algoritmos especializados que permiten lecturas concurrentes sin bloqueos mientras mantienen la consistencia de los datos.</p>
+                </div>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">BlockingQueue</h3>
+                    <div class="text-content">
+                        <p>La interfaz <code>BlockingQueue</code> define una cola FIFO (first-in-first-out) que bloquea
+                            hilos que intentan extraer un elemento cuando la cola está vacía, esperando hasta que haya
+                            algún elemento disponible. También permite especificar un número máximo de elementos, de
+                            manera que se bloquean hilos que intentan añadir elementos cuando la cola está llena.
+                            Además, permite especificar un tiempo máximo para el bloqueo.</p>
+
+                        <p><code>BlockingQueue</code> es fundamental para implementar el patrón productor-consumidor, uno de los patrones más comunes en programación concurrente. En este patrón, uno o más hilos "productores" generan datos y los colocan en una cola, mientras que uno o más hilos "consumidores" extraen y procesan esos datos. La belleza de <code>BlockingQueue</code> es que maneja automáticamente toda la sincronización y señalización entre productores y consumidores.</p>
+                        
+                        <p>Los métodos principales de <code>BlockingQueue</code> incluyen: <code>put(E e)</code> que inserta un elemento, bloqueando si es necesario hasta que haya espacio disponible; <code>take()</code> que recupera y elimina el elemento al inicio de la cola, bloqueando si es necesario hasta que haya un elemento disponible; <code>offer(E e, long timeout, TimeUnit unit)</code> que intenta insertar con un tiempo de espera máximo; y <code>poll(long timeout, TimeUnit unit)</code> que intenta recuperar un elemento con tiempo de espera.</p>
+                        
+                        <p>El bloqueo automático de <code>BlockingQueue</code> elimina la necesidad de usar bucles de espera activa (busy waiting), que desperdiciarían recursos de CPU. En lugar de eso, los hilos se suspenden eficientemente hasta que la condición que esperan se cumple, y son despertados automáticamente por el sistema operativo cuando corresponde.</p>
+
+                        <p><strong>Implementaciones principales:</strong></p>
+
+                        <ul>
+                            <li><strong>ArrayBlockingQueue:</strong> Cola con capacidad fija basada en un array. Es una cola acotada (bounded) que se crea con un tamaño máximo específico. Internamente usa un array circular para almacenar elementos, lo que la hace muy eficiente en memoria. Es ideal cuando se conoce de antemano el número máximo de elementos que pueden estar en la cola y se quiere evitar el crecimiento ilimitado. Utiliza un único bloqueo para controlar el acceso, lo que garantiza ordenamiento FIFO estricto pero puede crear contención en escenarios de muy alta concurrencia.</li>
+                            
+                            <li><strong>LinkedBlockingQueue:</strong> Cola opcionalmente limitada basada en nodos enlazados. Puede crearse con capacidad fija o sin límite (comportándose como una cola no acotada). Internamente usa nodos enlazados, lo que permite crecer dinámicamente según sea necesario. A diferencia de <code>ArrayBlockingQueue</code>, usa dos bloqueos separados: uno para operaciones de inserción y otro para operaciones de extracción, lo que puede mejorar el rendimiento en escenarios de alta concurrencia al permitir que inserciones y extracciones ocurran simultáneamente. Es la opción más común cuando no se requieren características especiales.</li>
+                            
+                            <li><strong>PriorityBlockingQueue:</strong> Cola sin límite con orden de prioridad. Los elementos no se procesan en orden FIFO, sino según su orden natural (si implementan <code>Comparable</code>) o según un <code>Comparator</code> proporcionado. Internamente utiliza un heap binario para mantener el orden de prioridad. Es ideal para sistemas donde algunos trabajos son más importantes que otros y deben procesarse primero. No tiene límite de capacidad, por lo que puede crecer indefinidamente si los productores generan datos más rápido de lo que los consumidores pueden procesarlos.</li>
+                        </ul>
+                        
+                        <p>Otras implementaciones especializadas incluyen <code>DelayQueue</code> para elementos que solo pueden ser tomados después de que expire su tiempo de retraso, <code>SynchronousQueue</code> donde cada operación de inserción debe esperar a una operación de extracción correspondiente (no tiene capacidad de almacenamiento interno), y <code>TransferQueue</code> que permite a los productores esperar hasta que un consumidor reciba el elemento.</p>
+                    </div>
+
+                    <div class="text-content">
+                        <p><strong>Ejemplo práctico - Patrón Productor-Consumidor:</strong></p>
+                        <p>Este ejemplo demuestra el patrón productor-consumidor clásico. El productor genera 20 productos a una velocidad de uno cada 100ms, mientras que el consumidor los procesa a una velocidad de uno cada 200ms. La cola tiene capacidad para 10 elementos. Cuando la cola está llena, el productor se bloquea automáticamente. Cuando está vacía, el consumidor se bloquea. Esto crea un mecanismo de control de flujo natural donde el productor se ralentiza automáticamente si el consumidor no puede seguir el ritmo, evitando el consumo excesivo de memoria.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>ProductorConsumidor.java</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.*;
+
+public class ProductorConsumidor {
+    private static BlockingQueue&lt;String&gt; cola = new ArrayBlockingQueue&lt;&gt;(10);
+    
+    // Hilo productor
+    static class Productor implements Runnable {
+        public void run() {
+            try {
+                for (int i = 1; i &lt;= 20; i++) {
+                    String producto = "Producto-" + i;
+                    cola.put(producto); // Bloquea si la cola está llena
+                    System.out.println("Producido: " + producto);
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+    
+    // Hilo consumidor
+    static class Consumidor implements Runnable {
+        public void run() {
+            try {
+                while (true) {
+                    String producto = cola.take(); // Bloquea si la cola está vacía
+                    System.out.println("Consumido: " + producto);
+                    Thread.sleep(200);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">ConcurrentHashMap</h3>
+                    <div class="text-content">
+                        <p><code>ConcurrentHashMap</code> es una implementación thread-safe de <code>Map</code> que no
+                            requiere sincronización externa. Es más eficiente que usar
+                            <code>Collections.synchronizedMap()</code> porque permite accesos concurrentes de lectura
+                            sin bloqueos.</p>
+                        
+                        <p><code>ConcurrentHashMap</code> es una de las estructuras de datos concurrentes más sofisticadas y utilizadas en Java. A diferencia de <code>Hashtable</code> o <code>Collections.synchronizedMap()</code> que bloquean toda la estructura para cualquier operación, <code>ConcurrentHashMap</code> utiliza una técnica llamada "lock striping" o bloqueo por segmentos, donde el mapa se divide internamente en segmentos y cada segmento puede bloquearse independientemente.</p>
+                        
+                        <p>En versiones modernas de Java (8+), <code>ConcurrentHashMap</code> ha sido reimplementado para usar un enfoque aún más eficiente basado en operaciones CAS (Compare-And-Swap) y sincronización a nivel de bin (bucket), lo que permite aún mayor concurrencia. Las operaciones de lectura generalmente no requieren ningún bloqueo, permitiendo que múltiples lectores y escritores operen simultáneamente sin interferencia.</p>
+                        
+                        <p>Una característica crucial es que <code>ConcurrentHashMap</code> no permite claves o valores nulos, a diferencia de <code>HashMap</code>. Esta decisión de diseño elimina ambigüedades: en un mapa concurrente, si <code>get(key)</code> devuelve null, significa definitivamente que la clave no existe, no que existe con valor null. Esto es importante para operaciones atómicas condicionales.</p>
+                        
+                        <p><code>ConcurrentHashMap</code> proporciona operaciones atómicas que son seguras y eficientes en entornos concurrentes. Métodos como <code>putIfAbsent()</code>, <code>remove(key, value)</code>, <code>replace(key, oldValue, newValue)</code>, y <code>compute()</code> garantizan que las operaciones de verificación y modificación ocurran atómicamente, sin posibilidad de condiciones de carrera. Estas operaciones son fundamentales para escribir código concurrente correcto sin necesidad de sincronización externa.</p>
+                        
+                        <p>Los iteradores de <code>ConcurrentHashMap</code> tienen una semántica de "weakly consistent" (débilmente consistente). Esto significa que pueden reflejar el estado del mapa en algún punto desde la creación del iterador, pero no necesariamente el estado más reciente. Sin embargo, están garantizados para nunca lanzar <code>ConcurrentModificationException</code>, lo que los hace seguros para usar mientras otros hilos modifican el mapa.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de ConcurrentHashMap</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>ConcurrentHashMap&lt;String, Integer&gt; puntuaciones = new ConcurrentHashMap&lt;&gt;();
+
+// Operación atómica: añadir solo si no existe
+// Retorna null si la clave no existía, o el valor existente si ya estaba
+puntuaciones.putIfAbsent("Jugador1", 0);
+
+// Operación atómica: reemplazar solo si existe
+// Retorna el valor anterior, o null si la clave no existía
+puntuaciones.replace("Jugador1", 100);
+
+// Operación atómica: incrementar valor
+// compute() permite actualizar un valor basándose en su valor actual
+// La función recibe la clave y el valor actual (o null si no existe)
+puntuaciones.compute("Jugador1", (k, v) -&gt; v == null ? 1 : v + 1);
+
+// Operación atómica: combinar valores
+// merge() es ideal para acumular valores, como sumas o concatenaciones
+// Si la clave no existe, usa el valor proporcionado (10)
+// Si existe, aplica la función de combinación (suma en este caso)
+puntuaciones.merge("Jugador1", 10, Integer::sum); // Suma 10 al valor actual</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">CopyOnWriteArrayList</h3>
+                    <div class="text-content">
+                        <p>Implementación de lista donde todas las operaciones de modificación crean una nueva copia del
+                            array subyacente. Ideal cuando las lecturas son mucho más frecuentes que las escrituras.</p>
+                        
+                        <p><code>CopyOnWriteArrayList</code> implementa una estrategia radical para la seguridad de hilos: cada vez que se modifica la lista (añadir, eliminar, o modificar un elemento), se crea una copia completamente nueva del array subyacente. Aunque esto suena costoso, es extremadamente eficiente para casos de uso donde las lecturas son mucho más frecuentes que las escrituras.</p>
+                        
+                        <p>El principal beneficio es que las operaciones de lectura (como iteración, get, contains) son completamente libres de bloqueos y extremadamente rápidas. Los iteradores operan sobre una instantánea inmutable del array que existía en el momento de su creación, por lo que nunca lanzan <code>ConcurrentModificationException</code> y no requieren sincronización externa, incluso si otros hilos modifican la lista simultáneamente.</p>
+                        
+                        <p>Este enfoque es ideal para escenarios como listas de observadores/listeners (donde múltiples hilos leen frecuentemente la lista para notificar eventos, pero raramente se añaden o eliminan listeners), listas de configuración (que se leen constantemente pero se actualizan raramente), o listas de cache (donde las lecturas dominan sobre las actualizaciones).</p>
+                        
+                        <p>Sin embargo, es importante entender las limitaciones: cada operación de escritura requiere copiar todo el array, lo que puede ser costoso en memoria y tiempo para listas grandes; los iteradores reflejan el estado de la lista en el momento de su creación, no capturando modificaciones posteriores; y no es adecuada para listas que cambian frecuentemente o que son muy grandes.</p>
+                        
+                        <p>Existe también <code>CopyOnWriteArraySet</code>, que es una implementación de <code>Set</code> basada en <code>CopyOnWriteArrayList</code>, útil para conjuntos con las mismas características de lectura frecuente y escritura rara.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de CopyOnWriteArrayList</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>CopyOnWriteArrayList&lt;String&gt; logs = new CopyOnWriteArrayList&lt;&gt;();
+
+// Múltiples hilos pueden leer sin bloqueos
+// Esta iteración es segura incluso si otros hilos añaden o eliminan elementos
+// El iterador trabaja sobre una instantánea de la lista en este momento
+for (String log : logs) {
+    System.out.println(log);
+}
+
+// Las escrituras son costosas pero seguras
+// Esta operación crea una nueva copia del array interno
+// Sin embargo, es thread-safe sin necesidad de sincronización externa
+logs.add("Nuevo log");</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Variables atómicas</h2>
+                <div class="text-content">
+                    <p>El paquete <code>java.util.concurrent.atomic</code> incluye clases que proporcionan operaciones
+                        atómicas sobre variables primitivas sin necesidad de usar <code>synchronized</code>. Son mucho
+                        más eficientes que la sincronización tradicional.</p>
+                    
+                    <p>Las clases atómicas representan un enfoque fundamentalmente diferente para la concurrencia. En lugar de usar bloqueos (locks) que suspenden hilos cuando hay contención, utilizan operaciones a nivel de hardware llamadas CAS (Compare-And-Swap). Una operación CAS verifica si un valor en memoria es el esperado y, solo si lo es, lo actualiza atómicamente. Si otro hilo modificó el valor mientras tanto, la operación falla y puede reintentarse.</p>
+                    
+                    <p>La ventaja principal es que las operaciones CAS son operaciones de una sola instrucción de CPU en la mayoría de los procesadores modernos, haciéndolas extremadamente rápidas. No hay cambios de contexto del sistema operativo, no hay suspensión de hilos, y no hay riesgo de deadlock porque no se adquieren bloqueos. En escenarios de baja a moderada contención, las clases atómicas superan significativamente el rendimiento de la sincronización basada en bloqueos.</p>
+                    
+                    <p>Las operaciones atómicas son "lock-free" pero no necesariamente "wait-free". Esto significa que aunque ningún hilo sostiene un bloqueo, un hilo puede tener que reintentar su operación múltiples veces si otros hilos están modificando concurrentemente el mismo valor. Sin embargo, el sistema en su conjunto siempre hace progreso: al menos un hilo completa su operación exitosamente en cada intento.</p>
+                    
+                    <p>Es importante entender que "atómico" significa que la operación completa se ejecuta como una unidad indivisible. No puede observarse en un estado intermedio. Por ejemplo, en <code>incrementAndGet()</code>, la lectura del valor actual, el incremento, y la escritura del nuevo valor ocurren todos atómicamente desde la perspectiva de otros hilos.</p>
+                </div>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">AtomicInteger y AtomicLong</h3>
+                    <div class="text-content">
+                        <p><code>AtomicInteger</code> y <code>AtomicLong</code> proporcionan operaciones atómicas sobre enteros de 32 y 64 bits respectivamente. Son perfectos para contadores, generadores de ID, estadísticas, y cualquier situación donde múltiples hilos necesiten actualizar un valor numérico compartido.</p>
+                        
+                        <p>Los métodos principales incluyen: <code>get()</code> y <code>set(value)</code> para lectura y escritura atómica; <code>getAndSet(newValue)</code> que actualiza atómicamente y retorna el valor anterior; <code>incrementAndGet()</code> y <code>getAndIncrement()</code> (similar a ++i y i++); <code>decrementAndGet()</code> y <code>getAndDecrement()</code>; <code>addAndGet(delta)</code> y <code>getAndAdd(delta)</code> para sumas arbitrarias.</p>
+                        
+                        <p>El método <code>compareAndSet(expected, update)</code> es fundamental para implementar algoritmos lock-free más complejos. Actualiza el valor a <code>update</code> solo si el valor actual es igual a <code>expected</code>, retornando true si tuvo éxito. Esto permite implementar bucles de actualización condicional que se repiten hasta que tienen éxito.</p>
+                        
+                        <p>Los métodos <code>updateAndGet(IntUnaryOperator)</code> y <code>getAndUpdate(IntUnaryOperator)</code> (Java 8+) permiten aplicar cualquier función al valor de forma atómica. Internamente usan bucles CAS para garantizar atomicidad incluso con operaciones complejas. Esto es extremadamente útil para actualizaciones condicionales o cálculos complejos.</p>
+                        
+                        <p>También existe <code>AtomicBoolean</code> para valores booleanos (útil para flags) y clases para arrays: <code>AtomicIntegerArray</code> y <code>AtomicLongArray</code>, que proporcionan operaciones atómicas sobre elementos individuales de un array.</p>
+                        
+                        <p><strong>Ejemplo - Contador compartido:</strong></p>
+                        <p>Este ejemplo muestra un contador thread-safe que puede ser incrementado, decrementado, y actualizado atómicamente por múltiples hilos sin necesidad de sincronización. El método <code>incrementarSiMenorQue()</code> demuestra un patrón común de bucle CAS para operaciones condicionales complejas.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>ContadorAtomic.java</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.atomic.AtomicInteger;
+
+public class ContadorAtomic {
+    private AtomicInteger contador = new AtomicInteger(0);
+    
+    public void incrementar() {
+        contador.incrementAndGet(); // Atómico, sin synchronized
+    }
+    
+    public void decrementar() {
+        contador.decrementAndGet();
+    }
+    
+    public void sumar(int valor) {
+        contador.addAndGet(valor);
+    }
+    
+    public int getValor() {
+        return contador.get();
+    }
+    
+    // Operación compare-and-swap
+    // Este método demuestra el patrón típico de bucle CAS
+    // Intenta incrementar solo si el valor es menor que el límite
+    public boolean incrementarSiMenorQue(int limite) {
+        int valorActual;
+        do {
+            valorActual = contador.get();
+            if (valorActual &gt;= limite) {
+                return false;
+            }
+            // compareAndSet retorna true si tuvo éxito, false si otro hilo cambió el valor
+            // Si falla, el bucle se repite con el nuevo valor actual
+        } while (!contador.compareAndSet(valorActual, valorActual + 1));
+        return true;
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">AtomicReference</h3>
+                    <div class="text-content">
+                        <p>Permite operaciones atómicas sobre referencias a objetos.</p>
+                        
+                        <p><code>AtomicReference&lt;V&gt;</code> extiende el concepto de operaciones atómicas a referencias de objetos. Mientras que <code>AtomicInteger</code> maneja valores primitivos, <code>AtomicReference</code> puede contener referencias a cualquier tipo de objeto y proporciona las mismas garantías atómicas para operaciones sobre esas referencias.</p>
+                        
+                        <p>Es importante entender que <code>AtomicReference</code> garantiza atomicidad en la actualización de la referencia misma, no en las modificaciones del objeto referenciado. Si múltiples hilos modifican el objeto al que apunta la referencia, aún necesitarás sincronización adicional o usar objetos inmutables.</p>
+                        
+                        <p>El patrón más común con <code>AtomicReference</code> es trabajar con objetos inmutables: leer la referencia actual, crear una nueva versión del objeto con los cambios deseados, y luego actualizar atómicamente la referencia usando CAS. Este patrón garantiza que las actualizaciones sean atómicas y visibles para todos los hilos sin necesidad de bloqueos.</p>
+                        
+                        <p>Los métodos <code>updateAndGet()</code> y <code>getAndUpdate()</code> simplifican este patrón al encapsular el bucle CAS internamente. Simplemente proporcionas una función que toma el valor actual y retorna el nuevo valor, y el método se encarga de aplicarla atómicamente.</p>
+                        
+                        <p>También existe <code>AtomicReferenceArray&lt;E&gt;</code> para arrays de referencias, y <code>AtomicStampedReference</code> y <code>AtomicMarkableReference</code> para resolver el problema ABA (donde un valor cambia de A a B y luego vuelve a A, lo que puede causar problemas en algunos algoritmos).</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de AtomicReference</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.atomic.AtomicReference;
+
+class Estado {
+    String nombre;
+    int valor;
+}
+
+AtomicReference&lt;Estado&gt; estadoActual = new AtomicReference&lt;&gt;(new Estado());
+
+// Actualización atómica
+// updateAndGet() aplica la función y retorna el nuevo valor
+// Internamente usa un bucle CAS para garantizar atomicidad
+// La función puede ser llamada múltiples veces si hay contención
+estadoActual.updateAndGet(estado -&gt; {
+    Estado nuevo = new Estado();
+    nuevo.nombre = "Actualizado";
+    nuevo.valor = estado.valor + 1;
+    return nuevo;
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">LongAdder</h3>
+                    <div class="text-content">
+                        <p>Para contadores de alto rendimiento con muchas actualizaciones concurrentes,
+                            <code>LongAdder</code> es más eficiente que <code>AtomicLong</code>.</p>
+                        
+                        <p><code>LongAdder</code> fue introducido en Java 8 para resolver un problema específico de rendimiento con <code>AtomicLong</code>. Cuando muchos hilos actualizan concurrentemente un <code>AtomicLong</code>, se genera mucha contención: múltiples CPUs compiten por actualizar la misma ubicación de memoria, causando invalidación de cachés y reintentos de operaciones CAS.</p>
+                        
+                        <p><code>LongAdder</code> usa una técnica ingeniosa: en lugar de mantener un único valor, mantiene internamente un array de variables que se actualizan independientemente. Cada hilo tiende a actualizar una celda diferente del array, reduciendo dramáticamente la contención. Cuando necesitas el valor total, simplemente suma todas las celdas.</p>
+                        
+                        <p>Esta estrategia hace que <code>LongAdder</code> sea significativamente más rápido que <code>AtomicLong</code> para contadores con alta contención (muchos hilos actualizando frecuentemente), especialmente en sistemas con muchos cores. La contrapartida es que la operación <code>sum()</code> es más costosa, ya que debe iterar sobre todas las celdas.</p>
+                        
+                        <p>Por lo tanto, <code>LongAdder</code> es ideal para contadores estadísticos donde las actualizaciones son muy frecuentes pero las lecturas del total son relativamente raras. Casos de uso típicos incluyen contadores de peticiones en servidores web, contadores de eventos en sistemas de monitoreo, o acumuladores de métricas.</p>
+                        
+                        <p>Si necesitas lecturas frecuentes del valor total, o si la contención es baja, <code>AtomicLong</code> puede ser más apropiado. <code>LongAdder</code> también consume más memoria debido al array interno de celdas.</p>
+                        
+                        <p>Existen variantes relacionadas: <code>DoubleAdder</code> para valores de punto flotante, y <code>LongAccumulator</code> y <code>DoubleAccumulator</code> que permiten operaciones de acumulación personalizadas (no solo suma), como encontrar el máximo, mínimo, o aplicar cualquier función binaria asociativa.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de LongAdder</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.atomic.LongAdder;
+
+LongAdder peticiones = new LongAdder();
+
+// Múltiples hilos incrementando
+// Estas operaciones son extremadamente rápidas incluso con alta contención
+// Cada hilo tiende a actualizar una celda diferente del array interno
+peticiones.increment();
+peticiones.add(5);
+
+// Obtener el total
+// sum() itera sobre todas las celdas internas y las suma
+// Esta operación es más costosa que get() en AtomicLong
+// pero las actualizaciones son mucho más rápidas con alta concurrencia
+long total = peticiones.sum();</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Ejecutores y pools de hilos (Executors)</h2>
+                <div class="text-content">
+                    <p>En lugar de crear hilos manualmente, Java ofrece el framework <code>Executor</code> que gestiona
+                        automáticamente pools de hilos reutilizables.</p>
+                    
+                    <p>El framework Executor Framework representa un cambio fundamental en cómo se debe pensar sobre la ejecución concurrente en Java. En lugar de crear hilos directamente para cada tarea (lo cual es costoso ya que crear un hilo implica asignar memoria, recursos del sistema operativo, y tiempo de inicialización), el patrón recomendado es separar la sumisión de tareas de la mecánica de cómo serán ejecutadas.</p>
+                    
+                    <p>Un pool de hilos mantiene un conjunto de hilos trabajadores (worker threads) que están constantemente esperando tareas para ejecutar. Cuando envías una tarea al pool, uno de los hilos disponibles la toma y la ejecuta. Una vez completada, el hilo no se destruye sino que vuelve al pool para esperar otra tarea. Esto elimina el costo de crear y destruir hilos continuamente.</p>
+                    
+                    <p>Los beneficios del Executor Framework incluyen: mejor rendimiento mediante reutilización de hilos, control del nivel de concurrencia limitando el número de hilos en el pool, gestión automática del ciclo de vida de los hilos, cola automática de tareas cuando todos los hilos están ocupados, manejo robusto de excepciones, y separación clara entre la lógica de negocio (las tareas) y la gestión de recursos de concurrencia.</p>
+                    
+                    <p>La interfaz <code>Executor</code> es extremadamente simple: solo define un método <code>execute(Runnable)</code>. <code>ExecutorService</code> extiende <code>Executor</code> añadiendo métodos para gestión del ciclo de vida (<code>shutdown()</code>, <code>shutdownNow()</code>, <code>isShutdown()</code>, <code>isTerminated()</code>) y para enviar tareas que retornan resultados mediante <code>Future</code>.</p>
+                    
+                    <p>La clase <code>Executors</code> proporciona métodos factory para crear diferentes tipos de pools de hilos: <code>newFixedThreadPool(n)</code> crea un pool con un número fijo de hilos; <code>newCachedThreadPool()</code> crea un pool que crece según demanda y reutiliza hilos inactivos; <code>newSingleThreadExecutor()</code> garantiza ejecución secuencial con un solo hilo; y <code>newWorkStealingPool()</code> (Java 8+) crea un pool que usa el algoritmo work-stealing para mejor balanceo de carga.</p>
+                </div>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">ExecutorService</h3>
+                    <div class="text-content">
+                        <p><code>ExecutorService</code> es la interfaz principal para gestionar pools de hilos. Proporciona métodos para enviar tareas, obtener resultados, y controlar el ciclo de vida del pool.</p>
+                        
+                        <p>Los métodos principales para enviar tareas incluyen: <code>execute(Runnable)</code> que ejecuta una tarea sin retornar resultado; <code>submit(Runnable)</code> que retorna un <code>Future&lt;?&gt;</code> para saber cuándo completa; <code>submit(Callable&lt;T&gt;)</code> que retorna un <code>Future&lt;T&gt;</code> con el resultado de la tarea; y <code>invokeAll()</code> y <code>invokeAny()</code> para ejecutar colecciones de tareas.</p>
+                        
+                        <p>Un <code>Callable</code> es similar a <code>Runnable</code> pero puede retornar un valor y lanzar excepciones checked. Un <code>Future</code> representa el resultado pendiente de una tarea asíncrona, permitiendo verificar si completó (<code>isDone()</code>), obtener el resultado bloqueando si es necesario (<code>get()</code>), cancelar la tarea (<code>cancel()</code>), o obtener el resultado con timeout.</p>
+                        
+                        <p>La gestión del ciclo de vida es crucial: <code>shutdown()</code> inicia un apagado ordenado donde no se aceptan nuevas tareas pero las existentes se completan; <code>shutdownNow()</code> intenta detener todas las tareas activas inmediatamente y retorna las tareas que estaban en cola; <code>awaitTermination(timeout)</code> bloquea hasta que todas las tareas completen después de un shutdown o expire el timeout.</p>
+                        
+                        <p>Es importante siempre llamar a <code>shutdown()</code> o <code>shutdownNow()</code> cuando terminas de usar un ExecutorService, ya que los hilos del pool previenen que la JVM termine. Un patrón común es usar try-finally o try-with-resources (Java 19+ con AutoCloseable ExecutorService) para garantizar el shutdown.</p>
+                        
+                        <p><strong>Ejemplo básico:</strong></p>
+                        <p>Este ejemplo demuestra un pool de 4 hilos procesando 10 tareas. Como hay más tareas que hilos, algunas tareas esperarán en cola hasta que un hilo se libere. El método <code>awaitTermination()</code> asegura que el programa principal espere hasta que todas las tareas completen antes de salir.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de ExecutorService</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.*;
+
+ExecutorService executor = Executors.newFixedThreadPool(4); // Pool de 4 hilos
+
+// Enviar tareas
+for (int i = 0; i &lt; 10; i++) {
+    final int tarea = i;
+    executor.submit(() -&gt; {
+        System.out.println("Ejecutando tarea " + tarea + 
+                          " en " + Thread.currentThread().getName());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    });
+}
+
+executor.shutdown(); // No acepta más tareas
+executor.awaitTermination(1, TimeUnit.MINUTES); // Espera a que terminen todas</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">ScheduledExecutorService</h3>
+                    <div class="text-content">
+                        <p>Para tareas programadas y periódicas.</p>
+                        
+                        <p><code>ScheduledExecutorService</code> extiende <code>ExecutorService</code> para soportar la ejecución de tareas con retrasos o de forma periódica. Es la alternativa moderna y thread-safe a <code>java.util.Timer</code>, con mejor manejo de errores y más flexibilidad.</p>
+                        
+                        <p>Los métodos principales incluyen: <code>schedule(Runnable, delay, unit)</code> que ejecuta una tarea una vez después del retraso especificado; <code>schedule(Callable, delay, unit)</code> similar pero retorna un <code>ScheduledFuture</code> con resultado; <code>scheduleAtFixedRate(Runnable, initialDelay, period, unit)</code> que ejecuta periódicamente con período fijo desde el inicio de cada ejecución; y <code>scheduleWithFixedDelay(Runnable, initialDelay, delay, unit)</code> que ejecuta periódicamente con retraso fijo entre el fin de una ejecución y el inicio de la siguiente.</p>
+                        
+                        <p>La diferencia entre <code>scheduleAtFixedRate</code> y <code>scheduleWithFixedDelay</code> es importante: con <code>scheduleAtFixedRate</code>, si una ejecución tarda más que el período, la siguiente comenzará inmediatamente (pueden acumularse ejecuciones); con <code>scheduleWithFixedDelay</code>, siempre hay al menos el retraso especificado entre ejecuciones, sin importar cuánto tarde cada una.</p>
+                        
+                        <p>Si una tarea lanza una excepción no capturada, se suprimen futuras ejecuciones de esa tarea. Por lo tanto, es crucial capturar y manejar todas las excepciones dentro de las tareas programadas si quieres que continúen ejecutándose.</p>
+                        
+                        <p><code>ScheduledExecutorService</code> es ideal para tareas como limpieza periódica de cachés, envío de heartbeats en protocolos de red, generación periódica de reportes, verificaciones de salud de servicios, y cualquier tarea que necesite ejecutarse regularmente o con retraso.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de ScheduledExecutorService</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+
+// Ejecutar una vez después de 5 segundos
+scheduler.schedule(() -&gt; System.out.println("Tarea retrasada"), 
+                   5, TimeUnit.SECONDS);
+
+// Ejecutar cada 10 segundos
+// scheduleAtFixedRate ejecuta a intervalos fijos desde el inicio de cada ejecución
+// Si una ejecución tarda más de 10 segundos, la siguiente comenzará inmediatamente
+// Útil cuando quieres mantener una frecuencia específica
+scheduler.scheduleAtFixedRate(() -&gt; System.out.println("Tarea periódica"), 
+                              0, 10, TimeUnit.SECONDS);</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">CompletableFuture (Java 8+)</h3>
+                    <div class="text-content">
+                        <p>Para programación asíncrona moderna.</p>
+                        
+                        <p><code>CompletableFuture</code> representa una evolución significativa en la programación asíncrona de Java. Mientras que <code>Future</code> es pasivo (solo puedes bloquear esperando el resultado), <code>CompletableFuture</code> es activo y composable: puedes encadenar operaciones que se ejecutarán cuando el resultado esté disponible, sin bloquear.</p>
+                        
+                        <p>Implementa tanto <code>Future</code> como <code>CompletionStage</code>. Esta última interfaz define un rico conjunto de métodos para componer operaciones asíncronas: <code>thenApply()</code> transforma el resultado, <code>thenAccept()</code> consume el resultado, <code>thenRun()</code> ejecuta una acción, <code>thenCompose()</code> encadena futures dependientes, <code>thenCombine()</code> combina dos futures independientes, y muchos más.</p>
+                        
+                        <p>Cada uno de estos métodos tiene variantes: la versión normal ejecuta en el mismo hilo que completó el future, <code>...Async()</code> ejecuta en el pool común de ForkJoin, y <code>...Async(Executor)</code> ejecuta en un executor específico. Esto te da control fino sobre dónde se ejecuta cada etapa de tu pipeline asíncrono.</p>
+                        
+                        <p>El manejo de errores es robusto con métodos como <code>exceptionally()</code> que proporciona un valor de respaldo si ocurre una excepción, <code>handle()</code> que recibe tanto el resultado como cualquier excepción, y <code>whenComplete()</code> para ejecutar código de limpieza sin importar si tuvo éxito o falló.</p>
+                        
+                        <p>Puedes combinar múltiples futures de varias formas: <code>allOf()</code> espera a que todos completen, <code>anyOf()</code> espera a que cualquiera complete, permitiendo patrones sofisticados como "el primero que responda" o "esperar todos los resultados".</p>
+                        
+                        <p><code>CompletableFuture</code> también puede completarse manualmente con <code>complete(value)</code> o <code>completeExceptionally(throwable)</code>, permitiendo casos de uso avanzados como implementar callbacks o bridges entre sistemas asíncronos.</p>
+                        
+                        <p>La programación con <code>CompletableFuture</code> promueve un estilo declarativo donde describes qué debe pasar cuando los resultados estén disponibles, en lugar de bloquear hilos esperando. Esto resulta en aplicaciones más escalables que usan mejor los recursos disponibles.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de CompletableFuture</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>CompletableFuture&lt;String&gt; futuro = CompletableFuture.supplyAsync(() -&gt; {
+    // Operación costosa en otro hilo
+    return "Resultado de operación larga";
+});
+
+// thenAccept() se ejecutará cuando el futuro complete, sin bloquear el hilo actual
+futuro.thenAccept(resultado -&gt; {
+    System.out.println("Recibido: " + resultado);
+});
+
+// Combinar múltiples operaciones asíncronas
+CompletableFuture&lt;Integer&gt; f1 = CompletableFuture.supplyAsync(() -&gt; 10);
+CompletableFuture&lt;Integer&gt; f2 = CompletableFuture.supplyAsync(() -&gt; 20);
+
+// thenCombine() combina los resultados de dos futures independientes
+// cuando ambos completen
+CompletableFuture&lt;Integer&gt; suma = f1.thenCombine(f2, (a, b) -&gt; a + b);
+System.out.println("Suma: " + suma.get());</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Sincronizadores de alto nivel</h2>
+                <div class="text-content">
+                    <p>Los sincronizadores son utilidades especializadas que coordinan la ejecución de múltiples hilos basándose en diferentes condiciones. Encapsulan patrones comunes de sincronización que serían complejos y propensos a errores si se implementaran manualmente con <code>wait()</code>, <code>notify()</code> y <code>synchronized</code>.</p>
+                    
+                    <p>Cada sincronizador resuelve un problema específico de coordinación entre hilos. Son fundamentales para implementar correctamente patrones de concurrencia complejos sin reinventar la rueda y evitando errores sutiles que son difíciles de detectar y depurar.</p>
+                </div>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">CountDownLatch</h3>
+                    <div class="text-content">
+                        <p>Permite que uno o más hilos esperen hasta que se completen un conjunto de operaciones.</p>
+                        
+                        <p><code>CountDownLatch</code> es un mecanismo de sincronización de "una sola vez" (one-shot). Se inicializa con un contador, y los hilos pueden esperar llamando a <code>await()</code> hasta que el contador llegue a cero mediante llamadas a <code>countDown()</code>. Una vez que el contador llega a cero, todos los hilos en espera son liberados y el latch permanece abierto permanentemente.</p>
+                        
+                        <p>El caso de uso típico es esperar a que múltiples servicios o componentes completen su inicialización antes de continuar. Por ejemplo, en el inicio de una aplicación, podrías tener varios servicios (base de datos, caché, conectores de red) que deben inicializarse. El hilo principal puede esperar en un <code>CountDownLatch</code> inicializado con el número de servicios, y cada servicio llama a <code>countDown()</code> cuando está listo.</p>
+                        
+                        <p>Otro uso común es en pruebas de rendimiento: iniciar múltiples hilos trabajadores, hacer que todos esperen en un latch, y luego liberar el latch para que todos comiencen simultáneamente, garantizando máxima concurrencia.</p>
+                        
+                        <p>El método <code>await()</code> bloquea indefinidamente, pero existe <code>await(timeout, unit)</code> que retorna false si el timeout expira antes de que el contador llegue a cero. Esto es útil para evitar esperas infinitas si algún servicio falla en inicializar.</p>
+                        
+                        <p>Es importante entender que <code>CountDownLatch</code> no es reutilizable. Una vez que el contador llega a cero, permanece en cero. Si necesitas un mecanismo reutilizable, considera <code>CyclicBarrier</code> o <code>Phaser</code>.</p>
+                        
+                        <p><strong>Ejemplo - Esperar a que varios servicios inicien:</strong></p>
+                        <p>Este ejemplo muestra tres servicios que tardan diferentes cantidades de tiempo en inicializar. El hilo principal espera en el latch hasta que los tres servicios hayan llamado a <code>countDown()</code>, indicando que están listos.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de CountDownLatch</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.CountDownLatch;
+
+CountDownLatch inicio = new CountDownLatch(3); // Esperar a 3 servicios
+
+// Servicio 1
+new Thread(() -&gt; {
+    System.out.println("Servicio 1 iniciando...");
+    Thread.sleep(1000);
+    System.out.println("Servicio 1 listo");
+    inicio.countDown();
+}).start();
+
+// Servicio 2
+new Thread(() -&gt; {
+    System.out.println("Servicio 2 iniciando...");
+    Thread.sleep(2000);
+    System.out.println("Servicio 2 listo");
+    inicio.countDown();
+}).start();
+
+// Servicio 3
+new Thread(() -&gt; {
+    System.out.println("Servicio 3 iniciando...");
+    Thread.sleep(1500);
+    System.out.println("Servicio 3 listo");
+    inicio.countDown();
+}).start();
+
+inicio.await(); // Espera hasta que count = 0
+System.out.println("Todos los servicios listos. Iniciando aplicación...");</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">CyclicBarrier</h3>
+                    <div class="text-content">
+                        <p>Permite que un grupo de hilos esperen entre sí hasta alcanzar un punto común.</p>
+                        
+                        <p><code>CyclicBarrier</code> es un punto de sincronización donde un número fijo de hilos deben esperar entre sí antes de continuar. A diferencia de <code>CountDownLatch</code>, la barrera es reutilizable (cíclica): después de que todos los hilos hayan alcanzado la barrera y sean liberados, la barrera se resetea automáticamente y puede usarse nuevamente.</p>
+                        
+                        <p>El constructor toma dos parámetros: el número de "partes" (hilos) que deben esperar, y opcionalmente una acción de barrera (<code>Runnable</code>) que se ejecuta cuando todos los hilos llegan a la barrera, justo antes de liberarlos. Esta acción se ejecuta exactamente una vez por ciclo, por el último hilo que llega.</p>
+                        
+                        <p>Los hilos llaman a <code>await()</code> para indicar que han alcanzado la barrera. Este método bloquea hasta que todas las partes hayan llegado. Una vez que el último hilo llega, todos son liberados simultáneamente y la barrera se resetea para el siguiente ciclo.</p>
+                        
+                        <p>El caso de uso clásico es en simulaciones o computaciones por fases donde múltiples hilos procesan datos en paralelo, pero necesitan sincronizarse entre fases. Por ejemplo, en una simulación física con múltiples objetos, cada hilo podría calcular el nuevo estado de algunos objetos, esperar en una barrera hasta que todos completen, y luego proceder a la siguiente iteración con los estados actualizados.</p>
+                        
+                        <p>Otro uso común es en algoritmos paralelos iterativos como Jacobi o Gauss-Seidel, donde múltiples hilos trabajan en partes diferentes de una matriz, pero deben sincronizarse al final de cada iteración antes de comenzar la siguiente.</p>
+                        
+                        <p>Si un hilo es interrumpido mientras espera en la barrera, o si el <code>await()</code> expira (si usas la versión con timeout), la barrera se "rompe" y todos los hilos esperando (y futuros <code>await()</code>) lanzan <code>BrokenBarrierException</code>. La barrera puede resetearse manualmente con <code>reset()</code>.</p>
+                        
+                        <p><strong>Ejemplo - Simulación por fases:</strong></p>
+                        <p>Este ejemplo simula 4 jugadores que deben prepararse individualmente, pero todos deben estar listos antes de que comience cada ronda. La acción de barrera se ejecuta cuando todos están listos, señalizando el inicio de la nueva ronda.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de CyclicBarrier</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.CyclicBarrier;
+
+int numJugadores = 4;
+CyclicBarrier barrera = new CyclicBarrier(numJugadores, () -&gt; {
+    System.out.println("Todos listos. Iniciando nueva ronda...");
+});
+
+for (int i = 0; i &lt; numJugadores; i++) {
+    final int jugador = i;
+    new Thread(() -&gt; {
+        try {
+            while (true) {
+                System.out.println("Jugador " + jugador + " preparándose...");
+                Thread.sleep((long)(Math.random() * 2000));
+                System.out.println("Jugador " + jugador + " listo");
+                barrera.await(); // Espera a los demás
+                System.out.println("Jugador " + jugador + " jugando");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }).start();</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">Semaphore</h3>
+                    <div class="text-content">
+                        <p>Controla el acceso a un recurso mediante un número limitado de permisos.</p>
+                        
+                        <p><code>Semaphore</code> mantiene un conjunto de permisos. Los hilos adquieren permisos con <code>acquire()</code>, bloqueándose si no hay permisos disponibles, y liberan permisos con <code>release()</code>. El número de permisos disponibles se especifica en el constructor.</p>
+                        
+                        <p>Un semáforo con 1 permiso actúa como un mutex (bloqueo de exclusión mutua), permitiendo que solo un hilo acceda al recurso a la vez. Con N permisos, permite hasta N hilos accediendo simultáneamente, útil para limitar la concurrencia a un nivel específico.</p>
+                        
+                        <p>Los métodos principales incluyen: <code>acquire()</code> que adquiere un permiso, bloqueando si es necesario; <code>acquire(n)</code> para adquirir múltiples permisos; <code>tryAcquire()</code> que intenta adquirir sin bloquear, retornando false si no hay permisos disponibles; <code>tryAcquire(timeout, unit)</code> con tiempo de espera máximo; <code>release()</code> para liberar un permiso; y <code>release(n)</code> para liberar múltiples.</p>
+                        
+                        <p>El caso de uso típico es limitar el acceso a recursos escasos. Por ejemplo, un pool de conexiones de base de datos con un número máximo de conexiones puede implementarse con un semáforo. Los clientes adquieren un permiso antes de obtener una conexión, garantizando que nunca se excedan las conexiones máximas.</p>
+                        
+                        <p>Otros usos incluyen: controlar el número de hilos que acceden a una API externa (para respetar límites de tasa), limitar la concurrencia en secciones críticas para rendimiento (como I/O de disco), implementar pools de recursos genéricos, o controlar el nivel de paralelismo en algoritmos.</p>
+                        
+                        <p>El constructor acepta un parámetro opcional de "fairness". Un semáforo justo (fair=true) garantiza orden FIFO en la adquisición de permisos, previniendo inanición pero con overhead adicional. Un semáforo no justo (fair=false, por defecto) ofrece mejor rendimiento pero no garantiza orden.</p>
+                        
+                        <p>Es crucial usar <code>release()</code> en un bloque finally para garantizar que los permisos se liberen incluso si ocurre una excepción, previniendo fugas de permisos que dejarían el semáforo permanentemente agotado.</p>
+                        
+                        <p><strong>Ejemplo - Pool de conexiones:</strong></p>
+                        <p>Este ejemplo simula un pool de conexiones con máximo 3 conexiones simultáneas. Los clientes adquieren un permiso (conexión) antes de usarla, y la liberan cuando terminan. Si las 3 conexiones están en uso, los clientes adicionales esperan.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de Semaphore</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.Semaphore;
+
+Semaphore conexiones = new Semaphore(3); // Máximo 3 conexiones simultáneas
+
+class Cliente implements Runnable {
+    private int id;
+    
+    public Cliente(int id) { this.id = id; }
+    
+    public void run() {
+        try {
+            System.out.println("Cliente " + id + " esperando conexión...");
+            conexiones.acquire(); // Adquiere permiso
+            System.out.println("Cliente " + id + " conectado");
+            Thread.sleep(2000); // Usa la conexión
+            System.out.println("Cliente " + id + " desconectado");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            conexiones.release(); // Libera permiso
+        }
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Locks explícitos (ReentrantLock)</h2>
+                <div class="text-content">
+                    <p>Alternativa más flexible a <code>synchronized</code>.</p>
+                    
+                    <p><code>ReentrantLock</code> proporciona la misma funcionalidad básica de exclusión mutua que <code>synchronized</code>, pero con capacidades adicionales que lo hacen más flexible y poderoso para casos de uso avanzados.</p>
+                    
+                    <p>Las ventajas sobre <code>synchronized</code> incluyen: posibilidad de intentar adquirir el bloqueo sin esperar indefinidamente con <code>tryLock()</code>, capacidad de adquirir el bloqueo de forma interrumpible con <code>lockInterruptibly()</code>, soporte para múltiples variables de condición asociadas al mismo lock mediante <code>newCondition()</code>, opción de bloqueo justo que respeta orden FIFO, y capacidad de verificar el estado del lock.</p>
+                    
+                    <p>El método <code>lock()</code> adquiere el bloqueo, esperando si es necesario. Es equivalente a entrar en un bloque <code>synchronized</code>. <code>unlock()</code> libera el bloqueo y debe llamarse siempre en un bloque finally para garantizar que se libere incluso si ocurre una excepción.</p>
+                    
+                    <p><code>tryLock()</code> intenta adquirir el bloqueo inmediatamente, retornando true si tuvo éxito y false si el lock ya está siendo sostenido por otro hilo. Esto permite implementar lógica alternativa cuando el lock no está disponible en lugar de bloquear. <code>tryLock(timeout, unit)</code> espera hasta el timeout especificado.</p>
+                    
+                    <p><code>lockInterruptibly()</code> adquiere el bloqueo a menos que el hilo sea interrumpido mientras espera, en cuyo caso lanza <code>InterruptedException</code>. Esto permite cancelar operaciones que están esperando locks.</p>
+                    
+                    <p>Las <code>Condition</code>s son similares a <code>wait()</code>/<code>notify()</code> pero más flexibles. Puedes tener múltiples conditions asociadas al mismo lock, cada una representando una condición diferente para esperar. Esto permite diseños más claros que <code>wait()</code>/<code>notifyAll()</code> donde todos los hilos comparten la misma cola de espera.</p>
+                    
+                    <p>El constructor acepta un parámetro de fairness. Un lock justo garantiza que el hilo que más tiempo ha estado esperando adquiere el lock primero, previniendo inanición pero con overhead de rendimiento. Un lock no justo permite que hilos "salten" la cola, ofreciendo mejor throughput pero sin garantías de orden.</p>
+                    
+                    <p><code>ReentrantLock</code> es "reentrant" (reentrante): el mismo hilo puede adquirir el mismo lock múltiples veces (cada <code>lock()</code> debe emparejarse con un <code>unlock()</code>). Esto es importante para métodos recursivos o cuando un método que sostiene el lock llama a otro método que también necesita el mismo lock.</p>
+                    
+                    <p>Generalmente, usa <code>synchronized</code> a menos que necesites las capacidades avanzadas de <code>ReentrantLock</code>. <code>synchronized</code> es más simple, menos propenso a errores (el bloqueo se libera automáticamente), y en versiones modernas de Java tiene rendimiento comparable.</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Ejemplo de ReentrantLock</span>
+                        <span class="language-badge">Java</span>
+                    </div>
+                    <div class="code-content">
+                        <button class="copy-button">Copiar</button>
+                        <pre><code>import java.util.concurrent.locks.*;
+
+class CuentaBancaria {
+    private double saldo = 0;
+    private Lock lock = new ReentrantLock();
+    
+    public void depositar(double cantidad) {
+        lock.lock();
+        try {
+            saldo += cantidad;
+        } finally {
+            lock.unlock(); // Siempre en finally
+        }
+    }
+    
+    // Con tryLock - intenta adquirir sin bloquear indefinidamente
+    // Útil cuando quieres intentar una operación pero tienes una alternativa
+    // si el recurso no está disponible inmediatamente
+    public boolean retirar(double cantidad) {
+        if (lock.tryLock()) {
+            try {
+                if (saldo &gt;= cantidad) {
+                    saldo -= cantidad;
+                    return true;
+                }
+                return false;
+            } finally {
+                lock.unlock();
+            }
+        }
+        return false; // No pudo obtener el lock
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Números aleatorios para multihilo</h2>
+                <div class="text-content">
+                    <p>La generación de números aleatorios en entornos multihilo requiere consideraciones especiales. Las clases tradicionales como <code>java.util.Random</code> son thread-safe, pero usan sincronización interna que crea un cuello de botella cuando múltiples hilos generan números aleatorios concurrentemente.</p>
+                    
+                    <p><code>Math.random()</code> usa una instancia compartida de <code>Random</code>, por lo que tiene el mismo problema de contención. En aplicaciones con alta concurrencia, esto puede convertirse en un punto de serialización significativo que degrada el rendimiento.</p>
+                </div>
+
+                <section class="lesson-section">
+                    <h3 class="section-subtitle">ThreadLocalRandom</h3>
+                    <div class="text-content">
+                        <p>Proporciona números aleatorios de forma eficiente en aplicaciones multihilo, en sustitución
+                            de <code>Math.random()</code> o <code>Random</code> compartido.</p>
+                        
+                        <p><code>ThreadLocalRandom</code> fue introducido en Java 7 para resolver el problema de contención en la generación de números aleatorios. En lugar de usar un generador compartido que requiere sincronización, cada hilo obtiene su propia instancia de generador de números aleatorios.</p>
+                        
+                        <p>El patrón de uso es simple: <code>ThreadLocalRandom.current()</code> retorna la instancia del generador para el hilo actual. Esta instancia está aislada de otros hilos, por lo que no hay sincronización ni contención. Esto hace que la generación de números aleatorios sea extremadamente rápida en aplicaciones multihilo.</p>
+                        
+                        <p>La API es similar a <code>Random</code>: <code>nextInt()</code>, <code>nextLong()</code>, <code>nextDouble()</code>, <code>nextBoolean()</code>, etc. Además, proporciona versiones con rangos que son más convenientes que usar módulo: <code>nextInt(bound)</code> genera un entero de 0 (inclusive) a bound (exclusivo), y <code>nextInt(origin, bound)</code> genera un entero en el rango [origin, bound).</p>
+                        
+                        <p>Es importante entender que <code>ThreadLocalRandom</code> NO debe usarse para criptografía o aplicaciones que requieren aleatoriedad de alta calidad para seguridad. Para esos casos, usa <code>java.security.SecureRandom</code>. <code>ThreadLocalRandom</code> está diseñado para rendimiento en simulaciones, juegos, muestreo, y otros casos donde la calidad criptográfica no es necesaria.</p>
+                        
+                        <p>No compartas instancias de <code>ThreadLocalRandom</code> entre hilos. Siempre obtén la instancia actual llamando a <code>current()</code> en cada hilo. Compartir instancias derrota el propósito y puede causar problemas de rendimiento y calidad de aleatoriedad.</p>
+                        
+                        <p><code>ThreadLocalRandom</code> usa el algoritmo XorShift, que es muy rápido pero no es criptográficamente seguro. Es perfecto para simulaciones Monte Carlo, algoritmos genéticos, shuffling, generación de datos de prueba, y cualquier aplicación donde necesites números pseudoaleatorios de buena calidad pero no para seguridad.</p>
+                    </div>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Ejemplo de ThreadLocalRandom</span>
+                            <span class="language-badge">Java</span>
+                        </div>
+                        <div class="code-content">
+                            <button class="copy-button">Copiar</button>
+                            <pre><code>import java.util.concurrent.ThreadLocalRandom;
+
+// Número entero entre 0 y 99
+int r = ThreadLocalRandom.current().nextInt(0, 100);
+
+// Número decimal entre 0.0 y 1.0
+double d = ThreadLocalRandom.current().nextDouble();
+
+// Número long entre 1 y 1000
+long l = ThreadLocalRandom.current().nextLong(1, 1001);
+
+// Booleano aleatorio
+boolean b = ThreadLocalRandom.current().nextBoolean();
+
+// Uso en simulación
+class Trabajador implements Runnable {
+    public void run() {
+        while (true) {
+            // Cada hilo usa su propia instancia de generador
+            // No hay contención ni sincronización
+            int pausa = ThreadLocalRandom.current().nextInt(100, 1000);
+            try {
+                Thread.sleep(pausa);
+                System.out.println(Thread.currentThread().getName() + 
+                                 " trabajando durante " + pausa + "ms");
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="lesson-section">
+                <h2 class="section-title">Streams paralelos (Java 8+)</h2>
+                <div class="text-content">
+                    <p>Java 8 introdujo la API de Streams con soporte para procesamiento paralelo automático.</p>
+                    
+                    <p>Los Streams representan un cambio de paradigma en cómo procesamos colecciones en Java, moviéndose de un estilo imperativo (bucles for, iteradores explícitos) a un estilo declarativo y funcional. Los streams paralelos extienden esto permitiendo que las operaciones se ejecuten automáticamente en paralelo, aprovechando múltiples cores del procesador.</p>
+                    
+                    <p>Un stream paralelo divide los datos en segmentos, procesa cada segmento en un hilo diferente usando el pool común de ForkJoin, y combina los resultados. Todo esto ocurre transparentemente: simplemente cambias <code>stream()</code> por <code>parallelStream()</code> o llamas a <code>parallel()</code> en un stream existente.</p>
+                    
+                    <p>El framework usa work-stealing: si un hilo termina su segmento antes que otros, "roba" trabajo de las colas de otros hilos. Esto garantiza buen balanceo de carga incluso cuando los segmentos tardan tiempos diferentes en procesarse.</p>
+                    
+                    <p>Sin embargo, no todas las operaciones se benefician del paralelismo. Las consideraciones importantes incluyen: el tamaño de los datos (datasets pequeños pueden ser más lentos en paralelo debido al overhead de coordinación), la naturaleza de las operaciones (operaciones simples y rápidas pueden no beneficiarse, mientras que operaciones costosas sí), la estructura de datos fuente (algunas estructuras se dividen mejor que otras), y si las operaciones tienen efectos secundarios o dependen del orden.</p>
+                    
+                    <p>Las operaciones de stream deben ser stateless (sin estado), non-interfering (no modificar la fuente), y preferiblemente asociativas y conmutativas para resultados correctos en paralelo. Operaciones como <code>forEach()</code> en streams paralelos no garantizan orden de procesamiento.</p>
+                    
+                    <p>Los streams paralelos usan por defecto el pool común de ForkJoin, que tiene tantos hilos como procesadores disponibles. Este pool es compartido globalmente, por lo que operaciones bloqueantes en streams paralelos pueden afectar negativamente a otras partes de la aplicación.</p>
+                    
+                    <p>Para datasets muy grandes o operaciones muy costosas, los streams paralelos pueden proporcionar mejoras significativas de rendimiento. Para operaciones en memoria sobre colecciones pequeñas, el overhead puede superar los beneficios. Como siempre, mide el rendimiento con tus datos y operaciones específicos antes de decidir.</p>
+                    
+                    <p>Las operaciones agregadas como <code>reduce()</code>, <code>collect()</code>, <code>sum()</code>, <code>max()</code>, etc., se benefician particularmente del paralelismo porque pueden dividirse naturalmente en subtareas independientes que se combinan al final.</p>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Ejemplo de Streams Paralelos</span>
+                        <span class="language-badge">Java</span>
+                    </div>
+                    <div class="code-content">
+                        <button class="copy-button">Copiar</button>
+                        <pre><code>import java.util.*;
+import java.util.stream.*;
+
+List&lt;Integer&gt; numeros = IntStream.range(1, 1000000).boxed().collect(Collectors.toList());
+
+// Procesamiento secuencial
+// Todo se ejecuta en un solo hilo
+long suma1 = numeros.stream()
+                    .filter(n -&gt; n % 2 == 0)
+                    .mapToLong(n -&gt; n * n)
+                    .sum();
+
+// Procesamiento paralelo automático
+// Los datos se dividen en segmentos procesados en múltiples hilos
+// El framework maneja toda la coordinación y combinación de resultados
+long suma2 = numeros.parallelStream()
+                    .filter(n -&gt; n % 2 == 0)
+                    .mapToLong(n -&gt; n * n)
+                    .sum();</code></pre>
+                    </div>
+                </div>
+
+                <div class="text-content">
+                    <p>Estas herramientas modernas simplifican enormemente el desarrollo de aplicaciones concurrentes,
+                        reduciendo errores y mejorando el rendimiento. Se recomienda utilizar estos mecanismos de alto
+                        nivel en lugar de gestionar hilos y sincronización manualmente siempre que sea posible.</p>
+                    
+                    <p>El ecosistema de concurrencia de Java ha evolucionado desde primitivas de bajo nivel hacia abstracciones cada vez más sofisticadas y fáciles de usar. Cada herramienta está diseñada para resolver problemas específicos de forma eficiente y segura. Comprender cuándo y cómo usar cada una es fundamental para escribir aplicaciones concurrentes robustas y de alto rendimiento.</p>
+                    
+                    <p>La tendencia general es usar las herramientas de más alto nivel posible para tu caso de uso: prefiere streams paralelos para procesamiento de datos, <code>CompletableFuture</code> para operaciones asíncronas, ExecutorService para gestión de hilos, colecciones concurrentes sobre colecciones sincronizadas manualmente, y variables atómicas sobre sincronización con bloqueos cuando sea apropiado. Recurre a primitivas de bajo nivel solo cuando las herramientas de alto nivel no se ajusten a tus necesidades específicas.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
