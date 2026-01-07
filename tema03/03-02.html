@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de niveles de TCP/IP</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div>Redes de Ordenadores</div>
+    </header>
+
+    <section class="contenido-didactico">
+        <h1>3.2. Modelo de niveles de TCP/IP</h1>
+
+        <p>En esta sección vamos a repasar los conceptos fundamentales sobre redes de ordenadores. Estos conceptos ya deberías conocerlos del módulo de Sistemas Informáticos, así que haremos un repaso general para refrescar la memoria.</p>
+
+        <p>Cuando los ordenadores se comunican a través de una red, lo hacen mediante un modelo organizado en capas o niveles (en inglés, <i>layers</i>). Piensa en estas capas como en los diferentes pisos de un edificio: cada piso ofrece servicios específicos a los pisos de arriba. La capa más baja es la física, donde encontramos todo el hardware: los ordenadores, cables, tarjetas de red, etc. La capa más alta es la de aplicación, que es donde trabajan los programas que usamos diariamente para comunicarnos (como el navegador web o el correo electrónico). Entre estos dos extremos hay varias capas intermedias, cada una usando los servicios de la capa inferior y proporcionando servicios a la superior. Para acceder a los servicios de cada capa, se utilizan protocolos específicos, que son como "idiomas" o reglas de comunicación. El primer modelo por capas que se propuso para las comunicaciones en red fue el modelo OSI (Open Systems Interconnection), desarrollado por la organización ISO (International Organization for Standardization).</p>
+
+        <p>Actualmente, el modelo que domina en las redes es el modelo TCP/IP, sobre el cual se construyó Internet tal como la conocemos hoy en 2025. Este modelo no se preocupa de las capas más básicas del modelo OSI (la capa física y la de enlace). Su capa superior, llamada capa de aplicación, engloba las tres capas superiores del modelo OSI: aplicación, presentación y sesión. En cada capa del modelo TCP/IP, los diferentes componentes acceden a los servicios de la capa inferior mediante protocolos específicos. Para este modelo se ha desarrollado un conjunto completo de protocolos (en inglés se le llama <i>protocol suite</i> o <i>protocol stack</i>, que significa "pila de protocolos"). En cada capa hay uno o varios protocolos disponibles, que se basan en los protocolos de la capa inferior y sirven de base para los protocolos de la capa superior.</p>
+
+        <p>En la figura 3.4 puedes ver cómo se relacionan las capas del modelo TCP/IP con las del modelo OSI</p>
+
+        <figure>
+            <img src="https://pfst.cf2.poecdn.net/base/image/e5e4057f22d6825096d2eebcf567b88c6cd336464fb6024aa5473a71213deb3f?w=1536&h=1024" alt="Imagen didáctica 1">
+            <figcaption>Cómo se simplifican las 7 capas OSI en las 4 de TCP/IP.</figcaption>
+        </figure>
+
+        <p>Es importante destacar que todas las capas del modelo TCP/IP se implementan mediante software, no hay hardware específico.</p>
+
+        <p>En la capa de red existe un único protocolo: el protocolo IP. En la capa de transporte encontramos dos protocolos principales: TCP y UDP. En la capa de aplicación hay una gran variedad de protocolos diferentes, algunos de los cuales veremos en el siguiente capítulo cuando hablemos de los servicios en red.</p>
+
+        <p>La figura 3.5 muestra qué dispositivos de la red implementan cada una de las capas del modelo TCP/IP</p>
+
+        <figure>
+            <img src="https://pfst.cf2.poecdn.net/base/image/abec98e91c9767514eee9c3af0b7e381fb6640aaa473e461ba9962e2835a75f1?w=1536&h=1024" alt="Imagen didáctica 2">
+            <figcaption>Qué capas implementa cada dispositivo y cómo se comunican entre sí.</figcaption>
+        </figure>
+
+        <p>Los routers (o enrutadores) son dispositivos que pueden conectarse a varias redes simultáneamente, permitiendo la comunicación entre ellas. Para realizar esta función, implementan las capas física, de enlace y de red del modelo.</p>
+
+        <p>Los hosts son ordenadores conectados a la red y deben implementar todas las capas del modelo. Además de las capas que implementan los routers (física, enlace y red), añaden las capas de transporte y de aplicación. Aquí hay un detalle importante: la capa de red, por sí sola, no puede garantizar que todos los paquetes de datos enviados lleguen a su destino, ni que lleguen en el mismo orden en que fueron enviados. Es la capa de transporte la que proporciona un servicio de comunicación fiable de extremo a extremo entre dos hosts, garantizando que todos los datos enviados se reciban correctamente y en el orden correcto.</p>
+
+        <p>El cuadro 3.1 resume de forma clara los servicios que proporciona cada capa del modelo TCP/IP.</p>
+
+        <p style="text-align: right;"><strong>CUADRO 3.1</strong><br>Servicios proporcionados por cada capa del modelo TCP/IP</p>
+
+        <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #0077b6; color: white;">
+                    <th>Capa</th>
+                    <th>¿Qué elementos conecta?</th>
+                    <th>Nombre de la unidad de datos</th>
+                    <th>¿Qué servicio proporciona esta capa?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Enlace</td>
+                    <td>Interfaces de red (tarjetas de red)</td>
+                    <td>Trama</td>
+                    <td>Esta capa permite la comunicación entre dos tarjetas de red que están en la misma red local. Pueden estar conectadas directamente, a través de un <i>switch</i>, o mediante varios <i>switches</i> interconectados. La capa de enlace puede proporcionar un servicio fiable de entrega de tramas incluso cuando la capa física no es completamente fiable. Para ello, detecta las tramas que tienen errores o que no se recibieron, y solicita que se vuelvan a transmitir.</td>
+                </tr>
+                <tr>
+                    <td>Red o Internet</td>
+                    <td>Hosts (ordenadores en la red)</td>
+                    <td>Datagrama IP (también llamado paquete de datos)</td>
+                    <td>Esta capa permite la comunicación entre dos interfaces de red o hosts. El término "host" puede referirse tanto a una interfaz de red conectada a la red (<i>host interface</i>) como al ordenador completo al que pertenece esa interfaz (<i>host computer</i>). A cada interfaz de red se le asigna una dirección IP única. La capa de red, mediante el protocolo IP, comunica diferentes interfaces enviando paquetes de datos o datagramas. Sin embargo, este servicio no garantiza que los paquetes lleguen a su destino (pueden perderse por el camino) ni que lleguen en el orden correcto (pueden llegar desordenados). Las interfaces comunicadas pueden estar en la misma red local o en redes diferentes conectadas a través de uno o más routers intermedios. Un router es un dispositivo que permite conectar redes distintas; para ello, tiene varias interfaces de red, cada una conectada a una red diferente.</td>
+                </tr>
+                <tr>
+                    <td>Transporte</td>
+                    <td>Puertos en un host</td>
+                    <td>Segmento</td>
+                    <td>Esta capa permite la transmisión de datos entre dos puertos, cada uno ubicado en un host diferente. Existen dos protocolos en esta capa:
+                        <ul>
+                            <li><strong>TCP:</strong> Proporciona un servicio de transmisión fiable y garantiza que los segmentos de datos lleguen al destino en el mismo orden en que se enviaron desde el origen. Si algún segmento se pierde o llega con errores, TCP se encarga de solicitar su retransmisión.</li>
+                            <li><strong>UDP:</strong> Proporciona un servicio de entrega de datagramas de usuario más simple, que no garantiza ni la entrega de todos los datagramas ni que lleguen en el orden correcto. Es más rápido pero menos fiable que TCP.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Aplicación</td>
+                    <td>Procesos (programas en ejecución)</td>
+                    <td>Datos</td>
+                    <td>Esta capa permite la transmisión fiable de una secuencia de bytes entre dos procesos (programas en ejecución), donde cada proceso se ejecuta en un ordenador o host diferente. Es la capa con la que interactúan directamente las aplicaciones que usamos.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>3.2.1. Capas de enlace y de red</h2>
+
+        <p>La capa de enlace permite la comunicación entre interfaces de red (tarjetas de red) que están conectadas físicamente de forma directa. Esta conexión puede ser a través de un mismo <i>switch</i>, o mediante varios <i>switches</i> interconectados entre sí. Una interfaz de red corresponde a una tarjeta de red física instalada en el ordenador. Cada tarjeta de red tiene una dirección MAC de 48 bits (6 bytes) que es única en todo el mundo, permanente y viene grabada de fábrica. Esta dirección normalmente se representa mostrando cada byte con dos dígitos hexadecimales, separando todos los bytes con dos puntos, como en este ejemplo:</p>
+
+        <div style="text-align: center; font-family: monospace;">
+            38:2c:4a:b5:72:6b
+        </div>
+
+        <p>En la capa de red, las tarjetas de red se comunican utilizando el protocolo IP. En este nivel, cada tarjeta se identifica mediante una dirección IP y una máscara de red. Es el sistema operativo el que asigna esta configuración IP a cada tarjeta de red cuando se configura la red.</p>
+
+        <p>Existe una interfaz de red especial que no está asociada a ningún dispositivo físico. Se llama interfaz de <i>loopback</i> y se utiliza para que los programas puedan comunicarse con otros procesos que se están ejecutando en el mismo ordenador. Normalmente se utiliza el nombre <i>localhost</i> para hacer referencia a esta interfaz especial.</p>
+
+        <p>Existen dos versiones del protocolo IP en uso actualmente (en 2025), y el formato de las direcciones IP es diferente en cada versión.</p>
+
+        <h3>A) IPv4: Versión 4 del protocolo IP</h3>
+
+        <p>Es la versión más utilizada tradicionalmente, aunque está siendo gradualmente sustituida por IPv6. Una dirección IPv4 es un identificador de 32 bits (4 bytes). Normalmente se escribe en un formato fácil de leer llamado <i>notación decimal punteada</i>, como se ve en este ejemplo: cuatro números decimales (uno por cada byte) separados por puntos.</p>
+
+        <div style="text-align: center; font-family: monospace;">
+            192.168.80.45
+        </div>
+
+        <p>Esta dirección se divide en dos partes: los primeros bits identifican la red a la que pertenece el ordenador, y los bits restantes identifican el host concreto dentro de esa red. El número de bits que se usan para identificar la red se llama "longitud de máscara". La máscara de red es un número binario formado por tantos bits en uno como indica la longitud de la máscara, y el resto de bits en cero. Si la máscara de red para la dirección IP anterior es de 24 bits, se puede representar en notación decimal punteada como <span style="color: #0077b6;">255.255.255.0</span> (los 24 primeros bits valen 1 y los 8 últimos valen 0). También existe otra forma más compacta de mostrar la máscara: indicando su longitud después de la dirección IP separada por una barra: <span style="color: #0077b6;">192.168.80.45/24</span>. Con esta máscara, la red sería <span style="color: #0077b6;">192.168.80.0/24</span>, y el valor de los últimos 8 bits (45 en este caso) identifica el host específico dentro de esa red.</p>
+
+        <p>Dentro de cada red local existe una dirección especial llamada dirección de <i>broadcast</i> (difusión). Esta dirección se utiliza para enviar un mensaje a todos los hosts de la red al mismo tiempo. Se obtiene poniendo todos los bits de la parte de host a uno. Por ejemplo, la dirección de <i>broadcast</i> para la red <span style="color: #0077b6;">192.168.80.0/24</span> es <span style="color: #0077b6;">192.168.80.255</span>.</p>
+
+        <p>La interfaz de <i>loopback</i> tiene asignada una dirección especial: <span style="color: #0077b6;">127.0.0.1</span>.</p>
+
+        <p>Existen varios rangos de direcciones IP reservados exclusivamente para su uso en redes locales privadas, especificados en el documento RFC 1918. Estas direcciones se llaman direcciones privadas o locales, y no pueden usarse en Internet pública. Las direcciones privadas están indicadas en el cuadro 3.2.</p>
+
+        <p style="color: #0077b6;"><strong>CUADRO 3.2</strong><br>Direcciones IP reservadas para redes privadas</p>
+
+        <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+            <thead>
+                <tr style="background-color: #0077b6; color: white;">
+                    <th>Tipo de red</th>
+                    <th>Longitud de máscara (bits)</th>
+                    <th>Redes disponibles</th>
+                    <th>Rango de direcciones utilizables para hosts</th>
+                    <th>Dirección de <i>broadcast</i> para cada red</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Clase A</td>
+                    <td>8</td>
+                    <td>1 red grande de tipo A:<br>10.0.0.0/8</td>
+                    <td>Desde 10.0.0.1 hasta<br>10.255.255.254</td>
+                    <td>10.255.255.255</td>
+                </tr>
+                <tr>
+                    <td>Clase B</td>
+                    <td>16</td>
+                    <td>16 redes medianas de tipo B:<br>172.<i>X</i>.0.0/16, donde <i>X</i> va desde 16 hasta 31</td>
+                    <td>Desde 172.<i>X</i>.0.1 hasta<br>172.<i>X</i>.255.254</td>
+                    <td>172.<i>X</i>.255.255</td>
+                </tr>
+                <tr>
+                    <td>Clase C</td>
+                    <td>24</td>
+                    <td>256 redes pequeñas de tipo C:<br>192.168.<i>X</i>.0/24, donde <i>X</i> va desde 0 hasta 255</td>
+                    <td>Desde 192.168.<i>X</i>.1 hasta<br>192.168.<i>X</i>.254</td>
+                    <td>192.168.<i>X</i>.255</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>B) IPv6: Versión 6 del protocolo IP</h3>
+
+        <p>IPv6 fue diseñado para sustituir gradualmente a IPv4, ya que este último se está quedando sin direcciones disponibles. En 2025, ambas versiones coexisten y la mayoría de los sistemas operativos configuran las interfaces de red para trabajar tanto con IPv4 como con IPv6. Una dirección IPv6 es mucho más larga: consta de 128 bits (16 bytes). Las direcciones IPv6 se representan de forma diferente a IPv4, como se muestra en el siguiente ejemplo: se agrupan en bloques de 2 bytes, cada byte se representa con un par de dígitos hexadecimales, y todos los bloques se separan con dos puntos. Para simplificar la escritura, los bloques que contienen solo ceros se pueden omitir.</p>
+
+        <div style="text-align: center; font-family: monospace;">
+            fe80::3a2c:4aff:feb5:726b
+        </div>
+
+        <p>En este ejemplo, se han omitido los bytes tercero y cuarto (que son ceros), y también se han omitido los bytes del 13 en adelante (que también son ceros). Los dos puntos dobles (::) indican que ahí hay uno o más bloques de ceros omitidos.</p>
+
+        <p>La dirección IPv6 para la interfaz de <i>loopback</i> es <span style="color: #0077b6;">::1</span>. En formato binario, esta dirección consiste en ciento veintisiete ceros seguidos de un uno al final.</p>
+
+        <p>Puedes ver las direcciones de enlace (direcciones MAC) y de red (direcciones IP) de tu ordenador utilizando comandos y herramientas del sistema operativo. A continuación, se muestra un ejemplo de la información que proporciona el comando <span style="color: #0077b6;">ifconfig</span> de Linux para una tarjeta de red. Si usas Windows, puedes obtener la misma información con el comando <span style="color: #0077b6;">ipconfig</span>, pero necesitarás usar la opción <span style="color: #0077b6;">/all</span> para que también se muestre la dirección MAC.</p>
+
+        <p>El identificador que aparece al principio, <span style="color: #0077b6;">eth0</span>, es el nombre que el sistema operativo le ha dado a esta interfaz de red. En este caso concreto, es una interfaz asociada a una tarjeta de red Ethernet con cable (no WiFi).</p>
+
+<pre><code class="language-bash">$ ifconfig
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.1.20  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::3a2c:4aff:feb5:726b  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 38:2c:4a:b5:72:6b  txqueuelen 1000  (Ethernet)
+        RX packets 17568  bytes 11650217 (11.6 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 12440  bytes 1414308 (1.4 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</code></pre>
+
+        <p>Este comando muestra, para cada interfaz de red del ordenador, la siguiente información: la dirección IPv4 (indicada como <span style="color: #0077b6;">inet</span>), la máscara de red para IPv4 (indicada como <span style="color: #0077b6;">netmask</span>), la dirección de <i>broadcast</i> para IPv4 (indicada como <span style="color: #0077b6;">broadcast</span>), la dirección IPv6 (indicada como <span style="color: #0077b6;">inet6</span>) y la dirección MAC (indicada como <span style="color: #0077b6;">ether</span>).</p>
+
+        <h2>3.2.2. Capa de transporte</h2>
+
+        <p>En la capa de transporte, las comunicaciones se realizan entre un puerto en un host y otro puerto en otro host diferente. Un puerto se identifica mediante un número de puerto de 16 bits, lo que significa que puede tener un valor desde 0 hasta 65.535. Este sistema de numeración de puertos es el mismo tanto para el protocolo UDP como para TCP. Cuando combinamos una dirección IP con un número de puerto, obtenemos lo que se llama un <i>socket</i>. Por lo tanto, podemos decir que la comunicación en la capa de transporte ocurre realmente entre dos <i>sockets</i>. Aparte de esta característica común, los dos protocolos de transporte son muy diferentes en su funcionamiento.</p>
+
+        <ul>
+            <li><strong>UDP (User Datagram Protocol - Protocolo de Datagramas de Usuario):</strong> Es un protocolo no orientado a conexión, lo que significa que no establece una conexión previa antes de enviar datos. UDP añade muy pocas funcionalidades extra al servicio básico que proporciona la capa de red. Envía paquetes de datos independientes llamados datagramas UDP o datagramas de usuario (<i>user datagrams</i>). UDP no realiza control de errores para detectar problemas que puedan ocurrir en la capa de red, ni gestiona la retransmisión de los paquetes que no llegaron o llegaron con errores. Tampoco garantiza que los paquetes lleguen al receptor en el mismo orden en que fueron enviados. Es un protocolo simple pero rápido.</li>
+            <li><strong>TCP (Transport Control Protocol - Protocolo de Control de Transmisión):</strong> Es un protocolo orientado a conexión, lo que significa que antes de transmitir datos, primero establece una conexión lógica entre el emisor y el receptor. Todos los paquetes transmitidos pertenecen a esta conexión y llevan un número de secuencia. TCP proporciona transmisión de datos fiable: garantiza que los datos se reciban en el destino exactamente en el mismo orden en que se enviaron desde el origen. Si algún paquete se pierde o llega con errores, TCP detecta el problema y solicita automáticamente la retransmisión del paquete. Es más lento que UDP pero mucho más fiable.</li>
+        </ul>
+
+        <p>Los números de puerto se organizan en tres rangos diferentes para los protocolos TCP y UDP, y cada rango se utiliza con fines distintos, como se muestra en el cuadro 3.3.</p>
+
+        <p style="color: #0077b6;"><strong>CUADRO 3.3</strong><br>Rangos de números de puerto y sus usos</p>
+
+        <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+            <tbody>
+                <tr>
+                    <td style="background-color: #f0f8ff; width: 20%;">Puertos del sistema o <i>well known ports</i> (puertos bien conocidos)</td>
+                    <td style="width: 15%;">0 a 1.023</td>
+                    <td>Estos puertos están asignados a servicios estándar o protocolos conocidos de la capa de aplicación. Un proceso servidor que quiera recibir comunicaciones de otros procesos (clientes) a través de puertos en este rango debe ejecutarse con privilegios de superusuario o administrador.<br>
+Algunos ejemplos de asignaciones estándar de puertos para servicios conocidos son:
+                        <ul style="list-style-type: none; padding-left: 20px;">
+                            <li>— SSH (conexión remota segura): puerto 22 de TCP.</li>
+                            <li>— FTP (transferencia de archivos): puertos 20 y 21 de TCP.</li>
+                            <li>— HTTP (páginas web): puerto 80 de TCP, o puerto 443 para HTTPS (versión segura).</li>
+                            <li>— DNS (resolución de nombres de dominio): puerto 53 de UDP.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color: #f0f8ff;">Puertos registrados</td>
+                    <td>1.024 a 49.151</td>
+                    <td>Estos puertos han sido reservados por empresas y organizaciones para sus propios servicios y aplicaciones específicas. No son estándares de Internet, pero están registrados oficialmente.<br>
+Por ejemplo, un servidor de bases de datos MariaDB o MySQL acepta peticiones de conexión en el puerto 3.306 de TCP. Este no es un estándar de Internet, pero es el puerto estándar que usa este software.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #f0f8ff;">Puertos efímeros (temporales)</td>
+                    <td>49.152 a 65.535</td>
+                    <td>Estos puertos pueden ser utilizados libremente por cualquier proceso cliente o servidor sin restricciones especiales. Normalmente, los programas servidores ofrecen sus servicios en puertos de los rangos anteriores (puertos del sistema o registrados), que son fijos y conocidos. Los procesos clientes, cuando se conectan a estos servidores, utilizan puertos efímeros que se les asignan temporalmente.<br>
+Cuando un proceso servidor que usa el protocolo TCP recibe una petición de conexión de un proceso cliente, el servidor reserva un puerto efímero específico para la comunicación con ese cliente en particular, confirma la conexión al cliente y le indica ese número de puerto efímero. A partir de ese momento, toda la comunicación entre el proceso cliente y el proceso servidor se realiza a través de esos dos puertos efímeros, liberando el puerto principal del servidor para atender nuevas peticiones de otros clientes.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>3.2.3. Capa de aplicación</h2>
+
+        <p>Los protocolos de la capa de aplicación se construyen sobre los protocolos de transporte UDP y TCP. La elección entre uno u otro depende de las necesidades específicas de cada aplicación. Los protocolos que necesitan una comunicación fiable o que deben transmitir grandes cantidades de datos en secuencia (como por ejemplo archivos completos o páginas web) utilizan TCP como protocolo de transporte. Por otro lado, el protocolo UDP se utiliza en aplicaciones donde la rapidez de transmisión es más importante que la fiabilidad absoluta, cuando la cantidad de datos a transmitir es pequeña, o cuando no importa que los datos lleguen desordenados.</p>
+
+        <p>Existen muchos protocolos basados en TCP y en UDP que son estándares de Internet, documentados en los llamados documentos RFC (Request for Comments). Estos son protocolos que cualquier desarrollador puede implementar siguiendo las especificaciones públicas. Además de estos estándares de Internet, existen muchos otros protocolos desarrollados por empresas y organizaciones específicas para sus propias necesidades. En este capítulo desarrollaremos procesos servidores sencillos basados tanto en TCP como en UDP, que pueden considerarse como ejemplos de implementación de protocolos simples de la capa de aplicación.</p>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

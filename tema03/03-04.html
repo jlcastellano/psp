@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clases de Java para comunicaciones en red</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div>Programación de Servicios y Procesos</div>
+    </header>
+
+    <section class="contenido-didactico">
+        <h1>3.4. Clases de Java para comunicaciones en red</h1>
+
+        <p>Java incluye un paquete llamado <span>java.net</span> que contiene herramientas (clases) especialmente diseñadas para que los programas puedan comunicarse a través de una red. Estas herramientas funcionan con los protocolos estándares de Internet, que pertenecen a la familia TCP/IP (los mismos que utiliza tu navegador web o tu aplicación de mensajería).</p>
+
+        <p>Este paquete se puede organizar en dos grandes grupos de clases:</p>
+
+        <ol>
+            <li>Clases de bajo nivel: Son las clases fundamentales que representan los elementos básicos de las redes, como tarjetas de red, direcciones IP y conexiones. Estas clases trabajan a nivel de los protocolos más cercanos al hardware (niveles de enlace, red y transporte). El cuadro 3.4 muestra estas clases, que son las que estudiaremos en este capítulo.</li>
+            <li>Clases de alto nivel: Están relacionadas con protocolos más especializados que funcionan a nivel de aplicación (como HTTP para páginas web o FTP para transferencia de archivos). Algunas de estas clases se estudiarán en el siguiente capítulo.</li>
+        </ol>
+
+        <p>En este capítulo haremos primero un repaso breve de las clases que manejan interfaces de red y direcciones IP. Después nos concentraremos en lo más importante: las clases para crear sockets (puntos de conexión) tanto de UDP como de TCP. Estas clases son el núcleo de este capítulo.</p>
+
+        <p>Con estas herramientas desarrollaremos programas que actúan como servidores (los que esperan conexiones) y como clientes (los que inician las conexiones).</p>
+
+        <figure>
+            <img src="https://pfst.cf2.poecdn.net/base/image/2df48f70195a34f573d7e5ed30de1f54266dde35fa3c17432f46681896df9c97?w=1536&h=1024" alt="Imagen didáctica 2">
+            <figcaption>La interacción entre sockets TCP/UDP, clientes y servidores.</figcaption>
+        </figure>
+
+        <p>Estos programas se comunicarán usando los dos principales protocolos de transporte: UDP y TCP. Aunque serán ejemplos sencillos, estaremos creando nuestros propios protocolos de nivel de aplicación básicos.</p>
+
+        <h2>CUADRO 3.4</h2>
+        <h3>Clases de bajo nivel del paquete java.net</h3>
+
+        <table>
+            <tbody>
+                <tr>
+                    <td><strong>Interfaces de red</strong></td>
+                    <td>NetworkInterface: Representa una interfaz de red física o virtual de tu ordenador (como la tarjeta WiFi, la tarjeta Ethernet, o conexiones virtuales).</td>
+                </tr>
+                <tr>
+                    <td><strong>Direcciones IP</strong></td>
+                    <td>
+                        InetAddress: Representa cualquier dirección IP (la "matrícula" que identifica a un dispositivo en la red).<br>
+                        Inet4Address: Representa específicamente una dirección IPv4 (el formato tradicional, como 192.168.1.1).<br>
+                        Inet6Address: Representa específicamente una dirección IPv6 (el formato moderno y más extenso, como 2001:0db8:85a3::8a2e:0370:7334).<br>
+                        InterfaceAddress: Combina una dirección IP con información adicional sobre la red a la que pertenece esa interfaz (como la máscara de subred).
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Sockets</strong></td>
+                    <td>
+                        Socket: Es un socket TCP del lado del cliente. Se utiliza cuando quieres conectarte a un servidor mediante el protocolo TCP (protocolo confiable que garantiza que los datos lleguen en orden).<br>
+                        ServerSocket: Es un socket TCP del lado del servidor. Se queda "escuchando" y acepta conexiones entrantes de clientes que usan TCP.<br>
+                        DatagramSocket: Es un socket para el protocolo UDP. Se usa tanto para enviar como para recibir datagramas (paquetes de datos independientes) mediante UDP (protocolo más rápido pero sin garantías de entrega).
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Nota sobre versiones actuales (2025):</strong> A partir de Java 19 (2022) se introdujeron mejoras en las API de red, incluyendo Virtual Threads que permiten manejar múltiples conexiones de forma más eficiente. Las clases mencionadas siguen siendo las fundamentales, aunque ahora se recomienda usar las APIs modernas de NIO.2 (java.nio) para aplicaciones que requieran alto rendimiento con muchas conexiones simultáneas.</p>
+
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

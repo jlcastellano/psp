@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distintos modelos de comunicación entre procesos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div>Distintos modelos de comunicación entre procesos</div>
+    </header>
+
+    <section class="contenido-didactico">
+        <h1>3.1. Distintos modelos de comunicación entre procesos</h1>
+
+        <p>En los capítulos anteriores has aprendido a crear aplicaciones formadas por varios procesos o hilos que necesitan comunicarse entre sí. Para ello, has visto diferentes mecanismos que permiten este intercambio de información.</p>
+
+        <p>En el primer capítulo trabajaste con procesos que se comunican mediante mecanismos de entrada/salida (E/S) secuenciales. ¿Qué significa esto? Básicamente, que un proceso puede leer datos que otro proceso ha escrito previamente en archivos o flujos de datos (llamados <i>streams</i>). Es como una cadena de montaje: un proceso deja información en un lugar y otro la recoge después.</p>
+
+        <p>En el segundo capítulo exploraste cómo diferentes hilos dentro de un mismo proceso se comunican mediante memoria compartida. Esto es más directo: cuando un hilo escribe algo en la memoria, los demás hilos pueden leerlo inmediatamente, sin pasos intermedios. Este método es más potente porque permite trabajar con objetos completos, lo que hace la comunicación más flexible y natural, similar a cómo trabajarías normalmente en tu código.</p>
+
+        <p>Recordarás del primer capítulo que existen diferentes tipos de sistemas según su número de procesadores. Por un lado están los sistemas monoprocesador (con un solo procesador) y por otro los sistemas multiprocesador (con varios). Dentro de estos últimos, hay dos categorías importantes: los sistemas multiprocesador fuertemente acoplados (que comparten memoria y sistema de E/S) y los sistemas multiprocesador débilmente acoplados (que no comparten estos recursos).</p>
+
+        <p>Los dos modelos que acabamos de mencionar (procesos comunicándose mediante E/S e hilos mediante memoria compartida) funcionan bien en sistemas monoprocesador y también en sistemas multiprocesador fuertemente acoplados. Estos últimos son sistemas donde todos los procesadores tienen acceso a la misma memoria y al mismo sistema de E/S, todo coordinado por un único sistema operativo.</p>
+
+        <p>En este capítulo aprenderás a desarrollar aplicaciones concurrentes diseñadas específicamente para sistemas distribuidos, que también viste en el primer capítulo. En estos sistemas, los procesos se ejecutan en procesadores que pertenecen a computadoras completamente independientes entre sí. La comunicación entre estos procesos se realiza a través de una red (como Internet) utilizando protocolos de comunicación estandarizados que todos entienden.</p>
+
+        <p>Dentro de este modelo de sistemas distribuidos, podemos identificar dos variantes importantes.</p>
+
+        <figure>
+            <img src="https://pfst.cf2.poecdn.net/base/image/a5857dc557e11bd990f75632a194049f4768023b51dce5c73ae381df2020da54?w=1536&h=1024" alt="Imagen didáctica 2">
+            <figcaption>Diferencias entre la arquitectura cliente/servidor y P2P.</figcaption>
+        </figure>
+
+        <p>En el modelo cliente/servidor (C/S), hay una división clara de roles: algunos procesos (los servidores) ofrecen servicios específicos, mientras que otros procesos (los clientes) solicitan y utilizan esos servicios. Por otro lado, en el modelo entre iguales o P2P (<i>peer to peer</i>, que significa "de igual a igual"), todos los procesos tienen el mismo nivel de importancia. Aquí todos colaboran entre sí de forma similar, sin que ninguno tenga un rol especial o diferenciado.</p>
+
+        <p>Para entender mejor cómo hemos llegado hasta aquí, veamos estos modelos desde una perspectiva histórica, dividida en tres grandes etapas:</p>
+
+        <figure>
+            <img src="https://pfst.cf2.poecdn.net/base/image/fd59f6ea5420bbecff95139c2c17fead23fba3c8ee96c841f484664203d5e867?w=1536&h=1024" alt="Imagen didáctica 1">
+            <figcaption>Evolución histórica de los modelos de computación.</figcaption>
+        </figure>
+
+        <ol>
+            <li><i>Computación aislada.</i> Hasta los años ochenta del siglo XX, los ordenadores funcionaban como islas: cada uno operaba de forma completamente independiente sin conexión con otros. Si dos procesos se ejecutaban en ordenadores diferentes, simplemente no había manera de que se comunicaran entre sí.</li>
+
+            <li><i>Computación en redes locales C/S.</i> Durante los años ochenta, las empresas comenzaron a conectar sus ordenadores mediante redes locales. En estas redes aparecieron los servidores: ordenadores especializados que ejecutaban procesos diseñados para proporcionar servicios a otros procesos dentro de la misma red local. El problema era que cada fabricante utilizaba sus propios protocolos de comunicación (protocolos privativos), lo que limitaba la compatibilidad entre diferentes sistemas.</li>
+
+            <li><i>Computación distribuida.</i> La llegada de la World Wide Web durante los años noventa cambió todo. Internet, que hasta entonces solo se usaba en ámbitos militares, académicos y de investigación, se extendió masivamente al uso doméstico y empresarial. Los nuevos protocolos estándar de Internet (que cualquiera podía usar) reemplazaron a los antiguos protocolos privativos en las redes locales. Este cambio revolucionario hizo posible que procesos ejecutándose en cualquier ordenador del mundo pudieran comunicarse entre sí a través de Internet, rompiendo las limitaciones geográficas de las redes locales.</li>
+        </ol>
+
+        <p>Es importante aclarar que esta evolución no significa que los modelos antiguos (computación aislada y redes locales C/S) hayan desaparecido por completo. Sin embargo, el modelo distribuido ha ido ganando cada vez más protagonismo. Con la generalización de Internet se han consolidado los protocolos de red estándar de la familia TCP/IP como base de las comunicaciones entre procesos. Estos protocolos tienen una ventaja fundamental: permiten desarrollar aplicaciones que funcionan exactamente igual sin importar dónde se ejecuten los procesos que las componen. En 2025, la familia de protocolos TCP/IP viene instalada por defecto en cualquier sistema operativo moderno y permite la comunicación entre procesos independientemente de su ubicación: pueden estar en ordenadores de diferentes redes locales al otro lado del mundo, en la misma red local de tu oficina, o incluso ejecutándose en el mismo ordenador.</p>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

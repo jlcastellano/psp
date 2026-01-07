@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución de nombres</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div>Resolución de nombres</div>
+    </header>
+
+    <section class="contenido-didactico">
+        <h1>3.3. Resolución de nombres</h1>
+
+        <p>Cuando usamos Internet o cualquier red, hay dos formas de identificar un equipo (host):</p>
+        <ul>
+            <li><strong>Por su nombre:</strong> Es lo que usamos normalmente en el nivel de aplicación. Por ejemplo, "www.wikipedia.org" es fácil de recordar y escribir.</li>
+            <li><strong>Por su dirección IP:</strong> Es lo que realmente necesitan los niveles inferiores (transporte y red) para establecer la comunicación. Por ejemplo, "91.198.174.192".</li>
+        </ul>
+
+        <p>Imagina que quieres visitar http://www.wikipedia.org usando tu navegador web. Tú escribes "www.wikipedia.org" porque es fácil de recordar, pero tu computadora necesita conocer la dirección IP real de ese servidor para poder conectarse con él. Aquí es donde entra en juego la <strong>resolución de nombres</strong>: el proceso que traduce nombres legibles (como www.wikipedia.org) en direcciones IP numéricas.</p>
+
+        <p>Los sistemas operativos incluyen un servicio especial de resolución de nombres que se encarga de esta traducción. Este servicio utiliza dos mecanismos diferentes que veremos a continuación:</p>
+
+        <h2>3.3.1. Resolución de nombres local</h2>
+
+        <p>Este mecanismo funciona mediante archivos locales almacenados en tu propia computadora. Estos archivos contienen una lista de asociaciones entre nombres y direcciones IP, como si fuera una pequeña agenda de contactos.</p>
+
+        <p>Los archivos más comunes son:</p>
+        <ul>
+            <li><strong>En Linux y macOS:</strong> <span style="color: #0077b6;">/etc/hosts</span></li>
+            <li><strong>En Windows:</strong> <span style="color: #0077b6;">C:\Windows\System32\drivers\etc\hosts</span></li>
+        </ul>
+
+        <p>Veamos un ejemplo del contenido de este archivo:</p>
+
+        <pre><code>127.0.0.1       localhost
+
+192.168.5.17    kabuto
+192.168.5.19    portatil_de_luis
+192.168.5.31    leonardo
+
+# Las siguientes líneas son para hosts con capacidad IPv6
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters</code></pre>
+
+        <p><strong>¿Qué significa este archivo?</strong></p>
+        <ul>
+            <li>La primera línea indica que el nombre "localhost" corresponde a la dirección IP 127.0.0.1, que siempre apunta a tu propia máquina.</li>
+            <li>Las líneas siguientes asocian nombres personalizados (como "kabuto" o "portatil_de_luis") con direcciones IP de tu red local.</li>
+            <li>Las líneas que comienzan con # son comentarios explicativos.</li>
+            <li>Las últimas líneas son para direcciones IPv6, la versión más moderna del protocolo de Internet.</li>
+        </ul>
+
+        <p>Gracias a este archivo, puedes acceder a recursos usando nombres en lugar de números. Por ejemplo:</p>
+        <ul>
+            <li>Escribir <span style="color: #0077b6;">http://localhost</span> en lugar de <span style="color: #0077b6;">http://127.0.0.1</span> para acceder a un servidor web en tu propia máquina.</li>
+            <li>Escribir <span style="color: #0077b6;">http://leonardo</span> en lugar de <span style="color: #0077b6;">http://192.168.5.31</span> para acceder a otro equipo en tu red local.</li>
+        </ul>
+
+        <h2>3.3.2. El protocolo DNS</h2>
+
+        <p>DNS (Sistema de Nombres de Dominio, por sus siglas en inglés <i>Domain Name System</i>) es un protocolo que permite traducir nombres de dominio en direcciones IP, pero a diferencia del método anterior, no se limita a tu computadora: funciona consultando servidores especializados en Internet.</p>
+
+        <p>Este es el mecanismo que usamos para acceder a sitios web como <span style="color: #0077b6;">www.wikipedia.org</span>. Cuando escribes este nombre en tu navegador, tu computadora consulta automáticamente a un servidor DNS para obtener la dirección IP correspondiente.</p>
+
+        <p><strong>Ejemplo práctico:</strong> Podemos consultar manualmente las direcciones IP de un sitio web usando el comando <span style="color: #0077b6;">nslookup</span>. En este ejemplo, consultamos al servidor DNS público de Google (<span style="color: #0077b6;">8.8.4.4</span>) para obtener las direcciones IPv4 e IPv6 de <span style="color: #0077b6;">www.wikipedia.org</span>:</p>
+
+        <pre><code>$ nslookup www.wikipedia.org 8.8.4.4
+Server:
+        8.8.4.4
+Address:        8.8.4.4#53
+
+Non-authoritative answer:
+www.wikipedia.org       canonical name = dyna.wikimedia.org.
+Name:   dyna.wikimedia.org
+Address: 91.198.174.192
+Name:   dyna.wikimedia.org
+Address: 2620:0:862:ed1a::1</code></pre>
+
+        <p><strong>¿Qué nos muestra este resultado?</strong></p>
+        <ul>
+            <li><strong>Server:</strong> El servidor DNS que respondió a nuestra consulta (8.8.4.4 en el puerto 53, que es el puerto estándar de DNS).</li>
+            <li><strong>Canonical name:</strong> El nombre real del servidor (dyna.wikimedia.org), ya que www.wikipedia.org es un alias que apunta a él.</li>
+            <li><strong>Address:</strong> Las direcciones IP encontradas. En este caso, obtuvimos una dirección IPv4 (91.198.174.192) y una dirección IPv6 (2620:0:862:ed1a::1).</li>
+        </ul>
+
+        <p><strong>Configuración de DNS en tu equipo:</strong></p>
+        <p>Para poder navegar eficazmente por Internet, es fundamental que tu computadora esté correctamente configurada como cliente DNS. Esta configuración consiste en especificar la dirección IP de uno o más servidores DNS que tu equipo consultará cuando necesite traducir nombres a direcciones IP.</p>
+
+        <p>En 2025, algunos de los servidores DNS públicos más utilizados son:</p>
+        <ul>
+            <li><strong>Google Public DNS:</strong> 8.8.8.8 y 8.8.4.4</li>
+            <li><strong>Cloudflare DNS:</strong> 1.1.1.1 y 1.0.0.1 (destacado por su velocidad y privacidad)</li>
+            <li><strong>Quad9:</strong> 9.9.9.9 (enfocado en seguridad, bloqueando sitios maliciosos)</li>
+            <li><strong>OpenDNS:</strong> 208.67.222.222 y 208.67.220.220</li>
+        </ul>
+
+        <p>La mayoría de los usuarios obtienen esta configuración automáticamente de su proveedor de Internet (ISP) o de su router doméstico, aunque también es posible configurar manualmente servidores DNS específicos para mejorar la velocidad, privacidad o seguridad de tu navegación.</p>
+
+        <figure>
+            <img src="https://pfst.cf2.poecdn.net/base/image/db16ad0adfcac4c26d7a53b8e72b39dbf1d328421328e0ac493fab687eb1ad37?w=1536&h=1024" alt="Imagen didáctica 1">
+            <figcaption>Mecanismos de resolución de nombres y el flujo de información.</figcaption>
+        </figure>
+
+    
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
