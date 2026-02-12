@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Telnet en Java</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div>Protocolo Telnet en Java</div>
+    </header>
+
+    <section class="contenido-didactico">
+        <h1>Introducción al Protocolo Telnet</h1>
+        
+        <p><strong>Telnet</strong> (TELecommunication NETwork) es uno de los protocolos más antiguos de Internet, desarrollado en 1969 como parte del proyecto ARPANET. Es un protocolo de red que proporciona una interfaz de comunicación bidireccional orientada a texto entre dos máquinas.</p>
+
+        <h2>¿Qué es Telnet?</h2>
+        <p>Telnet es un protocolo cliente-servidor que permite a un usuario conectarse a un equipo remoto (host) a través de una red, estableciendo una sesión de terminal virtual. Esta sesión permite al usuario interactuar con el sistema remoto como si estuviera físicamente presente en esa máquina.</p>
+
+        <h2>Características Principales</h2>
+        <ul>
+            <li><strong>Comunicación bidireccional:</strong> Permite el intercambio de datos en ambas direcciones</li>
+            <li><strong>Orientado a caracteres:</strong> Transmite datos carácter por carácter</li>
+            <li><strong>Puerto estándar:</strong> Utiliza por defecto el puerto TCP 23</li>
+            <li><strong>Sin cifrado:</strong> Los datos se transmiten en texto plano</li>
+            <li><strong>Terminal virtual:</strong> Emula una terminal remota</li>
+            <li><strong>Negociación de opciones:</strong> Permite configurar parámetros de la conexión</li>
+        </ul>
+
+        <h2>Usos Comunes</h2>
+        <ul>
+            <li><strong>Administración remota:</strong> Gestión de servidores y dispositivos de red</li>
+            <li><strong>Diagnóstico de red:</strong> Pruebas de conectividad y debugging</li>
+            <li><strong>Acceso a bases de datos:</strong> Conexión a sistemas legacy</li>
+            <li><strong>Configuración de equipos:</strong> Routers, switches y otros dispositivos de red</li>
+        </ul>
+
+        <h2>Evolución Histórica</h2>
+        <dl>
+            <dt>1969</dt>
+            <dd>Desarrollo inicial como parte de ARPANET</dd>
+            
+            <dt>1983</dt>
+            <dd>Estandarización en RFC 854</dd>
+            
+            <dt>1990s</dt>
+            <dd>Amplio uso en administración de sistemas</dd>
+            
+            <dt>2000s</dt>
+            <dd>Declive debido a preocupaciones de seguridad</dd>
+            
+            <dt>Actualidad</dt>
+            <dd>Reemplazado mayormente por SSH en entornos de producción</dd>
+        </dl>
+
+        <h2>Ventajas y Desventajas</h2>
+        
+        <h3>Ventajas</h3>
+        <ul>
+            <li>Simplicidad de implementación</li>
+            <li>Bajo consumo de recursos</li>
+            <li>Ampliamente soportado</li>
+            <li>Útil para debugging</li>
+            <li>Compatible con sistemas legacy</li>
+        </ul>
+
+        <h3>Desventajas</h3>
+        <ul>
+            <li>Sin cifrado de datos</li>
+            <li>Vulnerable a ataques de intercepción</li>
+            <li>No soporta transferencia de archivos</li>
+            <li>Limitado a interfaz de texto</li>
+            <li>Problemas de seguridad inherentes</li>
+        </ul>
+
+        <h2>Alternativas Modernas</h2>
+        <ul>
+            <li><strong>SSH (Secure Shell):</strong> Versión segura con cifrado</li>
+            <li><strong>RDP (Remote Desktop Protocol):</strong> Para interfaces gráficas</li>
+            <li><strong>VNC (Virtual Network Computing):</strong> Control remoto gráfico</li>
+        </ul>
+
+        <details>
+            <summary>Consideraciones de Seguridad</summary>
+            <p>Debido a que Telnet transmite datos en texto plano, incluyendo contraseñas y comandos, se recomienda:</p>
+            <ul>
+                <li>Usar SSH en lugar de Telnet cuando sea posible</li>
+                <li>Restringir el acceso Telnet a redes confiables</li>
+                <li>Implementar firewalls y control de acceso</li>
+                <li>Monitorear activamente las conexiones Telnet</li>
+            </ul>
+        </details>
+
+        <h2>1. Conceptos Básicos Telnet</h2>
+        <p>Telnet es un protocolo de red que permite acceder a una máquina remota y gestionarla como si estuviéramos sentados delante de ella. Características principales:</p>
+        <ul>
+            <li>Puerto por defecto: <kbd>23</kbd></li>
+            <li>Comunicación bidireccional orientada a texto</li>
+            <li>Protocolo sin cifrado (texto plano)</li>
+        </ul>
+
+        <h2>2. Implementación básica usando Apache Commons Net</h2>
+        <p>A continuación, un ejemplo de implementación básica de un cliente Telnet utilizando la biblioteca Apache Commons Net. Puedes copiar el código con el botón superior.</p>
+
+<pre><code class="language-java">import org.apache.commons.net.telnet.TelnetClient;
+import org.apache.commons.net.telnet.TelnetNotificationHandler;
+import org.apache.commons.net.telnet.SimpleOptionHandler;
+import java.io.*;
+
+public class TelnetExample {
+    private TelnetClient telnet;
+    private InputStream in;
+    private PrintStream out;
+    
+    public TelnetExample() {
+        telnet = new TelnetClient();
+    }
+    
+    public void connect(String server, int port) throws IOException {
+        try {
+            // Establecer conexión
+            telnet.connect(server, port);
+            
+            // Obtener streams de entrada/salida
+            in = telnet.getInputStream();
+            out = new PrintStream(telnet.getOutputStream());
+            
+        } catch (IOException e) {
+            disconnect();
+            throw e;
+        }
+    }
+}</code></pre>
+
+        <h2>3. Métodos de Lectura y Escritura</h2>
+        <p>Los métodos de lectura y escritura son fundamentales para la comunicación con el servidor Telnet:</p>
+
+<pre><code class="language-java">public class TelnetIO {
+    private TelnetClient telnet;
+    private InputStream in;
+    private PrintStream out;
+
+    // Método para escribir comandos
+    public void writeCommand(String command) {
+        out.println(command);
+        out.flush();
+    }
+
+    // Método para leer respuesta
+    public String readUntil(String pattern) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            char lastChar = pattern.charAt(pattern.length() - 1);
+            char ch;
+            
+            while ((ch = (char) in.read()) != -1) {
+                sb.append(ch);
+                if (ch == lastChar && sb.toString().endsWith(pattern)) {
+                    return sb.toString();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}</code></pre>
+
+        <h2>4. Manejo de Terminal Virtual</h2>
+        <p>La configuración del terminal virtual permite establecer opciones específicas para la sesión Telnet:</p>
+
+<pre><code class="language-java">public class TelnetTerminal {
+    private TelnetClient telnet;
+    
+    public void configureTelnetClient() {
+        try {
+            // Configurar opciones del terminal
+            TerminalTypeOptionHandler ttopt = 
+                new TerminalTypeOptionHandler("VT100", false, false, true, false);
+            EchoOptionHandler echoopt = 
+                new EchoOptionHandler(true, false, true, false);
+            SuppressGAOptionHandler gaopt = 
+                new SuppressGAOptionHandler(true, true, true, true);
+
+            telnet.addOptionHandler(ttopt);
+            telnet.addOptionHandler(echoopt);
+            telnet.addOptionHandler(gaopt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+
+        <h2>5. Ejemplo Completo de Cliente Telnet</h2>
+        <p>Este ejemplo muestra una implementación completa de un cliente Telnet con autenticación y ejecución de comandos:</p>
+
+<pre><code class="language-java">public class TelnetClient implements Runnable {
+    private TelnetClient telnet;
+    private String server;
+    private int port;
+    private String username;
+    private String password;
+    
+    public TelnetClient(String server, int port, String username, String password) {
+        this.server = server;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+        telnet = new TelnetClient();
+    }
+    
+    @Override
+    public void run() {
+        try {
+            // Conectar al servidor
+            telnet.connect(server, port);
+            
+            // Obtener streams
+            InputStream in = telnet.getInputStream();
+            PrintStream out = new PrintStream(telnet.getOutputStream());
+            
+            // Login
+            readUntil("login: ");
+            write(username);
+            readUntil("Password: ");
+            write(password);
+            
+            // Esperar prompt
+            readUntil("$");
+            
+            // Ejecutar comandos
+            write("ls");
+            String response = readUntil("$");
+            System.out.println("Respuesta del servidor: " + response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
+    }
+    
+    private void write(String value) {
+        PrintStream out = new PrintStream(telnet.getOutputStream());
+        out.println(value);
+        out.flush();
+    }
+    
+    private String readUntil(String pattern) {
+        try {
+            char lastChar = pattern.charAt(pattern.length() - 1);
+            StringBuilder sb = new StringBuilder();
+            InputStream in = telnet.getInputStream();
+            
+            char ch = (char) in.read();
+            while (true) {
+                sb.append(ch);
+                if (ch == lastChar && sb.toString().endsWith(pattern)) {
+                    return sb.toString();
+                }
+                ch = (char) in.read();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    private void disconnect() {
+        try {
+            telnet.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+
+        <h2>6. Ejemplo de Uso</h2>
+        <p>Para utilizar el cliente Telnet, simplemente crea una instancia y ejecútala en un hilo separado:</p>
+
+<pre><code class="language-java">public class TelnetMain {
+    public static void main(String[] args) {
+        TelnetClient client = new TelnetClient("servidor.ejemplo.com", 23, "usuario", "contraseña");
+        Thread telnetThread = new Thread(client);
+        telnetThread.start();
+    }
+}</code></pre>
+
+        <h2>5. Ejemplo Completo de Servidor Telnet</h2>
+
+<pre><code class="language-java">
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.*;
+
+public class TelnetServer {
+    private ServerSocket serverSocket;
+    private int port;
+    private boolean running;
+    private ExecutorService threadPool;
+    
+    // Credenciales de ejemplo (en producción usar sistema seguro)
+    private static final String VALID_USERNAME = "usuario";
+    private static final String VALID_PASSWORD = "contraseña";
+    
+    public TelnetServer(int port) {
+        this.port = port;
+        this.threadPool = Executors.newCachedThreadPool();
+    }
+    
+    public void start() throws IOException {
+        serverSocket = new ServerSocket(port);
+        running = true;
+        System.out.println("Servidor Telnet iniciado en puerto " + port);
+        
+        while (running) {
+            try {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Cliente conectado: " + clientSocket.getInetAddress());
+                threadPool.execute(new ClientHandler(clientSocket));
+            } catch (IOException e) {
+                if (running) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public void stop() {
+        running = false;
+        threadPool.shutdown();
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Clase interna para manejar cada cliente
+    private class ClientHandler implements Runnable {
+        private Socket socket;
+        private BufferedReader in;
+        private PrintWriter out;
+        private String currentDirectory = "/home/usuario";
+        
+        public ClientHandler(Socket socket) {
+            this.socket = socket;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
+                
+                // Proceso de autenticación
+                if (!authenticate()) {
+                    out.println("Autenticación fallida. Conexión cerrada.");
+                    return;
+                }
+                
+                out.println("Bienvenido al servidor Telnet");
+                out.print("$ ");
+                out.flush();
+                
+                // Bucle principal de comandos
+                String command;
+                while ((command = in.readLine()) != null) {
+                    String response = processCommand(command.trim());
+                    out.println(response);
+                    out.print("$ ");
+                    out.flush();
+                    
+                    if (command.trim().equalsIgnoreCase("exit")) {
+                        break;
+                    }
+                }
+                
+            } catch (IOException e) {
+                System.out.println("Cliente desconectado: " + socket.getInetAddress());
+            } finally {
+                disconnect();
+            }
+        }
+        
+        private boolean authenticate() throws IOException {
+            // Solicitar login
+            out.print("login: ");
+            out.flush();
+            String username = in.readLine();
+            
+            // Solicitar password
+            out.print("Password: ");
+            out.flush();
+            String password = in.readLine();
+            
+            // Validar credenciales
+            return VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password);
+        }
+        
+        private String processCommand(String command) {
+            if (command.isEmpty()) {
+                return "";
+            }
+            
+            String[] parts = command.split("\\s+", 2);
+            String cmd = parts[0].toLowerCase();
+            String args = parts.length > 1 ? parts[1] : "";
+            
+            switch (cmd) {
+                case "ls":
+                    return simulateLS();
+                case "pwd":
+                    return currentDirectory;
+                case "cd":
+                    return simulateCD(args);
+                case "echo":
+                    return args;
+                case "date":
+                    return new java.util.Date().toString();
+                case "whoami":
+                    return VALID_USERNAME;
+                case "hostname":
+                    return "servidor.ejemplo.com";
+                case "help":
+                    return getHelp();
+                case "exit":
+                    return "Hasta pronto!";
+                default:
+                    return "Comando no reconocido: " + cmd + ". Escriba 'help' para ver comandos disponibles.";
+            }
+        }
+        
+        private String simulateLS() {
+            return "archivo1.txt\narchivo2.txt\ndirectorio1\ndirectorio2\nconfig.xml";
+        }
+        
+        private String simulateCD(String directory) {
+            if (directory.isEmpty() || directory.equals("~")) {
+                currentDirectory = "/home/usuario";
+            } else if (directory.equals("..")) {
+                int lastSlash = currentDirectory.lastIndexOf('/');
+                if (lastSlash > 0) {
+                    currentDirectory = currentDirectory.substring(0, lastSlash);
+                }
+            } else if (directory.startsWith("/")) {
+                currentDirectory = directory;
+            } else {
+                currentDirectory = currentDirectory + "/" + directory;
+            }
+            return "";
+        }
+        
+        private String getHelp() {
+            return "Comandos disponibles:\n" +
+                   "  ls       - Listar archivos\n" +
+                   "  pwd      - Mostrar directorio actual\n" +
+                   "  cd       - Cambiar directorio\n" +
+                   "  echo     - Imprimir texto\n" +
+                   "  date     - Mostrar fecha y hora\n" +
+                   "  whoami   - Mostrar usuario actual\n" +
+                   "  hostname - Mostrar nombre del servidor\n" +
+                   "  help     - Mostrar esta ayuda\n" +
+                   "  exit     - Cerrar sesión";
+        }
+        
+        private void disconnect() {
+            try {
+                if (in != null) in.close();
+                if (out != null) out.close();
+                if (socket != null && !socket.isClosed()) socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        int puerto = 23; // Puerto Telnet estándar
+        
+        // Si no tienes permisos para el puerto 23, usa uno alternativo
+        if (args.length > 0) {
+            puerto = Integer.parseInt(args[0]);
+        }
+        
+        TelnetServer server = new TelnetServer(puerto);
+        
+        // Agregar shutdown hook para cerrar limpiamente
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("\nCerrando servidor...");
+            server.stop();
+        }));
+        
+        try {
+            server.start();
+        } catch (IOException e) {
+            System.err.println("Error al iniciar servidor: " + e.getMessage());
+            if (puerto == 23) {
+                System.err.println("Intente con un puerto alternativo (ej: 2323)");
+            }
+        }
+    }
+}
+</code></pre>
+
+
+
+<h2>8. Consideraciones de Seguridad</h2>
+        <p><mark>Importante:</mark> Telnet presenta serias vulnerabilidades de seguridad que deben ser consideradas:</p>
+        <ul>
+            <li>Telnet transmite datos en texto plano, incluyendo contraseñas</li>
+            <li>Se recomienda usar SSH en lugar de Telnet para conexiones seguras</li>
+            <li>Implementar timeout para evitar conexiones colgadas</li>
+            <li>Manejar excepciones adecuadamente</li>
+            <li>Cerrar siempre las conexiones después de su uso</li>
+        </ul>
+
+        <h2>9. Dependencias Maven</h2>
+        <p>Para utilizar estas clases, necesitas incluir Apache Commons Net en tu proyecto:</p>
+
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;commons-net&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-net&lt;/artifactId&gt;
+    &lt;version&gt;3.9.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+        <h2>10. Mejores Prácticas</h2>
+        <p>Al implementar clientes Telnet en Java, sigue estas mejores prácticas:</p>
+        <ol>
+            <li>Implementar timeouts para todas las operaciones</li>
+            <li>Usar try-with-resources para manejar recursos</li>
+            <li>Implementar un sistema de reintentos para conexiones fallidas</li>
+            <li>Manejar adecuadamente los eventos de desconexión</li>
+            <li>Implementar logging para debug y monitoreo</li>
+        </ol>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspecto</th>
+                    <th>Telnet</th>
+                    <th>SSH</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Seguridad</td>
+                    <td>Sin cifrado</td>
+                    <td>Cifrado completo</td>
+                </tr>
+                <tr>
+                    <td>Puerto</td>
+                    <td>23</td>
+                    <td>22</td>
+                </tr>
+                <tr>
+                    <td>Autenticación</td>
+                    <td>Texto plano</td>
+                    <td>Múltiples métodos seguros</td>
+                </tr>
+                <tr>
+                    <td>Uso recomendado</td>
+                    <td>Testing/Legacy</td>
+                    <td>Producción</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
