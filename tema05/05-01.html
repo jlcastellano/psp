@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguridad General en Java</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div>Seguridad General en Java</div>
+    </header>
+
+    <section class="contenido-didactico">
+        <h1>Seguridad General en Java</h1>
+
+        <p>La seguridad en aplicaciones Java requiere un enfoque multicapa que abarca <strong>autenticación</strong>, <strong>autorización</strong>, <strong>protección de datos</strong>, y <strong>prevención de ataques comunes</strong>.</p>
+
+        <h2>1. Gestión de Sesiones</h2>
+
+        <p><strong>Qué es:</strong> Sistema que gestiona estados temporales y seguros para cada usuario que interactúa con la aplicación, manteniendo su información y estado de autenticación entre diferentes peticiones.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Mantener el estado del usuario entre peticiones</li>
+            <li>Controlar el tiempo de vida de las sesiones</li>
+            <li>Prevenir accesos no autorizados</li>
+            <li>Gestionar el cierre de sesión</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Cuando un usuario inicia sesión, se crea una sesión única con <code>generateSessionId()</code></li>
+            <li>La sesión almacena ID de usuario y timestamp de creación/último acceso</li>
+            <li>Se verifica la validez de la sesión en cada petición</li>
+            <li>Las sesiones inactivas por más de 30 minutos son invalidadas automáticamente</li>
+        </ol>
+
+        <pre><code class="language-java">public class SessionManager {
+    private static final int SESSION_TIMEOUT = 30 * 60; // 30 minutos
+    private static final Map&lt;String, Session&gt; sessions = new ConcurrentHashMap&lt;&gt;();
+
+    public static class Session {
+        private final String id;
+        private final String userId;
+        private final Map&lt;String, Object&gt; attributes;
+        private final long creationTime;
+        private long lastAccessTime;
+
+        public Session(String userId) {
+            this.id = generateSessionId();
+            this.userId = userId;
+            this.attributes = new ConcurrentHashMap&lt;&gt;();
+            this.creationTime = System.currentTimeMillis();
+            this.lastAccessTime = this.creationTime;
+        }
+
+        private String generateSessionId() {
+            return UUID.randomUUID().toString() + 
+                   SecureRandomUtil.generateToken(32);
+        }
+    }
+
+    public static Session createSession(String userId) {
+        Session session = new Session(userId);
+        sessions.put(session.id, session);
+        return session;
+    }
+
+    public static void invalidateSession(String sessionId) {
+        sessions.remove(sessionId);
+    }
+
+    public static boolean isValidSession(String sessionId) {
+        Session session = sessions.get(sessionId);
+        if (session == null) return false;
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - session.lastAccessTime &gt; SESSION_TIMEOUT * 1000) {
+            invalidateSession(sessionId);
+            return false;
+        }
+
+        session.lastAccessTime = currentTime;
+        return true;
+    }
+}</code></pre>
+
+        <h2>2. Control de Acceso Basado en Roles (RBAC)</h2>
+
+        <p><strong>Qué es:</strong> Sistema de autorización que controla el acceso a recursos y funcionalidades basado en roles asignados a usuarios y sus permisos asociados.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Implementar el principio de mínimo privilegio</li>
+            <li>Controlar acceso a recursos y funcionalidades</li>
+            <li>Mantener separación de responsabilidades</li>
+            <li>Facilitar la gestión de permisos</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Los usuarios tienen roles asignados (ej: ADMIN, USER)</li>
+            <li>Los roles tienen permisos asociados</li>
+            <li>Se verifica si un usuario tiene permiso antes de cada operación protegida</li>
+            <li>Permite verificación granular de permisos</li>
+        </ol>
+
+        <pre><code class="language-java">public class RBACManager {
+    private static final Map&lt;String, Set&lt;String&gt;&gt; userRoles = new ConcurrentHashMap&lt;&gt;();
+    private static final Map&lt;String, Set&lt;String&gt;&gt; rolePermissions = new ConcurrentHashMap&lt;&gt;();
+
+    public static void addUserRole(String userId, String role) {
+        userRoles.computeIfAbsent(userId, k -&gt; new HashSet&lt;&gt;()).add(role);
+    }
+
+    public static void addRolePermission(String role, String permission) {
+        rolePermissions.computeIfAbsent(role, k -&gt; new HashSet&lt;&gt;()).add(permission);
+    }
+
+    public static boolean hasPermission(String userId, String permission) {
+        Set&lt;String&gt; roles = userRoles.get(userId);
+        if (roles == null) return false;
+
+        return roles.stream()
+            .anyMatch(role -&gt; {
+                Set&lt;String&gt; permissions = rolePermissions.get(role);
+                return permissions != null &amp;&amp; permissions.contains(permission);
+            });
+    }
+
+    @FunctionalInterface
+    public interface SecuredOperation {
+        void execute() throws SecurityException;
+    }
+
+    public static void requirePermission(String userId, String permission, 
+            SecuredOperation operation) {
+        if (!hasPermission(userId, permission)) {
+            throw new SecurityException("Access denied");
+        }
+        operation.execute();
+    }
+}</code></pre>
+
+        <h2>3. Prevención de XSS</h2>
+
+        <p><strong>Qué es:</strong> Sistema de defensa que previene la inyección y ejecución de scripts maliciosos en páginas web a través de la sanitización y codificación de datos.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Evitar la inyección de scripts maliciosos</li>
+            <li>Proteger datos sensibles del usuario</li>
+            <li>Mantener la integridad de la aplicación</li>
+            <li>Cumplir con estándares de seguridad</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Sanitiza entrada de usuario eliminando código malicioso</li>
+            <li>Codifica caracteres especiales en HTML</li>
+            <li>Escapa contenido JavaScript</li>
+            <li>Filtra URLs para prevenir redirecciones maliciosas</li>
+        </ol>
+
+        <pre><code class="language-java">public class XSSPrevention {
+    public static String sanitizeHTML(String input) {
+        return Encode.forHtml(input);
+    }
+
+    public static String sanitizeJavaScript(String input) {
+        return Encode.forJavaScript(input);
+    }
+
+    public static String sanitizeURL(String input) {
+        return Encode.forUri(input);
+    }
+
+    public static class XSSFilter implements Filter {
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response,
+                FilterChain chain) throws IOException, ServletException {
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            XSSRequestWrapper wrapper = new XSSRequestWrapper(httpRequest);
+            chain.doFilter(wrapper, response);
+        }
+    }
+}</code></pre>
+
+        <h2>4. Prevención de CSRF</h2>
+
+        <p><strong>Qué es:</strong> Sistema de protección que verifica la autenticidad de las peticiones HTTP para prevenir ataques de falsificación de peticiones entre sitios.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Prevenir ataques de falsificación de peticiones</li>
+            <li>Verificar autenticidad de las peticiones</li>
+            <li>Proteger operaciones que modifican datos</li>
+            <li>Asegurar que las peticiones provienen de fuentes legítimas</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Genera token único por sesión</li>
+            <li>Incluye token en formularios/headers</li>
+            <li>Valida token en cada petición que modifica estado</li>
+            <li>Rechaza peticiones sin token válido</li>
+        </ol>
+
+        <pre><code class="language-java">public class CSRFProtection {
+    private static final int TOKEN_LENGTH = 32;
+
+    public static String generateToken() {
+        return SecureRandomUtil.generateToken(TOKEN_LENGTH);
+    }
+
+    public static boolean validateToken(String sessionToken, String requestToken) {
+        if (sessionToken == null || requestToken == null) {
+            return false;
+        }
+        return MessageDigest.isEqual(
+            sessionToken.getBytes(),
+            requestToken.getBytes()
+        );
+    }
+
+    public static class CSRFFilter implements Filter {
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response,
+                FilterChain chain) throws IOException, ServletException {
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+            if (isStateChangingMethod(httpRequest.getMethod())) {
+                String sessionToken = (String) httpRequest.getSession()
+                    .getAttribute("csrf_token");
+                String requestToken = httpRequest.getHeader("X-CSRF-TOKEN");
+
+                if (!validateToken(sessionToken, requestToken)) {
+                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "CSRF token validation failed");
+                    return;
+                }
+            }
+
+            chain.doFilter(request, response);
+        }
+
+        private boolean isStateChangingMethod(String method) {
+            return "POST".equals(method) || "PUT".equals(method) || 
+                   "DELETE".equals(method) || "PATCH".equals(method);
+        }
+    }
+}</code></pre>
+
+        <h2>5. Prevención de SQL Injection</h2>
+
+        <p><strong>Qué es:</strong> Sistema de seguridad que protege la base de datos contra ataques de inyección SQL mediante el uso de consultas parametrizadas y validación de entradas.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Proteger la base de datos</li>
+            <li>Prevenir acceso no autorizado a datos</li>
+            <li>Mantener la integridad de las consultas</li>
+            <li>Evitar manipulación maliciosa de datos</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Usa PreparedStatements para todas las consultas</li>
+            <li>Parametriza valores en las consultas SQL</li>
+            <li>Evita concatenación directa de strings en queries</li>
+            <li>Separa la lógica SQL de los datos de entrada</li>
+        </ol>
+
+        <pre><code class="language-java">public class SQLInjectionPrevention {
+    public static PreparedStatement createSafeStatement(Connection conn, 
+            String sql, Object... params) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        for (int i = 0; i &lt; params.length; i++) {
+            stmt.setObject(i + 1, params[i]);
+        }
+        return stmt;
+    }
+
+    // Ejemplo de uso seguro
+    public User findUser(Connection conn, String username) throws SQLException {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement stmt = createSafeStatement(conn, sql, username)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                    rs.getLong("id"),
+                    rs.getString("username"),
+                    rs.getString("email")
+                );
+            }
+            return null;
+        }
+    }
+}</code></pre>
+
+        <h2>6. Logging Seguro</h2>
+
+        <p><strong>Qué es:</strong> Sistema de registro que documenta eventos y acciones en la aplicación de manera segura, protegiendo información sensible y facilitando la auditoría.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Registrar eventos de seguridad</li>
+            <li>Auditar acciones de usuarios</li>
+            <li>Detectar actividades sospechosas</li>
+            <li>Proteger información sensible en logs</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Filtra información sensible (contraseñas, tarjetas)</li>
+            <li>Registra eventos con timestamp y contexto</li>
+            <li>Mantiene logs de auditoría separados</li>
+            <li>Implementa diferentes niveles de logging</li>
+        </ol>
+
+        <pre><code class="language-java">public class SecureLogger {
+    private static final Logger logger = LoggerFactory.getLogger(SecureLogger.class);
+    private static final Pattern SENSITIVE_DATA = 
+        Pattern.compile("\\b(password|credit_card|ssn)\\b", 
+        Pattern.CASE_INSENSITIVE);
+
+    public static void logInfo(String message) {
+        logger.info(sanitizeLog(message));
+    }
+
+    public static void logError(String message, Throwable error) {
+        logger.error(sanitizeLog(message), error);
+    }
+
+    private static String sanitizeLog(String message) {
+        if (message == null) return null;
+        return SENSITIVE_DATA.matcher(message).replaceAll("[REDACTED]");
+    }
+
+    public static void auditLog(String userId, String action, String resource) {
+        String logMessage = String.format(
+            "User: %s, Action: %s, Resource: %s, Time: %s, IP: %s",
+            userId, action, resource, 
+            LocalDateTime.now(), getCurrentIP()
+        );
+        logger.info("AUDIT: " + logMessage);
+    }
+}</code></pre>
+
+        <h2>7. Gestión de Secretos</h2>
+
+        <p><strong>Qué es:</strong> Sistema especializado en el manejo seguro de información confidencial y credenciales, garantizando su protección en memoria y almacenamiento.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Proteger credenciales y claves</li>
+            <li>Gestionar secretos de forma segura</li>
+            <li>Limpiar datos sensibles de memoria</li>
+            <li>Prevenir fugas de información</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Almacena secretos en arrays de caracteres</li>
+            <li>Limpia memoria después de usar secretos</li>
+            <li>Implementa AutoCloseable para limpieza automática</li>
+            <li>Maneja lectura/escritura segura de secretos</li>
+        </ol>
+
+        <pre><code class="language-java">public class SecretManager {
+    private static final char[] EMPTY_CHAR_ARRAY = new char[0];
+    
+    public static class Secret implements AutoCloseable {
+        private char[] value;
+
+        public Secret(char[] value) {
+            this.value = Arrays.copyOf(value, value.length);
+            Arrays.fill(value, '\0'); // Limpiar el array original
+        }
+
+        public char[] getValue() {
+            return Arrays.copyOf(value, value.length);
+        }
+
+        @Override
+        public void close() {
+            if (value != null) {
+                Arrays.fill(value, '\0');
+                value = null;
+            }
+        }
+    }
+
+    public static Secret loadSecret(String path) throws IOException {
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader(path))) {
+            String line = reader.readLine();
+            if (line == null) {
+                return new Secret(EMPTY_CHAR_ARRAY);
+            }
+            char[] secret = line.toCharArray();
+            return new Secret(secret);
+        }
+    }
+
+    public static void saveSecret(String path, char[] secret) 
+            throws IOException {
+        try (FileWriter writer = new FileWriter(path)) {
+            writer.write(secret);
+        } finally {
+            Arrays.fill(secret, '\0');
+        }
+    }
+}</code></pre>
+
+        <h2>8. Configuración de Headers HTTP</h2>
+
+        <p><strong>Qué es:</strong> Sistema de configuración de cabeceras HTTP que implementa políticas de seguridad a nivel de navegador y protege contra ataques comunes basados en web.</p>
+
+        <p><strong>Por qué es necesario:</strong></p>
+        <ul>
+            <li>Implementar defensas en el navegador</li>
+            <li>Prevenir ataques comunes</li>
+            <li>Configurar políticas de seguridad</li>
+            <li>Reforzar la seguridad del cliente</li>
+        </ul>
+
+        <p><strong>Funcionamiento:</strong></p>
+        <ol>
+            <li>Configura headers de seguridad estándar</li>
+            <li>Implementa políticas CSP</li>
+            <li>Activa protecciones del navegador</li>
+            <li>Previene ataques como clickjacking</li>
+        </ol>
+
+        <pre><code class="language-java">public class SecurityHeaders {
+    public static void addSecurityHeaders(HttpServletResponse response) {
+        // Prevenir clickjacking
+        response.setHeader("X-Frame-Options", "DENY");
+        
+        // Activar protección XSS en navegadores modernos
+        response.setHeader("X-XSS-Protection", "1; mode=block");
+        
+        // Prevenir MIME-sniffing
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        
+        // Política de seguridad de contenido
+        response.setHeader("Content-Security-Policy", 
+            "default-src 'self'; " +
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+            "style-src 'self' 'unsafe-inline';"
+        );
+        
+        // HSTS
+        response.setHeader("Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains");
+        
+        // Referrer Policy
+        response.setHeader("Referrer-Policy", 
+            "strict-origin-when-cross-origin");
+        
+        // Características del navegador
+        response.setHeader("Permissions-Policy",
+            "camera=(), microphone=(), geolocation=()");
+    }
+}</code></pre>
+
+        <h2>Mejores Prácticas de Seguridad</h2>
+
+        <ul>
+            <li>Validar todas las entradas de usuario</li>
+            <li>Usar HTTPS en producción</li>
+            <li>Implementar el principio de mínimo privilegio</li>
+            <li>Mantener las dependencias actualizadas</li>
+            <li>Realizar auditorías de seguridad regulares</li>
+            <li>Implementar límites de rate y timeout</li>
+            <li>Usar almacenamiento seguro para credenciales</li>
+            <li>Implementar logging y monitoreo</li>
+            <li>Mantener copias de seguridad cifradas</li>
+        </ul>
+
+        <h2>Lista de Verificación de Seguridad</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Verificación</th>
+                    <th>Prioridad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Autenticación</td>
+                    <td>Implementar MFA</td>
+                    <td>Alta</td>
+                </tr>
+                <tr>
+                    <td>Autorización</td>
+                    <td>Validar permisos en cada solicitud</td>
+                    <td>Alta</td>
+                </tr>
+                <tr>
+                    <td>Datos</td>
+                    <td>Cifrar datos sensibles</td>
+                    <td>Alta</td>
+                </tr>
+                <tr>
+                    <td>Sesiones</td>
+                    <td>Implementar timeout</td>
+                    <td>Media</td>
+                </tr>
+                <tr>
+                    <td>Validación</td>
+                    <td>Sanitizar entradas</td>
+                    <td>Alta</td>
+                </tr>
+                <tr>
+                    <td>Logging</td>
+                    <td>Auditar acciones críticas</td>
+                    <td>Media</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Dependencias Maven</h2>
+
+        <pre><code class="language-xml">&lt;!-- Para validación y sanitización --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.owasp.encoder&lt;/groupId&gt;
+    &lt;artifactId&gt;encoder&lt;/artifactId&gt;
+    &lt;version&gt;1.2.3&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Para logging seguro --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+    &lt;version&gt;1.7.36&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Para manejo de sesiones --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.google.guava&lt;/groupId&gt;
+    &lt;artifactId&gt;guava&lt;/artifactId&gt;
+    &lt;version&gt;31.1-jre&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+</body>
+</html>
